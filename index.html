@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#0A0A0A"/>
-    <title>FXT Studio AI v3.3</title>
+    <title>FXT Studio AI v4.0</title>
     <link rel="manifest" href='data:application/json,{"name":"FXT Studio AI","short_name":"FXT","start_url":".","display":"standalone","background_color":"#0A0A0A","theme_color":"#0A0A0A","icons":[{"src":"https://via.placeholder.com/512/0A0A0A/EAEAEA?text=FXT","sizes":"512x512"}]}'>
     <script src="https://unpkg.com/tone@14.7.77/build/Tone.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@magenta/music@1.23.1/es6/core.js"></script>
@@ -20,21 +20,21 @@
         input,select,textarea{background:#252525;border:1px solid #333;color:#EAEAEA;padding:8px;border-radius:6px;width:100%;font-size:14px}
         label{font-size:11px;color:#999;display:block;margin-bottom:4px}.col{flex:1}
         #log{background:#000;padding:8px;border-radius:6px;font-size:9px;color:#0F0;height:160px;overflow:auto;margin-top:8px}
- .chat{border:1px solid #333;border-radius:8px;padding:8px;margin:8px 0;max-height:150px;overflow:auto;background:#111}
- .chat-msg{font-size:11px;margin:4px 0;padding:4px;border-radius:4px}
- .chat-user{background:#252525;text-align:right;color:#8FF}
- .chat-ai{background:#1A1A1A;color:#EAEAEA}
- .chat-box{display:flex;gap:4px;margin-top:4px}
- .chat-box input{flex:1;padding:6px;font-size:12px}
- .chat-box button{width:auto;padding:6px 10px;margin:0;font-size:12px}
- .toggle{font-size:11px;color:#00FF88;cursor:pointer;user-select:none}
- .hidden{display:none}
+.chat{border:1px solid #333;border-radius:8px;padding:8px;margin:8px 0;max-height:150px;overflow:auto;background:#111}
+.chat-msg{font-size:11px;margin:4px 0;padding:4px;border-radius:4px}
+.chat-user{background:#252525;text-align:right;color:#8FF}
+.chat-ai{background:#1A1A1A;color:#EAEAEA}
+.chat-box{display:flex;gap:4px;margin-top:4px}
+.chat-box input{flex:1;padding:6px;font-size:12px}
+.chat-box button{width:auto;padding:6px 10px;margin:0;font-size:12px}
+.toggle{font-size:11px;color:#00FF88;cursor:pointer;user-select:none}
+.hidden{display:none}
     </style>
 </head>
 <body>
-    <h1>FXT Studio AI v3.3</h1>
+    <h1>FXT Studio AI v4.0</h1>
     <div class="agent">
-        <label>OpenAI API Key - requerida para chat IA</label>
+        <label>OpenAI API Key - requerida para que los agentes generen</label>
         <input id="apikey" type="password" placeholder="sk-proj-..." onchange="localStorage.setItem('OPENAI_KEY', this.value)">
     </div>
     <div class="row">
@@ -63,7 +63,7 @@
         <div id="prod-chat" class="hidden">
             <div class="chat" id="prod-chatbox"></div>
             <div class="chat-box">
-                <input id="prod-input" placeholder="Ej: Bassline más agresivo, con slides en el drop">
+                <input id="prod-input" placeholder="Ej: Bassline hipnótico en F minor, slide en step 3 y 11, acento en 15">
                 <button onclick="chatAgent('producer')">Enviar</button>
             </div>
         </div>
@@ -77,7 +77,7 @@
         <div id="mix-chat" class="hidden">
             <div class="chat" id="mix-chatbox"></div>
             <div class="chat-box">
-                <input id="mix-input" placeholder="Ej: Más sidechain, el kick debe dominar">
+                <input id="mix-input" placeholder="Ej: Más sidechain, kick a -8dB">
                 <button onclick="chatAgent('mixer')">Enviar</button>
             </div>
         </div>
@@ -91,7 +91,7 @@
         <div id="mast-chat" class="hidden">
             <div class="chat" id="mast-chatbox"></div>
             <div class="chat-box">
-                <input id="mast-input" placeholder="Ej: Master más caliente para club, -5.5 LUFS">
+                <input id="mast-input" placeholder="Ej: Master de club a -5.5 LUFS">
                 <button onclick="chatAgent('mastering')">Enviar</button>
             </div>
         </div>
@@ -102,51 +102,53 @@
     <div id="log">Log:</div>
 <script>
 function log(msg){const l=document.getElementById('log');l.innerHTML+='<br>'+new Date().toLocaleTimeString()+': '+msg;l.scrollTop=l.scrollHeight}
-window.onerror=function(m,s,ln){log('ERROR JS línea '+ln+': '+m);updateStatus('prod-status','❌ Error');return true};
-log('1. Script iniciado');
+window.onerror=function(m,s,ln){log('ERROR JS línea '+ln+': '+m);updateStatus('prod-status','❌ Error JS');return true};
+log('1. Script iniciado OK');
 
 document.getElementById('apikey').value=localStorage.getItem('OPENAI_KEY')||'';
 log('2. DOM listo');
 
 const Storage={save:function(p){localStorage.setItem('fxt',JSON.stringify(p))},load:function(){const d=localStorage.getItem('fxt');return d?JSON.parse(d):null}};
 const ChatHistory={producer:[],mixer:[],mastering:[]};
-log('3. Storage OK');
+const Scales={
+    'C major':['C','D','E','F','G','A','B'],'C minor':['C','D','Eb','F','G','Ab','Bb'],
+    'C# major':['C#','D#','F','F#','G#','A#','C'],'C# minor':['C#','D#','E','F#','G#','A','B'],
+    'D major':['D','E','F#','G','A','B','C#'],'D minor':['D','E','F','G','A','Bb','C'],
+    'D# major':['D#','F','G','G#','A#','C','D'],'D# minor':['D#','F','F#','G#','A#','B','C#'],
+    'E major':['E','F#','G#','A','B','C#','D#'],'E minor':['E','F#','G','A','B','C','D'],
+    'F major':['F','G','A','Bb','C','D','E'],'F minor':['F','G','Ab','Bb','C','Db','Eb'],
+    'F# major':['F#','G#','A#','B','C#','D#','F'],'F# minor':['F#','G#','A','B','C#','D','E'],
+    'G major':['G','A','B','C','D','E','F#'],'G minor':['G','A','Bb','C','D','Eb','F'],
+    'G# major':['G#','A#','C','C#','D#','F','G'],'G# minor':['G#','A#','B','C#','D#','E','F#'],
+    'A major':['A','B','C#','D','E','F#','G#'],'A minor':['A','B','C','D','E','F','G'],
+    'A# major':['A#','C','D','D#','F','G','A'],'A# minor':['A#','C','C#','D#','F','F#','G#'],
+    'B major':['B','C#','D#','E','F#','G#','A#'],'B minor':['B','C#','D','E','F#','G','A']
+};
+log('3. Storage y escalas OK');
 
 function toggleChat(agent){const el=document.getElementById(agent+'-chat');el.classList.toggle('hidden');log('Chat '+agent+' toggle')}
 function addChatMsg(agent,role,text){const box=document.getElementById(agent+'-chatbox');const div=document.createElement('div');div.className='chat-msg chat-'+role;div.textContent=text;box.appendChild(div);box.scrollTop=box.scrollHeight;ChatHistory[agent].push({role:role,content:text})}
 
-async function chatAgent(agentType){
+async function askAI(systemPrompt,userPrompt){
     const key=localStorage.getItem('OPENAI_KEY');
-    if(!key){alert('Pon tu OpenAI API Key arriba para chatear');return}
-    const short=agentType.substring(0,4);
-    const input=document.getElementById(short+'-input');
-    const userMsg=input.value.trim();
-    if(!userMsg)return;
-    addChatMsg(short,'user',userMsg);
-    input.value='';
-    const systemPrompts={
-        producer:'Eres Producer FXT, experto en Melodic Techno estilo Boris Brejcha. Tu trabajo es crear basslines con call-response, slides, acentos. Respondes corto y técnico. Cuando el usuario pida cambios, confirmas qué vas a cambiar en el patrón.',
-        mixer:'Eres Mix Engineer FXT. Especialista en cadena: HPF 20Hz, Compresión bus, Tape sat, Clipper. Respondes sobre balance, headroom, LUFS, sidechain. Confirmas ajustes técnicos.',
-        mastering:'Eres Mastering Engineer FXT. Dominas targets LUFS para Spotify -14, Beatport -9, Club -6. Respondes sobre loudness, ceiling, true peak. Confirmas el target.'
-    };
-    const messages=[{role:'system',content:systemPrompts[agentType]}].concat(ChatHistory[short].map(function(m){return{role:m.role==='user'?'user':'assistant',content:m.content}}));
-    try{
-        addChatMsg(short,'ai','Pensando...');
-        const res=await fetch('https://api.openai.com/v1/chat/completions',{
-            method:'POST',
-            headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
-            body:JSON.stringify({model:'gpt-4o-mini',messages:messages,temperature:0.7,max_tokens:150})
-        });
-        const data=await res.json();
-        const reply=data.choices[0].message.content;
-        document.getElementById(short+'-chatbox').lastChild.remove();
-        addChatMsg(short,'ai',reply);
-        project[agentType+'Objective']=reply;
-        Storage.save(project);
-    }catch(e){
-        document.getElementById(short+'-chatbox').lastChild.remove();
-        addChatMsg(short,'ai','Error: '+e.message);
-    }
+    if(!key)throw new Error('Falta API Key de OpenAI');
+    const res=await fetch('https://api.openai.com/v1/chat/completions',{
+        method:'POST',
+        headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
+        body:JSON.stringify({model:'gpt-4o-mini',messages:[{role:'system',content:systemPrompt},{role:'user',content:userPrompt}],temperature:0.7,max_tokens:400})
+    });
+    const data=await res.json();
+    if(data.error)throw new Error(data.error.message);
+    return data.choices[0].message.content;
 }
 
-const DSP={async analyzeBuffer(b){try{let peak=0;for(let ch=0;ch<b.numberOfChannels;ch++){const d=b.getChannelData(ch);for(let i=0;i<d.length;i++)peak=Math.max(peak,Math.abs(d[i]))}const peakDb=20*Math.log10(peak||0.0001);let rms=0;const d=b.getChannelData(0);for(let i=0;i<d.length;i++)rms+=d[i]*d[i];rms=Math.sqrt(rms/d.length);return{peak:peakDb,lufs:parseFloat((20*Math.log10(rms||0.0001)-0.691).toFixed(1))}}catch(e){log('Error análisis: '+e);return{lufs:-23,peak:-6}}},async applyMixChain(bufs){log('Mix: renderizando');const l=Math.max.apply(Math,bufs.map(function(b){return b.length}));const ctx=new OfflineAudioContext(2,l,44100);const sum=ctx.createGain();sum.gain.value=.25;bufs.forEach(function(buf){const s=ctx.createBufferSource();s.buffer=buf;s.connect(sum);s.start()});const hpf=ctx.createBiquadFilter();hpf.type='highpass';hpf.frequency.value=20;const comp=ctx.createDynamicsCompressor();comp.threshold.value=-24;comp.ratio.value=2;comp.attack.value=.01;comp.release.value=.1;const tape=ctx.createWaveShaper();const s=44100,c=new Float32Array(s);for(let i=0;i<s;i++){const x=i*2/s-1;c[i]=Math.tanh(x*2)/Math.tanh(2)}tape.curve=c;const clip=ctx.createWaveShaper();const s2=44100,c2=new Float32Array(s2);const ceil=Math.pow(10,-1/20);for(let i=0;i<s2;i++){const x=i*2/s2-1;c2[i]=Math.max(-ceil,Math.min(ceil,x))}clip.curve=c2;sum.connect(hpf).connect(comp).connect(tape).connect(clip).connect(ctx.destination);return ctx.startRendering()},async master(buf,t){const ctx=new OfflineAudioContext(2,buf.length,44100);const src=ctx.createBufferSource();src.buffer=buf;const a=await this.analyzeBuffer(buf);const gainDb=t.lufs-a.lufs;const gain=ctx.createGain();gain.gain.value=Math.pow(10,gainDb/20);const lim=ctx.createDynamicsCompressor();lim.threshold.value=t.ceiling;lim.ratio.value=20;lim.attack.value=.003;lim.release.value=.05;src.connect(gain).connect(lim).connect(ctx.destination);src.start(0);return ctx.startRendering()},bufferToWav(buf){const len=buf.length*buf.numberOfChannels*2+44;const ab=new ArrayBuffer(len);const v=new DataView(ab);const w=function(o,s){for(let i=0;i<s.length;i++)v.setUint8(o+i,s.charCodeAt(i))};w(0,'RIFF');v.setUint32(4,len-8,true);w(8,'WAVE');w(12,'fmt ');v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16
+async function chatAgent(agentType){
+    try{
+        const short=agentType.substring(0,4);
+        const input=document.getElementById(short+'-input');
+        const userMsg=input.value.trim();
+        if(!userMsg)return;
+        addChatMsg(short,'user',userMsg);
+        input.value='';
+        const systemPrompts={
+            producer:'Eres Producer FXT experto en Melodic Techno. Cuando el usuario describa un bassline, responde SOLO con un JSON válido: {"notes":[{"step":0-15,"note":"F1","slide":true,"accent":false}]}. Usa steps 0-15. Notas en formato C1, F#0, etc. Si no especifican tonalidad usa la
