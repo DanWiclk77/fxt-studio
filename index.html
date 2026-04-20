@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#0A"/>
-    <title>FXT Studio AI v4.2</title>
+    <meta name="theme-color" content="#0A0A0A"/>
+    <title>FXT Studio AI v4.3</title>
     <link rel="manifest" href='data:application/json,{"name":"FXT Studio AI","short_name":"FXT","start_url":".","display":"standalone","background_color":"#0A0A0A","theme_color":"#0A0A0A","icons":[{"src":"https://via.placeholder.com/512/0A0A0A/EAEAEA?text=FXT","sizes":"512x512"}]}'>
     <script src="https://unpkg.com/tone@14.7.77/build/Tone.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@magenta/music@1.23.1/es6/core.js"></script>
@@ -31,7 +31,7 @@
     </style>
 </head>
 <body>
-    <h1>FXT Studio AI v4.2 <span class="badge">CHAT IA ACTIVO</span></h1>
+    <h1>FXT Studio AI v4.3 <span class="badge">IA ACTIVA</span></h1>
     <div class="agent">
         <label>OpenAI API Key - requerida para que los agentes generen</label>
         <input id="apikey" type="password" placeholder="sk-proj-..." onchange="localStorage.setItem('OPENAI_KEY', this.value)">
@@ -59,20 +59,20 @@
     <div class="agent">
         <h2>1. Producer FXT <span class="status" id="prod-status"></span></h2>
         <div class="chat" id="prod-chatbox">
-            <div class="chat-msg chat-ai">Soy Producer FXT. Dime qué bassline quieres y lo genero. Ej: "F minor, hipnótico, slide en step 3 y 11, acento en 15"</div>
+            <div class="chat-msg chat-ai">Soy Producer FXT. Dime qué quieres: "bassline + acordes + arpegio en F minor, hipnótico, 8 compases"</div>
         </div>
         <div class="chat-box">
-            <input id="prod-input" placeholder="Describe el bassline que quieres">
+            <input id="prod-input" placeholder="Describe bassline, acordes y arpegio">
             <button onclick="chatAgent('producer')">Enviar</button>
         </div>
-        <button onclick="runProducer()">Generar Bassline + Stems</button>
+        <button onclick="runProducer()">Generar Stems</button>
         <div id="prod-files"></div>
     </div>
 
     <div class="agent">
         <h2>2. Mix Engineer <span class="status" id="mix-status"></span></h2>
         <div class="chat" id="mix-chatbox">
-            <div class="chat-msg chat-ai">Soy Mix Engineer. Dime el balance que buscas. Ej: "kick -6dB, sidechain 80%, comp ratio 3:1"</div>
+            <div class="chat-msg chat-ai">Soy Mix Engineer. Dime el balance: "kick -6dB, sidechain 80%, comp ratio 3:1"</div>
         </div>
         <div class="chat-box">
             <input id="mix-input" placeholder="Describe la mezcla">
@@ -85,7 +85,7 @@
     <div class="agent">
         <h2>3. Mastering Engineer <span class="status" id="mast-status"></span></h2>
         <div class="chat" id="mast-chatbox">
-            <div class="chat-msg chat-ai">Soy Mastering. Dime los targets. Ej: "CLUB a -5.5 LUFS, Beatport a -8.5 LUFS"</div>
+            <div class="chat-msg chat-ai">Soy Mastering. Dime targets: "CLUB -5.5 LUFS, Beatport -8.5 LUFS"</div>
         </div>
         <div class="chat-box">
             <input id="mast-input" placeholder="Describe el master">
@@ -99,7 +99,7 @@
 <script>
 function log(msg){const l=document.getElementById('log');l.innerHTML+='<br>'+new Date().toLocaleTimeString()+': '+msg;l.scrollTop=l.scrollHeight}
 window.onerror=function(m,s,ln){log('ERROR JS línea '+ln+': '+m);updateStatus('prod-status','❌ Error JS');return true};
-log('1. Script v4.2 iniciado');
+log('1. Script v4.3 iniciado');
 
 document.getElementById('apikey').value=localStorage.getItem('OPENAI_KEY')||'';
 log('2. DOM listo');
@@ -110,14 +110,14 @@ const Scales={
     'C major':['C','D','E','F','G','A','B'],'C minor':['C','D','Eb','F','G','Ab','Bb'],
     'C# major':['C#','D#','F','F#','G#','A#','C'],'C# minor':['C#','D#','E','F#','G#','A','B'],
     'D major':['D','E','F#','G','A','B','C#'],'D minor':['D','E','F','G','A','Bb','C'],
-    'D# major':['D#','F','G','G#','A#','C','D'],'D# minor':['D#','F#','G#','A#','B','C#'],
+    'D# major':['D#','F','G','G#','A#','C','D'],'D# minor':['D#','F#','G#','A#','B','C#','D#'],
     'E major':['E','F#','G#','A','B','C#','D#'],'E minor':['E','F#','G','A','B','C','D'],
     'F major':['F','G','A','Bb','C','D','E'],'F minor':['F','G','Ab','Bb','C','Db','Eb'],
     'F# major':['F#','G#','A#','B','C#','D#','F'],'F# minor':['F#','G#','A','B','C#','D','E'],
     'G major':['G','A','B','C','D','E','F#'],'G minor':['G','A','Bb','C','D','Eb','F'],
-    'G# major':['G#','A#','C#','D#','F','G'],'G# minor':['G#','A#','B','C#','D#','E','F#'],
+    'G# major':['G#','A#','C','C#','D#','F','G'],'G# minor':['G#','A#','B','C#','D#','E','F#'],
     'A major':['A','B','C#','D','E','F#','G#'],'A minor':['A','B','C','D','E','F','G'],
-    'A# major':['A#','C','D#','F','G','A'],'A# minor':['A#','C','C#','D#','F','F#','G#'],
+    'A# major':['A#','C','D','D#','F','G','A'],'A# minor':['A#','C','C#','D#','F','F#','G#'],
     'B major':['B','C#','D#','E','F#','G#','A#'],'B minor':['B','C#','D','E','F#','G','A']
 };
 log('3. Storage y 24 escalas OK');
@@ -130,7 +130,7 @@ async function askAI(systemPrompt,userPrompt){
     const res=await fetch('https://api.openai.com/v1/chat/completions',{
         method:'POST',
         headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
-        body:JSON.stringify({model:'gpt-4o-mini',messages:[{role:'system',content:systemPrompt},{role:'user',content:userPrompt}],temperature:0.7,max_tokens:500,response_format:{type:'json_object'}})
+        body:JSON.stringify({model:'gpt-4o-mini',messages:[{role:'system',content:systemPrompt},{role:'user',content:userPrompt}],temperature:0.7,max_tokens:800,response_format:{type:'json_object'}})
     });
     const data=await res.json();
     if(data.error)throw new Error(data.error.message);
@@ -146,7 +146,7 @@ async function chatAgent(agentType){
         addChatMsg(short,'user',userMsg);
         input.value='';
         const systemPrompts={
-            producer:'Eres Producer FXT experto en Melodic Techno. El usuario describe un bassline. Responde SOLO un JSON válido: {"notes":[{"step":0-15,"note":"F1","slide":true,"accent":false}]}. Usa steps 0-15. Notas en formato C1, F#0. Respeta la tonalidad que te pasen. No agregues texto fuera del JSON.',
+            producer:'Eres Producer FXT. El usuario describe qué quiere: bassline, acordes, arpegio. Responde SOLO un JSON válido: {"bassline":[{"step":0-15,"note":"F1","slide":true,"accent":false}],"chords":[{"step":0,"notes":["F3","Ab3","C4"],"duration":4}],"arp":[{"step":0,"note":"F4","duration":0.25}]}. Steps 0-15 = 1 compás. duration en beats. Si no pide algo, no lo incluyas. Usa la tonalidad que te pasen.',
             mixer:'Eres Mix Engineer FXT. Responde SOLO JSON: {"sidechain":0.8,"kick_gain":-6,"comp_ratio":2,"comp_thresh":-24}.',
             mastering:'Eres Mastering Engineer FXT. Responde SOLO JSON: {"targets":{"CLUB":{"lufs":-5.5,"ceiling":-0.3},"BEATPORT":{"lufs":-8.5,"ceiling":-1.0}}}.'
         };
@@ -167,4 +167,4 @@ async function chatAgent(agentType){
     }
 }
 
-const DSP={async analyzeBuffer(b){try{let peak=0;for(let ch=0;ch<b.numberOfChannels;ch++){const d=b.getChannelData(ch);for(let i=0;i<d.length;i++)peak=Math.max(peak,Math.abs(d[i]))}const peakDb=20*Math.log10(peak||0.0001);let rms=0;const d=b.getChannelData(0);for(let i=0;i<d.length;i++)rms+=d[i]*d[i];rms=Math.sqrt(rms/d.length);return{peak:peakDb,lufs:parseFloat((20*Math.log10(rms||0.0001)-0.691).toFixed(1))}}catch(e){log('Error análisis: '+e);return{lufs:-23,peak:-6}}},async applyMixChain(bufs,opts){log('Mix: renderizando');const l=Math.max.apply(Math,bufs.map(function(b){return b.length}));const ctx=new OfflineAudioContext(2,l,44100);const sum=ctx.createGain();sum.gain.value=opts&&opts.kick_gain?Math.pow(10,opts.kick_gain/20):0.25;bufs.forEach(function(buf){const s=ctx.createBufferSource();s.buffer=buf;s.connect(sum);s.start()});const hpf=ctx.createBiquadFilter();hpf.type='highpass';hpf.frequency.value=20;const comp=ctx.createDynamicsCompressor();comp.threshold.value=opts&&opts.comp_thresh?opts.comp_thresh:-24;comp.ratio.value=opts&&opts.comp_ratio?opts.comp_ratio:2;comp.attack.value=.01;comp.release.value=.1;const tape=ctx.createWaveShaper();const s=44100,c=new Float32Array(s);for(let i=0;i<s;i++){const x=i*2/s-1;c[i]=Math.tanh(x*2)/Math.tanh(2)}tape.curve=c;const clip=ctx.createWaveShaper();const s2=44100,c2=new Float32Array(s2);const ceil=Math.pow(10,-1/20);for(let i=0;i<s2;i++){const x=i*2/s2-1;c2[i]=Math.max(-ceil,Math.min(ceil,x))}clip.curve=c2;sum.connect(hpf).connect(comp).connect(tape).connect(clip).connect(ctx.destination);return ctx.startRendering()},async master(buf,t){const ctx=new OfflineAudioContext(2,buf.length,44100);const src=ctx.createBufferSource();src.buffer=buf;const a=await this.analyzeBuffer(buf);const gainDb=t.lufs-a.lufs;const gain=ctx.createGain();gain.gain.value=Math.pow(10,gainDb/20);
+const DSP={async analyzeBuffer(b){try{let peak=0;for(let ch=0;ch<b.numberOfChannels;ch++){const d=b.get
