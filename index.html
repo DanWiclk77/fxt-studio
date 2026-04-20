@@ -4,74 +4,139 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#0A0A0A"/>
-    <title>FXT Studio AI v2.7</title>
+    <title>FXT Studio AI v3.0</title>
     <link rel="manifest" href='data:application/json,{"name":"FXT Studio AI","short_name":"FXT","start_url":".","display":"standalone","background_color":"#0A0A0A","theme_color":"#0A0A0A","icons":[{"src":"https://via.placeholder.com/512/0A0A0A/EAEAEA?text=FXT","sizes":"512x512"}]}'>
     <script src="https://unpkg.com/tone@14.7.77/build/Tone.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@magenta/music@1.23.1/es6/core.js"></script>
     <style>
-        *{box-sizing:border-box}body{font-family:system-ui;background:#0A0A0A;color:#EAEAEA;margin:0;padding:16px}
-        h1{font-size:20px;margin:0 0 16px 0}.row{display:flex;gap:8px;margin-bottom:16px}
-     .agent{background:#1A1A1A;border:1px solid #333;border-radius:12px;padding:16px;margin-bottom:16px}
-     .agent h2{margin:0 0 12px 0;font-size:16px;display:flex;justify-content:space-between}
-        button{background:#EAEAEA;color:#0A0A0A;border:none;padding:12px 16px;border-radius:8px;font-weight:600;width:100%;margin-top:8px;cursor:pointer}
+        *{box-sizing:border-box}body{font-family:system-ui;background:#0A0A0A;color:#EAEAEA;margin:0;padding:12px}
+        h1{font-size:18px;margin:0 0 12px 0}.row{display:flex;gap:8px;margin-bottom:12px}
+     .agent{background:#1A1A1A;border:1px solid #333;border-radius:12px;padding:12px;margin-bottom:12px}
+     .agent h2{margin:0 0 8px 0;font-size:15px;display:flex;justify-content:space-between;align-items:center}
+        button{background:#EAEAEA;color:#0A0A0A;border:none;padding:10px 14px;border-radius:8px;font-weight:600;width:100%;margin-top:8px;cursor:pointer;font-size:14px}
         button:disabled{background:#333;color:#666;cursor:not-allowed}
-     .file{background:#252525;padding:8px;border-radius:6px;margin:4px 0;font-size:12px;display:flex;justify-content:space-between;align-items:center}
-     .status{color:#00FF88;font-size:12px}.error{color:#FF4444;font-size:12px}
-        input,select{background:#252525;border:1px solid #333;color:#EAEAEA;padding:8px;border-radius:6px;width:100%}
-        label{font-size:12px;color:#999;display:block;margin-bottom:4px}.col{flex:1}
-        #log{background:#000;padding:8px;border-radius:6px;font-size:10px;color:#0F0;height:160px;overflow:auto;margin-top:8px}
+     .file{background:#252525;padding:6px 8px;border-radius:6px;margin:4px 0;font-size:11px;display:flex;justify-content:space-between;align-items:center}
+     .status{color:#00FF88;font-size:11px}.error{color:#FF4444;font-size:11px}
+        input,select,textarea{background:#252525;border:1px solid #333;color:#EAEAEA;padding:8px;border-radius:6px;width:100%;font-size:14px}
+        label{font-size:11px;color:#999;display:block;margin-bottom:4px}.col{flex:1}
+        #log{background:#000;padding:6px;border-radius:6px;font-size:9px;color:#0F0;height:80px;overflow:auto;margin-top:8px}
+       .chat{border:1px solid #333;border-radius:8px;padding:8px;margin:8px 0;max-height:150px;overflow:auto;background:#111}
+       .chat-msg{font-size:11px;margin:4px 0;padding:4px;border-radius:4px}
+       .chat-user{background:#252525;text-align:right;color:#8FF}
+       .chat-ai{background:#1A1A1A;color:#EAEAEA}
+       .chat-box{display:flex;gap:4px;margin-top:4px}
+       .chat-box input{flex:1;padding:6px;font-size:12px}
+       .chat-box button{width:auto;padding:6px 10px;margin:0;font-size:12px}
+       .toggle{font-size:11px;color:#00FF88;cursor:pointer;user-select:none}
+       .hidden{display:none}
     </style>
 </head>
 <body>
-    <h1>FXT Studio AI v2.7</h1>
+    <h1>FXT Studio AI v3.0</h1>
     <div class="agent">
-        <label>OpenAI API Key - opcional</label>
-        <input id="apikey" type="password" placeholder="sk-..." onchange="localStorage.setItem('OPENAI_KEY', this.value)">
+        <label>OpenAI API Key - requerida para chat IA</label>
+        <input id="apikey" type="password" placeholder="sk-proj-..." onchange="localStorage.setItem('OPENAI_KEY', this.value)">
     </div>
     <div class="row">
         <div class="col"><label>BPM</label><input id="bpm" type="number" value="126"></div>
-        <div class="col"><label>Key</label><select id="key"><option>F minor</option><option>G minor</option></select></div>
+        <div class="col"><label>Tonalidad</label>
+            <select id="key">
+                <option>C major</option><option>C minor</option>
+                <option>C# major</option><option>C# minor</option>
+                <option>D major</option><option>D minor</option>
+                <option>D# major</option><option>D# minor</option>
+                <option>E major</option><option>E minor</option>
+                <option>F major</option><option>F minor</option>
+                <option>F# major</option><option>F# minor</option>
+                <option>G major</option><option>G minor</option>
+                <option>G# major</option><option>G# minor</option>
+                <option>A major</option><option>A minor</option>
+                <option>A# major</option><option>A# minor</option>
+                <option>B major</option><option>B minor</option>
+            </select>
+        </div>
     </div>
-    <div class="agent"><h2>1. Producer FXT <span class="status" id="prod-status"></span></h2>
-        <button onclick="runProducer()">Generar Bassline + Stems</button><div id="prod-files"></div></div>
-    <div class="agent"><h2>2. Mix Engineer <span class="status" id="mix-status"></span></h2>
-        <button id="mix-btn" onclick="runMixer()" disabled>Mezclar Stems</button><div id="mix-files"></div></div>
-    <div class="agent"><h2>3. Mastering Engineer <span class="status" id="mast-status"></span></h2>
-        <button id="mast-btn" onclick="runMastering()" disabled>Masterizar 5 Plataformas</button><div id="mast-files"></div></div>
+
+    <div class="agent">
+        <h2>1. Producer FXT <span class="status" id="prod-status"></span></h2>
+        <div class="toggle" onclick="toggleChat('prod')">[+] Chat con Producer</div>
+        <div id="prod-chat" class="hidden">
+            <div class="chat" id="prod-chatbox"></div>
+            <div class="chat-box">
+                <input id="prod-input" placeholder="Ej: Bassline más agresivo, con slides en el drop">
+                <button onclick="chatAgent('producer')">Enviar</button>
+            </div>
+        </div>
+        <button onclick="runProducer()">Generar Bassline + Stems</button>
+        <div id="prod-files"></div>
+    </div>
+
+    <div class="agent">
+        <h2>2. Mix Engineer <span class="status" id="mix-status"></span></h2>
+        <div class="toggle" onclick="toggleChat('mix')">[+] Chat con Mix Engineer</div>
+        <div id="mix-chat" class="hidden">
+            <div class="chat" id="mix-chatbox"></div>
+            <div class="chat-box">
+                <input id="mix-input" placeholder="Ej: Más sidechain, el kick debe dominar">
+                <button onclick="chatAgent('mixer')">Enviar</button>
+            </div>
+        </div>
+        <button id="mix-btn" onclick="runMixer()" disabled>Mezclar Stems</button>
+        <div id="mix-files"></div>
+    </div>
+
+    <div class="agent">
+        <h2>3. Mastering Engineer <span class="status" id="mast-status"></span></h2>
+        <div class="toggle" onclick="toggleChat('mast')">[+] Chat con Mastering</div>
+        <div id="mast-chat" class="hidden">
+            <div class="chat" id="mast-chatbox"></div>
+            <div class="chat-box">
+                <input id="mast-input" placeholder="Ej: Master más caliente para club, -5.5 LUFS">
+                <button onclick="chatAgent('mastering')">Enviar</button>
+            </div>
+        </div>
+        <button id="mast-btn" onclick="runMastering()" disabled>Masterizar 5 Plataformas</button>
+        <div id="mast-files"></div>
+    </div>
+
     <div id="log">Log:</div>
 <script>
 function log(msg){const l=document.getElementById('log');l.innerHTML+='<br>'+new Date().toLocaleTimeString()+': '+msg;l.scrollTop=l.scrollHeight}
-window.onerror=function(m,s,ln){log('ERROR JS línea '+ln+': '+m);updateStatus('prod-status','❌ Error');return true};
-log('1. Script iniciado');
+window.onerror=function(m,s,ln){log('ERROR JS línea '+ln+': '+m);return true};
+log('Sistema v3.0 iniciado');
 
 document.getElementById('apikey').value=localStorage.getItem('OPENAI_KEY')||'';
-log('2. DOM listo');
 
 const Storage={save:function(p){localStorage.setItem('fxt',JSON.stringify(p))},load:function(){const d=localStorage.getItem('fxt');return d?JSON.parse(d):null}};
-log('3. Storage OK');
+const ChatHistory={producer:[],mixer:[],mastering:[]};
 
-const DSP={async analyzeBuffer(b){try{let peak=0;for(let ch=0;ch<b.numberOfChannels;ch++){const d=b.getChannelData(ch);for(let i=0;i<d.length;i++)peak=Math.max(peak,Math.abs(d[i]))}const peakDb=20*Math.log10(peak||0.0001);let rms=0;const d=b.getChannelData(0);for(let i=0;i<d.length;i++)rms+=d[i]*d[i];rms=Math.sqrt(rms/d.length);return{peak:peakDb,lufs:parseFloat((20*Math.log10(rms||0.0001)-0.691).toFixed(1))}}catch(e){log('Error análisis: '+e);return{lufs:-23,peak:-6}}},async applyMixChain(bufs){log('Mix: creando contexto');const l=Math.max.apply(Math,bufs.map(function(b){return b.length}));const ctx=new OfflineAudioContext(2,l,44100);const sum=ctx.createGain();sum.gain.value=.25;bufs.forEach(function(buf){const s=ctx.createBufferSource();s.buffer=buf;s.connect(sum);s.start()});const hpf=ctx.createBiquadFilter();hpf.type='highpass';hpf.frequency.value=20;const comp=ctx.createDynamicsCompressor();comp.threshold.value=-24;comp.ratio.value=2;comp.attack.value=.01;comp.release.value=.1;const tape=ctx.createWaveShaper();const s=44100,c=new Float32Array(s);for(let i=0;i<s;i++){const x=i*2/s-1;c[i]=Math.tanh(x*2)/Math.tanh(2)}tape.curve=c;const clip=ctx.createWaveShaper();const s2=44100,c2=new Float32Array(s2);const ceil=Math.pow(10,-1/20);for(let i=0;i<s2;i++){const x=i*2/s2-1;c2[i]=Math.max(-ceil,Math.min(ceil,x))}clip.curve=c2;sum.connect(hpf).connect(comp).connect(tape).connect(clip).connect(ctx.destination);log('Mix: renderizando');return ctx.startRendering()},async master(buf,t){const ctx=new OfflineAudioContext(2,buf.length,44100);const src=ctx.createBufferSource();src.buffer=buf;const a=await this.analyzeBuffer(buf);const gainDb=t.lufs-a.lufs;const gain=ctx.createGain();gain.gain.value=Math.pow(10,gainDb/20);const lim=ctx.createDynamicsCompressor();lim.threshold.value=t.ceiling;lim.ratio.value=20;lim.attack.value=.003;lim.release.value=.05;src.connect(gain).connect(lim).connect(ctx.destination);src.start(0);return ctx.startRendering()},bufferToWav(buf){const len=buf.length*buf.numberOfChannels*2+44;const ab=new ArrayBuffer(len);const v=new DataView(ab);const w=function(o,s){for(let i=0;i<s.length;i++)v.setUint8(o+i,s.charCodeAt(i))};w(0,'RIFF');v.setUint32(4,len-8,true);w(8,'WAVE');w(12,'fmt ');v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,buf.numberOfChannels,true);v.setUint32(24,buf.sampleRate,true);v.setUint32(28,buf.sampleRate*2*buf.numberOfChannels,true);v.setUint16(32,buf.numberOfChannels*2,true);v.setUint16(34,16,true);w(36,'data');v.setUint32(40,len-44,true);let o=44;for(let i=0;i<buf.length;i++){for(let ch=0;ch<buf.numberOfChannels;ch++){const s=Math.max(-1,Math.min(1,buf.getChannelData(ch)[i]));v.setInt16(o,s*0x7FFF,true);o+=2}}return new Blob([ab],{type:'audio/wav'})}};
-log('4. DSP OK');
+function toggleChat(agent){const el=document.getElementById(agent+'-chat');el.classList.toggle('hidden')}
+function addChatMsg(agent,role,text){const box=document.getElementById(agent+'-chatbox');const div=document.createElement('div');div.className='chat-msg chat-'+role;div.textContent=text;box.appendChild(div);box.scrollTop=box.scrollHeight;ChatHistory[agent].push({role:role,content:text})}
 
-const Midi={createMidiFile(notes,bpm){try{if(typeof core==='undefined'){log('ERROR: Librería MIDI no cargó');return new Blob()}const mm=new core.Midi();const track=mm.addTrack();const ppq=480;const ticksPerStep=ppq/4;notes.forEach(function(n){const start=n.step*ticksPerStep;const dur=n.slide?ticksPerStep*2:ticksPerStep;const m=Midi.noteToMidi(n.note);track.addNote({midi:m,ticks:start,durationTicks:dur,velocity:n.accent?127:90})});return new Blob([mm.toArray()],{type:'audio/midi'})}catch(e){log('Error MIDI: '+e);return new Blob()}},noteToMidi(n){const notes=['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];const m=n.match(/([A-G]#?)(\d)/);return notes.indexOf(m[1])+(parseInt(m[2])+1)*12}};
-log('5. MIDI OK');
+async function chatAgent(agentType){
+    const key=localStorage.getItem('OPENAI_KEY');
+    if(!key){alert('Pon tu OpenAI API Key arriba para chatear con los agentes');return}
+    const input=document.getElementById(agentType.substring(0,4)+'-input');
+    const userMsg=input.value.trim();
+    if(!userMsg)return;
+    addChatMsg(agentType.substring(0,4),'user',userMsg);
+    input.value='';
 
-const Synth={async initAudio(){if(!window.audioCtx){window.audioCtx=new(window.AudioContext||window.webkitAudioContext)();log('AudioContext creado')}if(window.audioCtx.state==='suspended'){await window.audioCtx.resume();log('AudioContext resumido')}},async renderKick(bpm){await this.initAudio();const ctx=new OfflineAudioContext(2,44100*2,44100);const o=ctx.createOscillator();const g=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(60,0);o.frequency.exponentialRampToValueAtTime(40,0.1);g.gain.setValueAtTime(1,0);g.gain.exponentialRampToValueAtTime(0.001,0.3);o.connect(g).connect(ctx.destination);o.start(0);o.stop(0.3);return ctx.startRendering()},async renderSub(notes,bpm){await this.initAudio();const ctx=new OfflineAudioContext(2,44100*8,44100);const sd=60/bpm/4;notes.forEach(function(n){if(n.note.includes('0')||n.note.includes('1')){const o=ctx.createOscillator();const g=ctx.createGain();o.type='sine';o.frequency.value=Tone.Frequency(n.note).toFrequency();g.gain.value=0.8;const s=n.step*sd;const d=n.slide?sd*1.9:sd*0.9;o.connect(g).connect(ctx.destination);o.start(s);o.stop(s+d)}});return ctx.startRendering()},async renderMid(notes,bpm){await this.initAudio();const ctx=new OfflineAudioContext(2,44100*8,44100);const sd=60/bpm/4;notes.forEach(function(n){const o=ctx.createOscillator();const f=ctx.createBiquadFilter();const g=ctx.createGain();o.type='sawtooth';o.frequency.value=Tone.Frequency(n.note).toFrequency();f.type='lowpass';f.frequency.value=n.accent?2000:800;f.Q.value=3;g.gain.value=n.accent?0.7:0.4;const s=n.step*sd;const d=sd*0.8;o.connect(f).connect(g).connect(ctx.destination);o.start(s);o.stop(s+d)});return ctx.startRendering()}};
-log('6. Synth OK');
+    const systemPrompts={
+        producer:'Eres Producer FXT, experto en Melodic Techno estilo Boris Brejcha. Tu trabajo es crear basslines con call-response, slides, acentos. Respondes corto y técnico. Cuando el usuario pida cambios, confirmas qué vas a cambiar en el patrón. No generes código, solo describe el cambio musical.',
+        mixer:'Eres Mix Engineer FXT. Especialista en cadena: HPF 20Hz, Compresión bus, Tape sat, Clipper. Respondes sobre balance, headroom, LUFS, sidechain. Confirmas ajustes técnicos que aplicarás.',
+        mastering:'Eres Mastering Engineer FXT. Dominas targets LUFS para Spotify -14, Beatport -9, Club -6. Respondes sobre loudness, ceiling, true peak. Confirmas el target que usarás.'
+    };
 
-let project={id:crypto.randomUUID(),stems:[],midi:[],mix:null,masters:{}};
-log('7. Proyecto OK');
+    const messages=[{role:'system',content:systemPrompts[agentType]}].concat(ChatHistory[agentType.substring(0,4)].map(function(m){return{role:m.role==='user'?'user':'assistant',content:m.content}}));
 
-async function runProducer(){try{updateStatus('prod-status','Generando...');log('Click OK: Producer');await Synth.initAudio();const bpm=document.getElementById('bpm').value;log('BPM: '+bpm);const notes=[{step:3,note:'F1',slide:true},{step:6,note:'C1'},{step:10,note:'B1',slide:true},{step:11,note:'C2',accent:true},{step:13,note:'Eb2'},{step:15,note:'F0',slide:true}];log('Generando MIDI');const midiBlob=Midi.createMidiFile(notes,bpm);const midi={name:'bassline_fxt.mid',url:URL.createObjectURL(midiBlob)};log('Render Kick');const kickBuf=await Synth.renderKick(bpm);log('Render Sub');const subBuf=await Synth.renderSub(notes,bpm);log('Render Mid');const midBuf=await Synth.renderMid(notes,bpm);log('Convirtiendo WAVs');const stems=[{name:'01_KICK.wav',url:URL.createObjectURL(DSP.bufferToWav(kickBuf))},{name:'02_SUB.wav',url:URL.createObjectURL(DSP.bufferToWav(subBuf))},{name:'03_MIDBASS.wav',url:URL.createObjectURL(DSP.bufferToWav(midBuf))}];project.midi=[midi];project.stems=stems;Storage.save(project);renderFiles('prod-files',project.midi.concat(project.stems));updateStatus('prod-status','✓ Listo');document.getElementById('mix-btn').disabled=false;log('Producer OK: 4 archivos')}catch(e){log('ERROR Producer: '+e.message);updateStatus('prod-status','❌ Error')}}
-
-async function runMixer(){try{updateStatus('mix-status','Mezclando...');log('Cargando stems');const bufs=await Promise.all(project.stems.map(async function(s){const r=await fetch(s.url);const ab=await r.arrayBuffer();return await new AudioContext().decodeAudioData(ab)}));log('Cadena FXT');const mixed=await DSP.applyMixChain(bufs);const an=await DSP.analyzeBuffer(mixed);const wav=DSP.bufferToWav(mixed);const mixdown={name:'mix_pre_master.wav',url:URL.createObjectURL(wav),lufs:an.lufs,peak:an.peak};project.mix=mixdown;Storage.save(project);renderFiles('mix-files',[project.mix]);updateStatus('mix-status','✓ '+project.mix.lufs+' LUFS');document.getElementById('mast-btn').disabled=false;log('Mix OK')}catch(e){log('ERROR Mix: '+e.message);updateStatus('mix-status','❌ Error')}}
-
-async function runMastering(){try{updateStatus('mast-status','Masterizando...');const r=await fetch(project.mix.url);const ab=await r.arrayBuffer();const mixBuf=await new AudioContext().decodeAudioData(ab);const targets={SPOTIFY:{lufs:-14,ceiling:-1.0},BEATPORT:{lufs:-9,ceiling:-1.0},CLUB:{lufs:-6,ceiling:-0.3},YOUTUBE:{lufs:-14,ceiling:-1.0},APPLE_MUSIC:{lufs:-16,ceiling:-1.0}};const results={};for(const p in targets){const t=targets[p];log('Master '+p);const m=await DSP.master(mixBuf,t);const w=DSP.bufferToWav(m);results[p]={name:'master_'+p.toLowerCase()+'.wav',url:URL.createObjectURL(w),lufs:t.lufs,peak:t.ceiling}}project.masters=results;Storage.save(project);renderFiles('mast-files',Object.values(results));updateStatus('mast-status','✓ 5 plataformas');log('Mastering OK')}catch(e){log('ERROR Master: '+e.message);updateStatus('mast-status','❌ Error')}}
-
-function renderFiles(id,files){document.getElementById(id).innerHTML=files.map(function(f){return '<div class="file"><span>'+f.name+' '+(f.lufs?f.lufs+' LUFS':'')+'</span><a href="'+f.url+'" download="'+f.name+'">Descargar</a></div>'}).join('')}
-function updateStatus(id,t){const el=document.getElementById(id);el.textContent=t;el.className=t.includes('❌')?'error':'status'}
-const saved=Storage.load();if(saved){project=saved;if(project.stems.length)document.getElementById('mix-btn').disabled=false;if(project.mix)document.getElementById('mast-btn').disabled=false;log('Proyecto anterior cargado')}
-log('8. LISTO. Toca Generar Bassline + Stems');
-</script>
-</body>
-</html>
+    try{
+        addChatMsg(agentType.substring(0,4),'ai','Pensando...');
+        const res=await fetch('https://api.openai.com/v1/chat/completions',{
+            method:'POST',
+            headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
+            body:JSON.stringify({model:'gpt-4o-mini',messages:messages,temperature:0.7,max_tokens:150})
+        });
+        const data=await res.json();
+        const reply=data.choices[0].message.content;
+        document.getElementById(agentType.substring
