@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#0A0A0A"/>
-    <title>FXT Studio AI v4.5</title>
+    <title>FXT Studio AI v4.6</title>
     <link rel="manifest" href='data:application/json,{"name":"FXT Studio AI","short_name":"FXT","start_url":".","display":"standalone","background_color":"#0A0A0A","theme_color":"#0A0A0A","icons":[{"src":"https://via.placeholder.com/512/0A0A0A/EAEAEA?text=FXT","sizes":"512x512"}]}'>
     <script src="https://unpkg.com/tone@14.7.77/build/Tone.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@magenta/music@1.23.1/es6/core.js"></script>
@@ -23,7 +23,7 @@
 .chat{border:1px solid #333;border-radius:8px;padding:8px;margin:8px 0;max-height:150px;overflow:auto;background:#111}
 .chat-msg{font-size:11px;margin:4px 0;padding:4px;border-radius:4px}
 .chat-user{background:#252525;text-align:right;color:#8FF}
-.chat-ai{background:#1A1A;color:#EAEAEA}
+.chat-ai{background:#1A1A1A;color:#EAEAEA}
 .chat-box{display:flex;gap:4px;margin-top:4px}
 .chat-box input{flex:1;padding:6px;font-size:12px}
 .chat-box button{width:auto;padding:6px 10px;margin:0;font-size:12px}
@@ -31,7 +31,7 @@
     </style>
 </head>
 <body>
-    <h1>FXT Studio AI v4.5 <span class="badge">IA ACTIVA</span></h1>
+    <h1>FXT Studio AI v4.6 <span class="badge">IA ACTIVA</span></h1>
     <div class="agent">
         <label>OpenAI API Key - requerida para que los agentes generen</label>
         <input id="apikey" type="password" placeholder="sk-proj-..." onchange="localStorage.setItem('OPENAI_KEY', this.value)">
@@ -59,7 +59,7 @@
     <div class="agent">
         <h2>1. Producer FXT <span class="status" id="prod-status"></span></h2>
         <div class="chat" id="prod-chatbox">
-            <div class="chat-msg chat-ai">Soy Producer FXT. Pídeme lo que quieras: "bassline + acordes i-VI-iv-V + arpegio + melodía lead en F minor, 8 compases"</div>
+            <div class="chat-msg chat-ai">Soy Producer FXT. Dime qué quieres: "bassline + acordes i-VI-iv-V + arpegio + melodía lead en F minor, 8 compases"</div>
         </div>
         <div class="chat-box">
             <input id="prod-input" placeholder="Ej: bassline, acordes, arpegio y melodía en F minor">
@@ -99,7 +99,7 @@
 <script>
 function log(msg){const l=document.getElementById('log');l.innerHTML+='<br>'+new Date().toLocaleTimeString()+': '+msg;l.scrollTop=l.scrollHeight}
 window.onerror=function(m,s,ln){log('ERROR JS línea '+ln+': '+m);updateStatus('prod-status','❌ Error JS');return true};
-log('1. Script v4.5 iniciado');
+log('1. Script v4.6 iniciado');
 
 document.getElementById('apikey').value=localStorage.getItem('OPENAI_KEY')||'';
 log('2. DOM listo');
@@ -114,19 +114,4 @@ const Scales={
     'E major':['E','F#','G#','A','B','C#','D#'],'E minor':['E','F#','G','A','B','C','D'],
     'F major':['F','G','A','Bb','C','D','E'],'F minor':['F','G','Ab','Bb','C','Db','Eb'],
     'F# major':['F#','G#','A#','B','C#','D#','F'],'F# minor':['F#','G#','A','B','C#','D','E'],
-    'G major':['G','A','B','C','D','E','F#'],'G minor':['G','A','Bb','C','D','Eb','F'],
-    'G# major':['G#','A#','C','C#','D#','F','G'],'G# minor':['G#','A#','B','C#','D#','E','F#'],
-    'A major':['A','B','C#','D','E','F#','G#'],'A minor':['A','B','C','D','E','F','G'],
-    'A# major':['A#','C','D','D#','F','G','A'],'A# minor':['A#','C','C#','D#','F#','G#'],
-    'B major':['B','C#','D#','E','F#','G#','A#'],'B minor':['B','C#','D','E','F#','G','A']
-};
-log('3. Storage y 24 escalas OK');
-
-function addChatMsg(agent,role,text){const box=document.getElementById(agent+'-chatbox');const div=document.createElement('div');div.className='chat-msg chat-'+role;div.textContent=text;box.appendChild(div);box.scrollTop=box.scrollHeight;ChatHistory[agent].push({role:role,content:text})}
-
-async function askAI(systemPrompt,userPrompt){
-    const key=localStorage.getItem('OPENAI_KEY');
-    if(!key)throw new Error('Falta API Key de OpenAI');
-    const res=await fetch('https://api.openai.com/v1/chat/completions',{
-        method:'POST',
-        headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
+    'G major':['G','A','B','C','D','
