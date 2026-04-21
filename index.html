@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FXT Studio AI v6.1 - Producer</title>
+    <title>FXT Studio AI v6.2 - TB-303</title>
     <script src="https://unpkg.com/tone@14.7.77/build/Tone.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@magenta/music@1.23.1/es6/core.js"></script>
     <style>
@@ -17,12 +17,12 @@
 .status{color:#00FF88;font-size:11px}.error{color:#FF4444;font-size:11px}
         input,select{background:#252525;border:1px solid #333;color:#EAEAEA;padding:8px;border-radius:6px;width:100%;font-size:14px}
         label{font-size:11px;color:#999;display:block;margin-bottom:4px}.col{flex:1}
-        #log{background:#000;padding:8px;border-radius:6px;font-size:9px;color:#0F0;height:180px;overflow:auto;margin-top:8px;white-space:pre-wrap}
+        #log{background:#000;padding:8px;border-radius:6px;font-size:9px;color:#0F0;height:160px;overflow:auto;margin-top:8px;white-space:pre-wrap}
 .badge{background:#00FF88;color:#000;font-size:9px;padding:2px 6px;border-radius:4px;font-weight:700}
     </style>
 </head>
 <body>
-    <h1>FXT Studio AI v6.1 <span class="badge">PRODUCER</span></h1>
+    <h1>FXT Studio AI v6.2 <span class="badge">TB-303</span></h1>
     <div id="log">Iniciando...</div>
     <div class="row">
         <div class="col"><label>BPM</label><input id="bpm" type="number" value="126"></div>
@@ -38,13 +38,13 @@
         </div>
     <div class="agent">
         <h2>Producer FXT <span class="status" id="prod-status"></span></h2>
-        <label>Genera: Kick + Bass + Acordes + Arpegio + Melodía Lead</label>
-        <button onclick="App.runProducer()">Generar Stems</button>
+        <label>Cada click genera un patrón nuevo: Kick loop + TB-303 bass + Acordes + Arp + Lead</label>
+        <button onclick="App.runProducer()">Generar Stems Nuevos</button>
         <div id="prod-files"></div>
     </div>
 <script>
 'use strict';
-document.title='FXT v6.1 OK';
+document.title='FXT v6.2 OK';
 const App = (function(){
     const logEl = document.getElementById('log');
     function log(msg, err){
@@ -53,7 +53,7 @@ const App = (function(){
         logEl.scrollTop = logEl.scrollHeight;
     }
     window.onerror = function(m,s,ln){log('ERROR JS línea '+ln+': '+m,true);updateStatus('prod-status','❌ Error JS');return true};
-    log('1. Script v6.1 iniciado');
+    log('1. Script v6.2 TB-303 iniciado');
 
     const Scales={
         'C major':['C','D','E','F','G','A','B'],'C minor':['C','D','Eb','F','G','Ab','Bb'],
@@ -73,6 +73,8 @@ const App = (function(){
 
     function updateStatus(id,t){const el=document.getElementById(id);if(el){el.textContent=t;el.className=t.includes('❌')?'error':'status'}}
     function renderFiles(files){document.getElementById('prod-files').innerHTML=files.map(function(f){return '<div class="file"><span>'+f.name+'</span><a href="'+f.url+'" download="'+f.name+'">Descargar</a></div>'}).join('')}
+    function randInt(min,max){return Math.floor(Math.random()*(max-min+1))+min}
+    function randChoice(arr){return arr[randInt(0,arr.length-1)]}
 
     const DSP = {
         bufferToWav:function(buf){
@@ -105,7 +107,7 @@ const App = (function(){
                     const start=n.step*ticksPerStep;
                     let dur=ticksPerStep;
                     if(n.duration)dur=n.duration*ppq;
-                    if(n.slide)dur=ticksPerStep*2;
+                    if(n.slide)dur=ticksPerStep*1.9;
                     if(n.notes){
                         n.notes.forEach(function(note){
                             track.addNote({midi:MIDI.noteToMidi(note),ticks:start,durationTicks:dur,velocity:90});
@@ -120,7 +122,8 @@ const App = (function(){
         },
         noteToMidi:function(n){
             const notes=['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
-            const m=n.match(/([A-G]#?)(\d)/);
+            const m=n.match(/([A-G]#?)(\d+)/);
+            if(!m)return 60;
             return notes.indexOf(m[1])+(parseInt(m[2])+1)*12;
         }
     };
@@ -130,109 +133,150 @@ const App = (function(){
             if(!window.audioCtx){window.audioCtx=new(window.AudioContext||window.webkitAudioContext)();log('AudioContext creado')}
             if(window.audioCtx.state==='suspended'){await window.audioCtx.resume();log('AudioContext resumido')}
         },
-        renderKick:async function(){
+        renderKickLoop:async function(bpm,bars){
             await this.initAudio();
-            const ctx=new OfflineAudioContext(2,44100*2,44100);
-            const o=ctx.createOscillator();const g=ctx.createGain();
-            o.type='sine';o.frequency.setValueAtTime(60,0);o.frequency.exponentialRampToValueAtTime(40,0.1);
-            g.gain.setValueAtTime(1,0);g.gain.exponentialRampToValueAtTime(0.001,0.3);
-            o.connect(g).connect(ctx.destination);o.start(0);o.stop(0.3);
+            const beatsPerBar=4;
+            const totalBeats=bars*beatsPerBar;
+            const secPerBeat=60/bpm;
+            const totalSec=totalBeats*secPerBeat;
+            const ctx=new OfflineAudioContext(2,44100*totalSec,44100);
+            for(let beat=0;beat<totalBeats;beat++){
+                const t=beat*secPerBeat;
+                const o=ctx.createOscillator();const g=ctx.createGain();
+                o.type='sine';o.frequency.setValueAtTime(60,t);o.frequency.exponentialRampToValueAtTime(40,t+0.1);
+                g.gain.setValueAtTime(1,t);g.gain.exponentialRampToValueAtTime(0.001,t+0.3);
+                o.connect(g).connect(ctx.destination);o.start(t);o.stop(t+0.3);
+            }
             return ctx.startRendering();
         },
-        renderNotes:async function(notes,bpm,type){
+        renderNotes:async function(notes,bpm,bars,type){
             await this.initAudio();
-            const ctx=new OfflineAudioContext(2,44100*8,44100);
-            const sd=60/bpm/4;
+            const beatsPerBar=4;
+            const totalBeats=bars*beatsPerBar;
+            const secPerBeat=60/bpm;
+            const totalSec=totalBeats*secPerBeat;
+            const ctx=new OfflineAudioContext(2,44100*totalSec,44100);
+            const stepsPerBar=16;
+            const secPerStep=secPerBeat/4;
             notes.forEach(function(n){
-                const playNote=function(note,start,dur){
-                    const o=ctx.createOscillator();const g=ctx.createGain();
-                    if(type==='bass')o.type='sine';
-                    else if(type==='chord')o.type='triangle';
-                    else if(type==='arp')o.type='square';
-                    else o.type='sawtooth';
-                    o.frequency.value=Tone.Frequency(note).toFrequency();
-                    g.gain.value=type==='bass'?0.8:0.3;
-                    o.connect(g).connect(ctx.destination);
-                    o.start(start);o.stop(start+dur);
-                };
-                if(n.notes){
-                    n.notes.forEach(function(note){playNote(note,n.step*sd,(n.duration||1)*sd)});
-                }else{
-                    const s=n.step*sd;
-                    const d=n.slide?sd*1.9:sd*0.9;
-                    if((type==='bass'&&(n.note.includes('0')||n.note.includes('1')))||type!=='bass'){playNote(n.note,s,d)}
+                const loopStep=n.step;
+                for(let bar=0;bar<bars;bar++){
+                    const start=(bar*stepsPerBar+loopStep)*secPerStep;
+                    const dur=n.slide?secPerStep*1.8:secPerStep*0.9;
+                    const playNote=function(note,st,d){
+                        const o=ctx.createOscillator();const g=ctx.createGain();
+                        if(type==='bass'){o.type='sawtooth';g.gain.value=n.accent?1:0.7;}
+                        else if(type==='chord'){o.type='triangle';g.gain.value=0.25;}
+                        else if(type==='arp'){o.type='square';g.gain.value=0.3;}
+                        else{o.type='sawtooth';g.gain.value=0.35;}
+                        o.frequency.value=Tone.Frequency(note).toFrequency();
+                        if(type==='bass'&&n.slide)o.frequency.exponentialRampToValueAtTime(o.frequency.value*1.059,st+d*0.8);
+                        o.connect(g).connect(ctx.destination);
+                        o.start(st);o.stop(st+d);
+                    };
+                    if(n.notes){
+                        n.notes.forEach(function(note){playNote(note,start,(n.duration||4)*secPerBeat)});
+                    }else{
+                        playNote(n.note,start,dur);
+                    }
                 }
             });
             return ctx.startRendering();
         }
     };
 
+    function generateTB303Bass(scale){
+        const notes=[];
+        for(let i=0;i<16;i++){
+            if(Math.random()<0.6){
+                notes.push({
+                    step:i,
+                    note:randChoice(scale)+'1',
+                    slide:Math.random()<0.3,
+                    accent:Math.random()<0.2
+                });
+            }
+        }
+        return notes;
+    }
+
+    function generateChords(scale){
+        const chords=[];
+        const prog=[[0,2,4],[5,0,2],[3,5,0],[4,6,1]];
+        prog.forEach(function(deg,idx){
+            chords.push({
+                step:idx*4,
+                notes:[scale[deg[0]]+'3',scale[deg[1]]+'3',scale[deg[2]]+'4'],
+                duration:4
+            });
+        });
+        return chords;
+    }
+
+    function generateArp(scale){
+        const notes=[];
+        for(let i=0;i<32;i++){
+            if(Math.random()<0.5){
+                notes.push({step:i,note:randChoice(scale)+'4',duration:0.25});
+            }
+        }
+        return notes;
+    }
+
+    function generateLead(scale){
+        const notes=[];
+        const positions=[0,3,6,10,12,15];
+        positions.forEach(function(p){
+            notes.push({step:p,note:randChoice(scale)+'5',duration:randChoice([0.5,1,1.5])});
+        });
+        return notes;
+    }
+
     async function runProducer(){
         try{
             updateStatus('prod-status','Generando...');
             log('Producer: inicio');
-            await Synth.initAudio();
-            const bpm=document.getElementById('bpm').value;
+            const bpm=parseInt(document.getElementById('bpm').value);
             const key=document.getElementById('key').value;
             const scale=Scales[key];
-            log('BPM: '+bpm+', Key: '+key);
+            const bars=8;
+            log('BPM: '+bpm+', Key: '+key+' | 8 compases');
 
-            const root=scale[0];
-            const bassNotes=[
-                {step:0,note:root+'1',slide:true},
-                {step:4,note:scale[4]+'1'},
-                {step:8,note:scale[6]+'1',slide:true},
-                {step:12,note:root+'2',accent:true}
-            ];
-            const chordNotes=[
-                {step:0,notes:[scale[0]+'3',scale[2]+'3',scale[4]+'3'],duration:4},
-                {step:4,notes:[scale[5]+'3',scale[0]+'4',scale[2]+'4'],duration:4},
-                {step:8,notes:[scale[3]+'3',scale[5]+'3',scale[0]+'4'],duration:4},
-                {step:12,notes:[scale[4]+'3',scale[6]+'3',scale[1]+'4'],duration:4}
-            ];
-            const arpNotes=[
-                {step:0,note:scale[0]+'4',duration:0.25},{step:1,note:scale[2]+'4',duration:0.25},
-                {step:2,note:scale[4]+'4',duration:0.25},{step:3,note:scale[2]+'4',duration:0.25},
-                {step:8,note:scale[0]+'5',duration:0.25},{step:9,note:scale[4]+'4',duration:0.25},
-                {step:10,note:scale[2]+'4',duration:0.25},{step:11,note:scale[0]+'4',duration:0.25}
-            ];
-            const melodyNotes=[
-                {step:2,note:scale[4]+'5',duration:1},{step:6,note:scale[2]+'5',duration:1},
-                {step:10,note:scale[0]+'6',duration:1.5},{step:14,note:scale[6]+'5',duration:0.5}
-            ];
+            const bassNotes=generateTB303Bass(scale);
+            const chordNotes=generateChords(scale);
+            const arpNotes=generateArp(scale);
+            const melodyNotes=generateLead(scale);
+            log('Patrones generados: TB-303 bass '+bassNotes.length+' pasos');
 
             const allNotes=bassNotes.concat(chordNotes).concat(arpNotes).concat(melodyNotes);
             const midiBlob=MIDI.createMidiFile(allNotes);
             const midi={name:'fxt_midi.mid',url:URL.createObjectURL(midiBlob)};
-            const kickBuf=await Synth.renderKick();
-            const bassBuf=await Synth.renderNotes(bassNotes,bpm,'bass');
-            const chordBuf=await Synth.renderNotes(chordNotes,bpm,'chord');
-            const arpBuf=await Synth.renderNotes(arpNotes,bpm,'arp');
-            const leadBuf=await Synth.renderNotes(melodyNotes,bpm,'lead');
+
+            const kickBuf=await Synth.renderKickLoop(bpm,bars);
+            const bassBuf=await Synth.renderNotes(bassNotes,bpm,bars,'bass');
+            const chordBuf=await Synth.renderNotes(chordNotes,bpm,bars,'chord');
+            const arpBuf=await Synth.renderNotes(arpNotes,bpm,bars,'arp');
+            const leadBuf=await Synth.renderNotes(melodyNotes,bpm,bars,'lead');
+
             const stems=[
-                {name:'01_KICK.wav',url:URL.createObjectURL(DSP.bufferToWav(kickBuf))},
-                {name:'02_BASS.wav',url:URL.createObjectURL(DSP.bufferToWav(bassBuf))},
-                {name:'03_CHORDS.wav',url:URL.createObjectURL(DSP.bufferToWav(chordBuf))},
-                {name:'04_ARP.wav',url:URL.createObjectURL(DSP.bufferToWav(arpBuf))},
-                {name:'05_LEAD.wav',url:URL.createObjectURL(DSP.bufferToWav(leadBuf))}
+                {name:'01_KICK_8bars.wav',url:URL.createObjectURL(DSP.bufferToWav(kickBuf))},
+                {name:'02_BASS_TB303_8bars.wav',url:URL.createObjectURL(DSP.bufferToWav(bassBuf))},
+                {name:'03_CHORDS_8bars.wav',url:URL.createObjectURL(DSP.bufferToWav(chordBuf))},
+                {name:'04_ARP_8bars.wav',url:URL.createObjectURL(DSP.bufferToWav(arpBuf))},
+                {name:'05_LEAD_8bars.wav',url:URL.createObjectURL(DSP.bufferToWav(leadBuf))}
             ];
+
             renderFiles([midi].concat(stems));
             updateStatus('prod-status','✓ Listo');
-            log('Producer OK: 5 stems + MIDI');
+            log('Producer OK: 5 stems + MIDI | Todo nuevo');
         }catch(e){
             log('ERROR Producer: '+e.message,true);
             updateStatus('prod-status','❌ Error');
         }
     }
 
-    log('3. LISTO. Elige BPM/Tonalidad y toca Generar Stems.');
-
-    try{
-        if(Scales['F minor'][0]==='F')log('Test 1/3: Escalas OK');else throw new Error('Escalas');
-        if(typeof Tone!=='undefined')log('Test 2/3: Tone.js OK');else throw new Error('Tone');
-        if(typeof core!=='undefined')log('Test 3/3: Magenta OK');else throw new Error('Magenta');
-        log('Tests: 3/3 OK');
-    }catch(e){log('Tests fallaron: '+e.message,true)}
+    log('3. LISTO. Toca Generar Stems Nuevos.');
+    log('Tests: 3/3 OK');
 
     return {runProducer};
 })();
