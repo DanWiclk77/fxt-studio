@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Groove Bass 303 v3.7</title>
+    <title>Groove Bass 303 v3.8</title>
     <script src="https://unpkg.com/tone@14.7.77/build/Tone.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@magenta/music@1.23.1/es6/core.js"></script>
     <style>
@@ -35,7 +35,7 @@
 .step-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
 .step-num{font-size:13px;font-weight:900;background:#333;color:#666;padding:3px 8px;border-radius:3px;cursor:pointer;border:2px solid #222;transition:all 0.1s}
 .step-num.active{background:#00F0FF;color:#000;border-color:#00C0CC;box-shadow:0 0 15px #00F0FF}
-.led{width:12px;height:12px;border-radius:50%;background:#300;box-shadow:inset 0 0 5px #000;border:2px solid #111}
+.led{width:12px;height:12px;border-radius:50%;background:#300;box-shadow:inset 0 5px #000;border:2px solid #111}
 .led.on{background:#FF0000;box-shadow:0 0 15px #F00,0 0 8px #F00 inset}
 .note-display{background:#000;color:#00F0FF;font-family:'Courier New',monospace;padding:8px;text-align:center;font-size:18px;font-weight:900;margin-bottom:8px;border:2px solid #00F0FF;letter-spacing:2px;min-height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:inset 0 0 10px #00F0FF11}
 .note-display.rest{color:#444;border-color:#333}.note-display.disabled{color:#222;cursor:not-allowed;border-color:#222}
@@ -100,7 +100,7 @@
                 <div class="btn rec" id="wav-btn">REC WAV</div>
                 <div class="btn" id="midi-btn">SAVE MIDI</div>
             </div>
-            <div class="info">TOCA: Step num=ON/OFF. Nota=selector C-B. OCT+=sube octava. OCT-=baja octava. Solo 1 OCT activo. REST=step OFF+LED OFF+silencio.</div>
+            <div class="info">REGLA: Step ON solo si REST OFF. REST ON = Step OFF + LED OFF + ---. OCT+ y OCT- exclusivos.</div>
         </div>
     </div>
 
@@ -346,7 +346,11 @@ const TB303 = (function(){
     function toggleStep(step){
         const p=patterns[currentPattern];
         p.active=!p.active;
-        if(!p.active)p.rest=false;
+        if(p.active){
+            p.rest=false;
+        }else{
+            p.rest=true;
+        }
         savePatterns();
         setupStepEditor();
     }
