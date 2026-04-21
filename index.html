@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>TB-303 Web Emulator v5 - Producers Pack</title>
+<title>TB-303 Web Emulator v6 - Multi Genre Pro</title>
 <style>
   body {
     background: #1a1a1a;
@@ -283,6 +283,13 @@
         <option value="claptone">Claptone</option>
         <option value="deadmau5">Deadmau5</option>
         <option value="dashberlin">Dash Berlin</option>
+        <option value="techhouse">Tech House</option>
+        <option value="melodictechno">Melodic Techno</option>
+        <option value="detroit">Detroit Techno</option>
+        <option value="berlin">Berlin Techno</option>
+        <option value="uplifting">Uplifting Trance</option>
+        <option value="psytrance">Psytrance</option>
+        <option value="house">House</option>
         <option value="dnb">Drum & Bass</option>
         <option value="acid">Acid Classic</option>
       </select>
@@ -303,7 +310,7 @@
     <div class="led-row" id="leds"></div>
     <div class="steps" id="steps"></div>
     <div style="font-size:10px;color:#888;margin-top:8px;text-align:center">
-      NOTA | O- O+ | S A - Random genera patrones por productor
+      NOTA | O- O+ | S A - Random genera patrones por estilo
     </div>
   </div>
 </div>
@@ -457,14 +464,11 @@ document.getElementById('runBtn').onclick = async () => {
     document.querySelectorAll('.step').forEach(s => s.classList.remove('playing'));
   }
 };
-
-// GENERADOR POR PRODUCTOR
 document.getElementById('randomBtn').onclick = () => {
   const scale = document.getElementById('scaleSelect').value;
   const genre = document.getElementById('genreSelect').value;
   const density = params.density / 100;
   const root = parseInt(document.getElementById('rootSelect').value);
-
   generatePattern(scale, genre, density, root);
 };
 
@@ -484,18 +488,23 @@ function generatePattern(scaleName, genre, density, rootOffset) {
     case 'claptone': generateClaptone(scaleNotes, density); break;
     case 'deadmau5': generateDeadmau5(scaleNotes, density); break;
     case 'dashberlin': generateDashBerlin(scaleNotes, density); break;
+    case 'techhouse': generateTechHouse(scaleNotes, density); break;
+    case 'melodictechno': generateMelodicTechno(scaleNotes, density); break;
+    case 'detroit': generateDetroitTechno(scaleNotes, density); break;
+    case 'berlin': generateBerlinTechno(scaleNotes, density); break;
+    case 'uplifting': generateUpliftingTrance(scaleNotes, density); break;
+    case 'psytrance': generatePsytrance(scaleNotes, density); break;
+    case 'house': generateHouse(scaleNotes, density); break;
     case 'dnb': generateDrumAndBass(scaleNotes, density); break;
     case 'acid': generateAcidClassic(scaleNotes, density); break;
   }
-
   updateStepUI();
 }
 
-// BORIS BREJCHA: High-tech minimal, offbeat, mucho groove, slides cortos, síncopas
+// BORIS BREJCHA: High-tech minimal, offbeat, mucho groove
 function generateBorisBrejcha(scaleNotes, density) {
   const pattern = [2,4,7,10,13,15];
   const root = scaleNotes[0], fifth = scaleNotes[4] || scaleNotes[0], second = scaleNotes[1] || root;
-
   pattern.forEach(i => {
     if(Math.random() < density * 1.15) {
       const r = Math.random();
@@ -508,32 +517,26 @@ function generateBorisBrejcha(scaleNotes, density) {
   if(Math.random() < density) { seq[3].note = second; seq[3].octave = 2; seq[3].accent = true; }
 }
 
-// AMELIE LENS: Techno crudo, martilleante, pocos elementos, acentos en 1 y 9, octavas bajas
+// AMELIE LENS: Techno crudo, martilleante, octavas bajas
 function generateAmelieLens(scaleNotes, density) {
   const pattern = [0,4,8,12];
   const root = scaleNotes[0], seventh = scaleNotes[scaleNotes.length-1];
-
   pattern.forEach(i => {
     if(Math.random() < density * 1.2) {
       seq[i].note = Math.random() < 0.8? root : seventh;
-      seq[i].octave = 1; // Bien grave
+      seq[i].octave = 1;
       seq[i].accent = true;
       seq[i].slide = false;
     }
   });
-  // Ghost notes
   [2,6,10,14].forEach(i => {
-    if(Math.random() < density * 0.4) {
-      seq[i].note = root;
-      seq[i].octave = 1;
-      seq[i].accent = false;
-    }
+    if(Math.random() < density * 0.4) { seq[i].note = root; seq[i].octave = 1; }
   });
 }
 
-// HOZHO: Melódico, oscuro, étnico, usa 5tas y escalas menores, slides largos
+// HOZHO: Melódico oscuro, escalas menores, slides largos
 function generateHozho(scaleNotes, density) {
-  const progression = [0, 4, 2, 4]; // I-V-iii-V
+  const progression = [0, 4, 2, 4];
   for(let i=0; i<16; i++) {
     if(Math.random() < density * 0.9) {
       const progStep = Math.floor(i/4) % 4;
@@ -545,9 +548,9 @@ function generateHozho(scaleNotes, density) {
   }
 }
 
-// CLAPTONE: House deep, groovy, swing, notas en contratiempo
+// CLAPTONE: House deep, contratiempos, swing
 function generateClaptone(scaleNotes, density) {
-  const groove = [1,3,6,9,11,14]; // Contratiempos
+  const groove = [1,3,6,9,11,14];
   groove.forEach(i => {
     if(Math.random() < density) {
       seq[i].note = scaleNotes[Math.floor(Math.random() * 4)];
@@ -558,22 +561,22 @@ function generateClaptone(scaleNotes, density) {
   });
 }
 
-// DEADMAU5: Progresivo, arpegiado, mucho sustain, octavas altas
+// DEADMAU5: Progresivo, arpegiado, mucho sustain
 function generateDeadmau5(scaleNotes, density) {
-  const arp = [0,2,4,7,4,2,0,4]; // Arpegio típico
+  const arp = [0,2,4,7,4,2,0,4];
   for(let i=0; i<16; i++) {
     if(Math.random() < density * 1.1) {
       seq[i].note = scaleNotes[arp[i%8] % scaleNotes.length];
       seq[i].octave = i < 8? 2 : 3;
       seq[i].accent = i%8 === 0;
-      seq[i].slide = true; // Deadmau5 usa mucho glide
+      seq[i].slide = true;
     }
   }
 }
 
-// DASH BERLIN: Trance uplifting, euforia, arpegiado ascendente, mayor
+// DASH BERLIN: Trance uplifting, arpegio ascendente
 function generateDashBerlin(scaleNotes, density) {
-  const arp = [0,2,4,2,4,7,9,7]; // Subida épica
+  const arp = [0,2,4,2,4,7,9,7];
   for(let i=0; i<16; i++) {
     if(Math.random() < density) {
       seq[i].note = scaleNotes[arp[i%8] % scaleNotes.length];
@@ -584,20 +587,117 @@ function generateDashBerlin(scaleNotes, density) {
   }
 }
 
-// DRUM AND BASS: 170+ BPM, notas rápidas, reese bass, síncopas
-function generateDrumAndBass(scaleNotes, density) {
-  const dnbPattern = [0,3,6,9,12,15]; // Síncopas DnB
-  const root = scaleNotes[0], third = scaleNotes[2] || scaleNotes[1];
+// TECH HOUSE: Groovy, síncopas, menos notas, roll de bajo
+function generateTechHouse(scaleNotes, density) {
+  const groove = [0,3,4,7,10,12,15];
+  groove.forEach(i => {
+    if(Math.random() < density * 1.2) {
+      seq[i].note = scaleNotes[Math.floor(Math.random() * scaleNotes.length)];
+      seq[i].octave = 2;
+      seq[i].accent = [0,4,8,12].includes(i);
+      seq[i].slide = Math.random() < 0.2;
+    }
+  });
+}
 
+// MELODIC TECHNO: Progresiones, musical, menos caótico
+function generateMelodicTechno(scaleNotes, density) {
+  const progression = [0, 2, 4, 2];
+  for(let i=0; i<16; i++) {
+    if(Math.random() < density) {
+      const progStep = Math.floor(i/4) % 4;
+      seq[i].note = scaleNotes[progression[progStep] % scaleNotes.length];
+      seq[i].octave = i%8 < 4? 2 : 3;
+      seq[i].accent = i%4 === 0 || Math.random() < 0.2;
+      seq[i].slide = Math.random() < 0.3;
+    }
+  }
+}
+
+// DETROIT TECHNO: Soul, acordes implícitos, 1-3-5-7
+function generateDetroitTechno(scaleNotes, density) {
+  const chord = [0,2,4,6]; // 1-3-5-7
+  [0,4,8,12].forEach(i => {
+    if(Math.random() < density) {
+      seq[i].note = scaleNotes[chord[Math.floor(i/4)%4] % scaleNotes.length];
+      seq[i].octave = 2;
+      seq[i].accent = true;
+      seq[i].slide = false;
+    }
+  });
+  [2,6,10,14].forEach(i => {
+    if(Math.random() < density * 0.5) {
+      seq[i].note = scaleNotes[0];
+      seq[i].octave = 1;
+    }
+  });
+}
+
+// BERLIN TECHNO: Industrial, repetitivo, hipnótico
+function generateBerlinTechno(scaleNotes, density) {
+  const root = scaleNotes[0];
+  [0,2,4,6,8,10,12,14].forEach(i => {
+    if(Math.random() < density * 0.8) {
+      seq[i].note = root;
+      seq[i].octave = 1;
+      seq[i].accent = i%4 === 0;
+      seq[i].slide = false;
+    }
+  });
+}
+
+// UPLIFTING TRANCE: Arpegiado rápido, octavas altas, euforia
+function generateUpliftingTrance(scaleNotes, density) {
+  const arp = [0,2,4,7,9,7,4,2];
+  for(let i=0; i<16; i++) {
+    if(Math.random() < density * 1.1) {
+      seq[i].note = scaleNotes[arp[i%8] % scaleNotes.length];
+      seq[i].octave = 3;
+      seq[i].accent = i%4 === 0;
+      seq[i].slide = false;
+    }
+  }
+}
+
+// PSYTRANCE: 16th notes, rolling bass, triplets implícitos
+function generatePsytrance(scaleNotes, density) {
+  const root = scaleNotes[0], third = scaleNotes[2] || scaleNotes[1];
+  for(let i=0; i<16; i++) {
+    if(Math.random() < density * 0.9) {
+      seq[i].note = i%3 === 0? third : root; // Roll característico
+      seq[i].octave = 1;
+      seq[i].accent = i%4 === 0;
+      seq[i].slide = Math.random() < 0.8; // Mucho slide
+    }
+  }
+}
+
+// HOUSE: Clásico, funky, acordes de 7ma
+function generateHouse(scaleNotes, density) {
+  const groove = [0,2,4,6,8,10,12,14];
+  const seventh = scaleNotes[6] || scaleNotes[scaleNotes.length-1];
+  groove.forEach(i => {
+    if(Math.random() < density) {
+      seq[i].note = i%4 === 0? scaleNotes[0] : seventh;
+      seq[i].octave = 2;
+      seq[i].accent = [0,8].includes(i);
+      seq[i].slide = Math.random() < 0.2;
+    }
+  });
+}
+
+// DRUM AND BASS: 170+ BPM, reese bass, síncopas
+function generateDrumAndBass(scaleNotes, density) {
+  const dnbPattern = [0,3,6,9,12,15];
+  const root = scaleNotes[0], third = scaleNotes[2] || scaleNotes[1];
   dnbPattern.forEach(i => {
     if(Math.random() < density) {
       seq[i].note = Math.random() < 0.7? root : third;
-      seq[i].octave = 1; // Sub bass
+      seq[i].octave = 1;
       seq[i].accent = [0,9].includes(i);
-      seq[i].slide = Math.random() < 0.7; // Reese bass glides
+      seq[i].slide = Math.random() < 0.7;
     }
   });
-  // Notas rápidas entre medias
   [2,5,8,11,14].forEach(i => {
     if(Math.random() < density * 0.5) {
       seq[i].note = root;
@@ -607,7 +707,7 @@ function generateDrumAndBass(scaleNotes, density) {
   });
 }
 
-// ACID CLASSIC: TB-303 original, mucho slide y accent aleatorio
+// ACID CLASSIC: TB-303 original
 function generateAcidClassic(scaleNotes, density) {
   const root = scaleNotes[0], fifth = scaleNotes[4] || scaleNotes[0];
   for(let i=0; i<16; i++) {
@@ -716,98 +816,89 @@ function scheduler() {
   if(isRunning) scheduleTimer = setTimeout(scheduler, 25);
 }
 
-// MIDI COMPATIBLE FL STUDIO MOBILE + ABLETON
+// MIDI FORMATO 1 - COMPATIBLE UNIVERSAL: FL Studio Mobile, Ableton, Logic, Reaper, GarageBand
 document.getElementById('downloadMidi').onclick = () => {
-  const PPQ = 480; // Pulses per quarter note - estándar FL/Ableton
+  const PPQ = 960; // Estándar universal más compatible
   const stepsPerBeat = 4;
   const ticksPerStep = PPQ / stepsPerBeat;
 
-  let trackEvents = [];
-  let currentTick = 0;
-
-  // Tempo Meta Event
+  // Track 0: Tempo y Time Signature
+  let track0 = [];
   const mpq = Math.floor(60000000 / params.tempo);
-  trackEvents.push({tick: 0, data: [0xFF, 0x51, 0x03, (mpq>>16)&0xFF, (mpq>>8)&0xFF, mpq&0xFF]});
+  track0.push(0x00, 0xFF, 0x51, 0x03, (mpq>>16)&0xFF, (mpq>>8)&0xFF, mpq&0xFF); // Tempo
+  track0.push(0x00, 0xFF, 0x58, 0x04, 0x04, 0x02, 0x18, 0x08); // 4/4
+  track0.push(0x00, 0xFF, 0x2F, 0x00); // End of track
 
-  // Time Signature 4/4
-  trackEvents.push({tick: 0, data: [0xFF, 0x58, 0x04, 0x04, 0x02, 0x18, 0x08]});
+  // Track 1: Notas
+  let track1Events = [];
+  let absTick = 0;
 
   seq.forEach((step, i) => {
     const stepTick = i * ticksPerStep;
     const freq = getStepFreq(step);
 
     if(freq) {
-      const midiNote = Math.round(69 + 12 * Math.log2(freq / 440));
+      const midiNote = Math.max(0, Math.min(127, Math.round(69 + 12 * Math.log2(freq / 440))));
       const vel = step.accent? 127 : 100;
-      const noteDur = Math.floor(ticksPerStep * (step.slide? 0.98 : 0.8));
+      const noteDur = Math.floor(ticksPerStep * (step.slide? 0.98 : 0.85));
 
-      // Note On
-      trackEvents.push({tick: stepTick, data: [0x90, midiNote, vel]});
-      // Note Off
-      trackEvents.push({tick: stepTick + noteDur, data: [0x80, midiNote, 0x00]});
+      track1Events.push({tick: stepTick, msg: [0x90, midiNote, vel]});
+      track1Events.push({tick: stepTick + noteDur, msg: [0x80, midiNote, 0x40]});
     }
   });
 
-  // End of Track
-  const lastTick = 16 * ticksPerStep;
-  trackEvents.push({tick: lastTick, data: [0xFF, 0x2F, 0x00]});
+  // Ordenar por tick absoluto
+  track1Events.sort((a,b) => a.tick - b.tick);
 
-  // Ordenar eventos por tick
-  trackEvents.sort((a,b) => a.tick - b.tick);
-
-  // Construir track con delta times
-  let trackData = [];
-  let prevTick = 0;
-  trackEvents.forEach(ev => {
-    const delta = ev.tick - prevTick;
-    trackData.push(...writeVarLen(delta));
-    trackData.push(...ev.data);
-    prevTick = ev.tick;
+  // Convertir a delta times
+  let track1 = [];
+  let lastTick = 0;
+  track1Events.forEach(ev => {
+    const delta = ev.tick - lastTick;
+    track1.push(...writeVarLen(delta));
+    track1.push(...ev.msg);
+    lastTick = ev.tick;
   });
 
-  // Header MIDI
-  let midiData = [];
-  midiData.push(...[0x4D,0x54,0x68,0x64]); // MThd
-  midiData.push(...[0x00,0x00,0x06]); // Header length
-  midiData.push(...[0x00,0x00]); // Format 0
-  midiData.push(...[0x00,0x01]); // 1 track
-  midiData.push(...[(PPQ>>8)&0xFF, PPQ&0xFF]); // PPQ
+  // End of track 1
+  const endDelta = (16 * ticksPerStep) - lastTick;
+  track1.push(...writeVarLen(Math.max(0, endDelta)));
+  track1.push(0xFF, 0x2F, 0x00);
 
-  // Track chunk
-  midiData.push(...[0x4D,0x54,0x72,0x6B]); // MTrk
-  const size = trackData.length;
-  midiData.push((size>>24)&0xFF,(size>>16)&0xFF,(size>>8)&0xFF,size&0xFF);
-  midiData.push(...trackData);
+  // Construir archivo MIDI Formato 1
+  let midiData = [];
+  // Header: MThd, length=6, format=1, ntrks=2, division=PPQ
+  midiData.push(0x4D,0x54,0x68,0x64, 0x00,0x06, 0x00,0x01, 0x00,0x02);
+  midiData.push((PPQ>>8)&0xFF, PPQ&0xFF);
+
+  // Track 0
+  midiData.push(0x4D,0x54,0x72,0x6B);
+  midiData.push((track0.length>>24)&0xFF, (track0.length>>16)&0xFF, (track0.length>>8)&0xFF, track0.length&0xFF);
+  midiData.push(...track0);
+
+  // Track 1
+  midiData.push(0x4D,0x54,0x72,0x6B);
+  midiData.push((track1.length>>24)&0xFF, (track1.length>>16)&0xFF, (track1.length>>8)&0xFF, track1.length&0xFF);
+  midiData.push(...track1);
 
   downloadBlob(new Uint8Array(midiData), 'tb303_pattern.mid', 'audio/midi');
 };
 
+// Variable Length Quantity correcto según spec MIDI
 function writeVarLen(value) {
   value = Math.floor(value);
   let bytes = [];
-  let buffer = value & 0x7F;
-
+  bytes.push(value & 0x7F);
   while ((value >>= 7) > 0) {
-    buffer <<= 8;
-    buffer |= 0x80;
-    buffer += (value & 0x7F);
+    bytes.push((value & 0x7F) | 0x80);
   }
-
-  while (true) {
-    bytes.push(buffer & 0xFF);
-    if (buffer & 0x80) {
-      buffer >>= 8;
-    } else {
-      break;
-    }
-  }
-  return bytes;
+  return bytes.reverse();
 }
 
 // DESCARGA WAV - Renderiza 4 compases
 document.getElementById('downloadWav').onclick = async () => {
   const secondsPerStep = 60.0 / params.tempo / 4;
-  const totalDuration = secondsPerStep * 16 * 4; // 4 loops
+  const totalDuration = secondsPerStep * 16 * 4;
   const sampleRate = 44100;
   const offlineCtx = new OfflineAudioContext(1, sampleRate * totalDuration, sampleRate);
 
@@ -898,11 +989,10 @@ function audioBufferToWav(buffer) {
     pos += 4;
   }
 
-  // RIFF identifier
-  setUint32(0x46464952);
+  setUint32(0x46464952); // "RIFF"
   setUint32(length - 8);
-  setUint32(0x45564157);
-  setUint32(0x20746d66);
+  setUint32(0x45564157); // "WAVE"
+  setUint32(0x20746d66); // "fmt "
   setUint32(16);
   setUint16(1);
   setUint16(numOfChan);
@@ -910,7 +1000,7 @@ function audioBufferToWav(buffer) {
   setUint32(buffer.sampleRate * 2 * numOfChan);
   setUint16(numOfChan * 2);
   setUint16(16);
-  setUint32(0x61746164);
+  setUint32(0x61746164); // "data"
   setUint32(length - pos - 4);
 
   for (let i = 0; i < buffer.numberOfChannels; i++) {
