@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#0A0A0A"/>
-    <title>FXT Studio AI v5.2</title>
+    <title>FXT Studio AI v5.3</title>
     <link rel="manifest" href='data:application/json,{"name":"FXT Studio AI","short_name":"FXT","start_url":".","display":"standalone","background_color":"#0A0A0A","theme_color":"#0A0A0A","icons":[{"src":"https://via.placeholder.com/512/0A/EAEAEA?text=FXT","sizes":"512x512"}]}'>
     <script src="https://unpkg.com/tone@14.7.77/build/Tone.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@magenta/music@1.23.1/es6/core.js"></script>
@@ -31,7 +31,7 @@
     </style>
 </head>
 <body>
-    <h1>FXT Studio AI v5.2 <span class="badge">PRO</span></h1>
+    <h1>FXT Studio AI v5.3 <span class="badge">PRO</span></h1>
     <div id="log">Iniciando...</div>
     <div class="agent">
         <label>OpenAI API Key - requerida para que los agentes generen</label>
@@ -49,7 +49,6 @@
                 <option>A# major</option><option>A# minor</option><option>B major</option><option>B minor</option>
             </select>
         </div>
-    </div>
     <div class="agent">
         <h2>1. Producer FXT <span class="status" id="prod-status"></span></h2>
         <div class="chat" id="prod-chatbox">
@@ -88,7 +87,7 @@
     </div>
 <script>
 'use strict';
-document.title='FXT v5.2 OK';
+document.title='FXT v5.3 OK';
 const App = (function(){
     const logEl = document.getElementById('log');
     function log(msg, err=false){
@@ -97,7 +96,7 @@ const App = (function(){
         logEl.scrollTop = logEl.scrollHeight;
     }
     window.onerror = function(m,s,ln,col){log('ERROR JS línea '+ln+': '+m,true);updateStatus('prod-status','❌ Error JS');return true};
-    log('1. Script v5.2 iniciado');
+    log('1. Script v5.3 iniciado');
 
     document.getElementById('apikey').value=localStorage.getItem('OPENAI_KEY')||'';
     log('2. DOM listo');
@@ -236,7 +235,7 @@ const App = (function(){
             }catch(e){log('Error MIDI: '+e,true);return new Blob()}
         },
         noteToMidi(n){
-            const notes=['C','C#','D','D#','E','F#','G','G#','A','A#','B'];
+            const notes=['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
             const m=n.match(/([A-G]#?)(\d)/);
             return notes.indexOf(m[1])+(parseInt(m[2])+1)*12;
         }
@@ -340,7 +339,8 @@ const App = (function(){
             if(chordNotes){const chordBuf=await Synth.renderNotes(chordNotes,bpm,'chord');stems.push({name:'03_CHORDS.wav',url:URL.createObjectURL(DSP.bufferToWav(chordBuf))})}
             if(arpNotes){const arpBuf=await Synth.renderNotes(arpNotes,bpm,'arp');stems.push({name:'04_ARP.wav',url:URL.createObjectURL(DSP.bufferToWav(arpBuf))})}
             if(melodyNotes){const leadBuf=await Synth.renderNotes(melodyNotes,bpm,'lead');stems.push({name:'05_LEAD.wav',url:URL.createObjectURL(DSP.bufferToWav(leadBuf))})}
-            project.midi=;project.stems=stems;
+            project.midi=;
+            project.stems=stems;
             Storage.save(project);
             renderFiles('prod-files',project.midi.concat(project.stems));
             updateStatus('prod-status','✓ Listo');
