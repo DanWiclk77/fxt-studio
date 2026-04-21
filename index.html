@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>TB-303 Hybrid v1.1 - MIDI Fixed</title>
+<title>TB-303 Web Emulator v8 - MIDI Roland Compatible</title>
 <style>
   body {
     background: #1a1a1a;
@@ -14,7 +14,7 @@
     margin: 0;
   }
 .tb303 {
-    background: linear-gradient(#d8d8d0, #b8b8b0);
+    background: linear-gradient(#c8c8c0, #a8a89e);
     width: 980px;
     padding: 20px;
     border-radius: 8px;
@@ -33,8 +33,8 @@
 
 .controls {
     display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 12px;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 15px;
     margin-bottom: 15px;
     background: #222;
     padding: 15px;
@@ -92,16 +92,6 @@
   button.active { background: #ff4500; color: #111; }
   button.download { background: #0a5; color: #fff; }
   button.download:hover { background: #0c7; }
-.bpm-btn {
-    background: #333;
-    border: 1px solid #555;
-    color: #ff4500;
-    padding: 4px 10px;
-    font-size: 16px;
-    font-weight: 900;
-    min-width: 30px;
-  }
-.bpm-btn:hover { background: #444; }
   select {
     background: #111;
     color: #ff4500;
@@ -193,7 +183,7 @@
 <body>
 <div class="tb303">
   <div class="header">
-    <div class="logo">TB-303<span>Hybrid Edition</span></div>
+    <div class="logo">TB-303<span>Bass Line Synthesizer</span></div>
     <div>
       <button id="runBtn">RUN</button>
       <button id="clearBtn">CLEAR</button>
@@ -209,34 +199,29 @@
       <div class="value" id="tuneVal">0</div>
     </div>
     <div class="knob-group">
-      <label>Cutoff</label>
-      <input type="range" id="cutoff" min="0" max="100" value="40" step="1">
-      <div class="value" id="cutoffVal">40</div>
+      <label>Cut Off Freq</label>
+      <input type="range" id="cutoff" min="100" max="8000" value="1000" step="10">
+      <div class="value" id="cutoffVal">1000</div>
     </div>
     <div class="knob-group">
       <label>Resonance</label>
-      <input type="range" id="resonance" min="0" max="100" value="60" step="1">
-      <div class="value" id="resVal">60</div>
+      <input type="range" id="resonance" min="0" max="30" value="10" step="0.1">
+      <div class="value" id="resVal">10.0</div>
     </div>
     <div class="knob-group">
       <label>Env Mod</label>
-      <input type="range" id="envmod" min="0" max="100" value="75" step="1">
-      <div class="value" id="envmodVal">75</div>
+      <input type="range" id="envmod" min="0" max="8000" value="2000" step="10">
+      <div class="value" id="envmodVal">2000</div>
     </div>
     <div class="knob-group">
       <label>Decay</label>
-      <input type="range" id="decay" min="50" max="600" value="200" step="10">
-      <div class="value" id="decayVal">200</div>
+      <input type="range" id="decay" min="0.05" max="2" value="0.3" step="0.01">
+      <div class="value" id="decayVal">0.30</div>
     </div>
     <div class="knob-group">
       <label>Accent</label>
-      <input type="range" id="accent" min="0" max="100" value="50" step="1">
-      <div class="value" id="accentVal">50</div>
-    </div>
-    <div class="knob-group">
-      <label>Drive</label>
-      <input type="range" id="drive" min="0" max="100" value="0" step="1">
-      <div class="value" id="driveVal">0</div>
+      <input type="range" id="accent" min="0" max="1" value="0.5" step="0.01">
+      <div class="value" id="accentVal">0.50</div>
     </div>
   </div>
 
@@ -248,9 +233,8 @@
     </div>
     <div class="switch">
       <label>Tempo:</label>
-      <button class="bpm-btn" id="bpmDown">-</button>
-      <span id="tempoVal" style="width:40px;display:inline-block;text-align:center;font-weight:700">128</span>
-      <button class="bpm-btn" id="bpmUp">+</button>
+      <input type="range" id="tempo" min="60" max="200" value="128" step="1" style="width:100px">
+      <span id="tempoVal" style="width:30px;display:inline-block">128</span>
     </div>
     <div class="switch">
       <label>Dist:</label>
@@ -293,7 +277,6 @@
     <div class="switch">
       <label>Style:</label>
       <select id="genreSelect">
-        <option value="acid">Acid Classic</option>
         <option value="brejcha">Boris Brejcha</option>
         <option value="amelie">Amelie Lens</option>
         <option value="hozho">Hozho</option>
@@ -308,12 +291,13 @@
         <option value="psytrance">Psytrance</option>
         <option value="house">House</option>
         <option value="dnb">Drum & Bass</option>
+        <option value="acid">Acid Classic</option>
       </select>
     </div>
     <div class="switch">
       <label>Density:</label>
-      <input type="range" id="density" min="20" max="100" value="70" step="5" style="width:80px">
-      <span id="densityVal" style="width:35px;display:inline-block">70%</span>
+      <input type="range" id="density" min="20" max="100" value="60" step="5" style="width:80px">
+      <span id="densityVal" style="width:35px;display:inline-block">60%</span>
     </div>
     <button id="randomBtn" style="background:#ff4500;color:#111">RANDOM</button>
   </div>
@@ -326,7 +310,7 @@
     <div class="led-row" id="leds"></div>
     <div class="steps" id="steps"></div>
     <div style="font-size:10px;color:#888;margin-top:8px;text-align:center">
-      MIDI Format 0 PPQ 96 - Optimizado CPU
+      NOTA | O- O+ | S A - Random genera patrones por estilo
     </div>
   </div>
 </div>
@@ -338,18 +322,9 @@ let nextNoteTime = 0;
 let waveform = 'sawtooth';
 let scheduleTimer;
 
-// Parámetros: Transistor Bass 0-100 + Decay TB-303 50-600ms optimizado
 const params = {
-  tune: 0,
-  cutoff: 40,
-  resonance: 60,
-  envmod: 75,
-  decay: 200, // 50-600ms para que no se arrastre
-  accent: 50,
-  drive: 0,
-  tempo: 128,
-  dist: 0,
-  density: 70
+  tune: 0, cutoff: 1000, resonance: 10, envmod: 2000,
+  decay: 0.3, accent: 0.5, tempo: 128, dist: 0, density: 60
 };
 
 const scales = {
@@ -372,33 +347,6 @@ const noteFreq = {
 };
 
 const seq = Array(16).fill().map(() => ({note: 'OFF', octave: 2, slide: false, accent: false}));
-
-// Pre-calcular curvas para optimizar CPU
-let driveCurve = null;
-let distCurve = null;
-
-function updateDriveCurve() {
-  if(params.drive === 0) { driveCurve = null; return; }
-  const k = params.drive / 100 * 50;
-  driveCurve = new Float32Array(44100);
-  for(let i=0; i<44100; i++) {
-    const x = i * 2 / 44100 - 1;
-    driveCurve[i] = (1 + k) * x / (1 + k * Math.abs(x));
-  }
-}
-
-function updateDistCurve() {
-  if(params.dist === 0) { distCurve = null; return; }
-  const k = params.dist * 10;
-  distCurve = new Float32Array(44100);
-  for(let i=0; i<44100; i++) {
-    const x = i * 2 / 44100 - 1;
-    distCurve[i] = (1 + k) * x / (1 + k * Math.abs(x));
-  }
-}
-
-updateDriveCurve();
-updateDistCurve();
 
 // UI Setup
 const stepsDiv = document.getElementById('steps');
@@ -428,28 +376,17 @@ for(let i=0;i<16;i++){
   ledsDiv.appendChild(led);
 }
 
+// Event listeners
 document.querySelectorAll('input[type=range]').forEach(input => {
   input.addEventListener('input', e => {
     const id = e.target.id;
     params[id] = parseFloat(e.target.value);
-    document.getElementById(id+'Val').textContent = Math.round(params[id]);
-    if(id === 'drive') updateDriveCurve();
-    if(id === 'dist') updateDistCurve();
+    const val = params[id];
+    document.getElementById(id+'Val').textContent =
+      id === 'density'? val + '%' :
+      id === 'decay' || id === 'accent' || id === 'resonance'? val.toFixed(2) : val;
   });
 });
-
-document.getElementById('bpmUp').onclick = () => {
-  if(params.tempo < 300) {
-    params.tempo++;
-    document.getElementById('tempoVal').textContent = params.tempo;
-  }
-};
-document.getElementById('bpmDown').onclick = () => {
-  if(params.tempo > 40) {
-    params.tempo--;
-    document.getElementById('tempoVal').textContent = params.tempo;
-  }
-};
 
 document.getElementById('sawBtn').onclick = () => {
   waveform = 'sawtooth';
@@ -545,7 +482,6 @@ function generatePattern(scaleName, genre, density, rootOffset) {
   });
 
   switch(genre) {
-    case 'acid': generateAcidClassic(scaleNotes, density); break;
     case 'brejcha': generateBorisBrejcha(scaleNotes, density); break;
     case 'amelie': generateAmelieLens(scaleNotes, density); break;
     case 'hozho': generateHozho(scaleNotes, density); break;
@@ -560,63 +496,51 @@ function generatePattern(scaleName, genre, density, rootOffset) {
     case 'psytrance': generatePsytrance(scaleNotes, density); break;
     case 'house': generateHouse(scaleNotes, density); break;
     case 'dnb': generateDrumAndBass(scaleNotes, density); break;
+    case 'acid': generateAcidClassic(scaleNotes, density); break;
   }
   updateStepUI();
 }
 
-function generateAcidClassic(scaleNotes, density) {
-  const root = scaleNotes[0], fifth = scaleNotes[4] || scaleNotes[0];
-  const pattern = [0,3,6,8,11,14];
-  pattern.forEach(i => {
-    if(Math.random() < density) {
-      seq[i].note = Math.random() < 0.65? root : fifth;
-      seq[i].octave = Math.random() < 0.3? 1 : 2;
-      seq[i].accent = [0,8].includes(i) || Math.random() < 0.35;
-      seq[i].slide = Math.random() < 0.55 && i > 0;
-    }
-  });
-}
-
 function generateBorisBrejcha(scaleNotes, density) {
   const pattern = [2,4,7,10,13,15];
-  const root = scaleNotes[0], fifth = scaleNotes[4] || root, second = scaleNotes[1] || root;
+  const root = scaleNotes[0], fifth = scaleNotes[4] || scaleNotes[0], second = scaleNotes[1] || root;
   pattern.forEach(i => {
-    if(Math.random() < density) {
+    if(Math.random() < density * 1.15) {
       const r = Math.random();
-      seq[i].note = r < 0.6? root : r < 0.85? fifth : second;
-      seq[i].octave = Math.random() < 0.7? 2 : 1;
-      seq[i].accent = [2,10].includes(i) || Math.random() < 0.5;
-      seq[i].slide = Math.random() < 0.35 && i > 0;
+      seq[i].note = r < 0.55? root : r < 0.85? fifth : second;
+      seq[i].octave = Math.random() < 0.75? 2 : 1;
+      seq[i].accent = [2,10].includes(i) || Math.random() < 0.55;
+      seq[i].slide = Math.random() < 0.4 && i > 0;
     }
   });
-  if(Math.random() < density * 0.8) { seq[3].note = second; seq[3].octave = 2; seq[3].accent = true; }
+  if(Math.random() < density) { seq[3].note = second; seq[3].octave = 2; seq[3].accent = true; }
 }
 
 function generateAmelieLens(scaleNotes, density) {
   const pattern = [0,4,8,12];
   const root = scaleNotes[0], seventh = scaleNotes[scaleNotes.length-1];
   pattern.forEach(i => {
-    if(Math.random() < density * 1.1) {
-      seq[i].note = Math.random() < 0.85? root : seventh;
+    if(Math.random() < density * 1.2) {
+      seq[i].note = Math.random() < 0.8? root : seventh;
       seq[i].octave = 1;
       seq[i].accent = true;
       seq[i].slide = false;
     }
   });
   [2,6,10,14].forEach(i => {
-    if(Math.random() < density * 0.5) { seq[i].note = root; seq[i].octave = 1; seq[i].accent = true; }
+    if(Math.random() < density * 0.4) { seq[i].note = root; seq[i].octave = 1; }
   });
 }
 
 function generateHozho(scaleNotes, density) {
   const progression = [0, 4, 2, 4];
   for(let i=0; i<16; i++) {
-    if(Math.random() < density * 0.85) {
+    if(Math.random() < density * 0.9) {
       const progStep = Math.floor(i/4) % 4;
       seq[i].note = scaleNotes[progression[progStep] % scaleNotes.length];
       seq[i].octave = i%8 < 4? 2 : 3;
       seq[i].accent = i%4 === 0;
-      seq[i].slide = Math.random() < 0.5 && i > 0;
+      seq[i].slide = Math.random() < 0.6 && i > 0;
     }
   }
 }
@@ -624,23 +548,20 @@ function generateHozho(scaleNotes, density) {
 function generateClaptone(scaleNotes, density) {
   const groove = [1,3,6,9,11,14];
   groove.forEach(i => {
-    if(Math.random() < density * 0.9) {
+    if(Math.random() < density) {
       seq[i].note = scaleNotes[Math.floor(Math.random() * 4)];
       seq[i].octave = 2;
       seq[i].accent = [1,9].includes(i);
-      seq[i].slide = Math.random() < 0.25;
+      seq[i].slide = Math.random() < 0.3;
     }
-  });
-  [0,8].forEach(i => {
-    if(Math.random() < density * 0.6) { seq[i].note = scaleNotes[0]; seq[i].octave = 2; }
   });
 }
 
 function generateDeadmau5(scaleNotes, density) {
   const arp = [0,2,4,7,4,2,0,4];
   for(let i=0; i<16; i++) {
-    if(Math.random() < density) {
-      seq[i].note = scaleNotes[arp[i%arp.length] % scaleNotes.length];
+    if(Math.random() < density * 1.1) {
+      seq[i].note = scaleNotes[arp[i%8] % scaleNotes.length];
       seq[i].octave = i < 8? 2 : 3;
       seq[i].accent = i%8 === 0;
       seq[i].slide = true;
@@ -649,13 +570,13 @@ function generateDeadmau5(scaleNotes, density) {
 }
 
 function generateDashBerlin(scaleNotes, density) {
-  const arp = [0,2,4,7,9,7,4,2];
+  const arp = [0,2,4,7,9,7];
   for(let i=0; i<16; i++) {
-    if(Math.random() < density * 0.9) {
-      seq[i].note = scaleNotes[arp[i % arp.length] % scaleNotes.length];
+    if(Math.random() < density) {
+      seq[i].note = scaleNotes[arp[i%8] % scaleNotes.length];
       seq[i].octave = i < 8? 2 : 3;
       seq[i].accent = i%4 === 0;
-      seq[i].slide = Math.random() < 0.2;
+      seq[i].slide = Math.random() < 0.25;
     }
   }
 }
@@ -663,27 +584,24 @@ function generateDashBerlin(scaleNotes, density) {
 function generateTechHouse(scaleNotes, density) {
   const groove = [0,3,4,7,10,12,15];
   groove.forEach(i => {
-    if(Math.random() < density) {
+    if(Math.random() < density * 1.2) {
       seq[i].note = scaleNotes[Math.floor(Math.random() * scaleNotes.length)];
       seq[i].octave = 2;
       seq[i].accent = [0,4,8,12].includes(i);
-      seq[i].slide = Math.random() < 0.15;
+      seq[i].slide = Math.random() < 0.2;
     }
-  });
-  [2,6,14].forEach(i => {
-    if(Math.random() < density * 0.4) { seq[i].note = scaleNotes[0]; seq[i].octave = 1; }
   });
 }
 
 function generateMelodicTechno(scaleNotes, density) {
   const progression = [0, 2, 4, 2];
   for(let i=0; i<16; i++) {
-    if(Math.random() < density * 0.9) {
+    if(Math.random() < density) {
       const progStep = Math.floor(i/4) % 4;
       seq[i].note = scaleNotes[progression[progStep] % scaleNotes.length];
       seq[i].octave = i%8 < 4? 2 : 3;
-      seq[i].accent = i%4 === 0 || Math.random() < 0.25;
-      seq[i].slide = Math.random() < 0.35;
+      seq[i].accent = i%4 === 0 || Math.random() < 0.2;
+      seq[i].slide = Math.random() < 0.3;
     }
   }
 }
@@ -691,7 +609,7 @@ function generateMelodicTechno(scaleNotes, density) {
 function generateDetroitTechno(scaleNotes, density) {
   const chord = [0,2,4,6];
   [0,4,8,12].forEach(i => {
-    if(Math.random() < density * 0.9) {
+    if(Math.random() < density) {
       seq[i].note = scaleNotes[chord[Math.floor(i/4)%4] % scaleNotes.length];
       seq[i].octave = 2;
       seq[i].accent = true;
@@ -699,10 +617,9 @@ function generateDetroitTechno(scaleNotes, density) {
     }
   });
   [2,6,10,14].forEach(i => {
-    if(Math.random() < density * 0.6) {
+    if(Math.random() < density * 0.5) {
       seq[i].note = scaleNotes[0];
       seq[i].octave = 1;
-      seq[i].accent = true;
     }
   });
 }
@@ -710,23 +627,20 @@ function generateDetroitTechno(scaleNotes, density) {
 function generateBerlinTechno(scaleNotes, density) {
   const root = scaleNotes[0];
   [0,2,4,6,8,10,12,14].forEach(i => {
-    if(Math.random() < density * 0.85) {
+    if(Math.random() < density * 0.8) {
       seq[i].note = root;
       seq[i].octave = 1;
       seq[i].accent = i%4 === 0;
       seq[i].slide = false;
     }
   });
-  [3,7,11,15].forEach(i => {
-    if(Math.random() < density * 0.4) { seq[i].note = root; seq[i].octave = 2; }
-  });
 }
 
 function generateUpliftingTrance(scaleNotes, density) {
   const arp = [0,2,4,7,9,7,4,2];
   for(let i=0; i<16; i++) {
-    if(Math.random() < density) {
-      seq[i].note = scaleNotes[arp[i % arp.length] % scaleNotes.length];
+    if(Math.random() < density * 1.1) {
+      seq[i].note = scaleNotes[arp[i%8] % scaleNotes.length];
       seq[i].octave = 3;
       seq[i].accent = i%4 === 0;
       seq[i].slide = false;
@@ -737,11 +651,11 @@ function generateUpliftingTrance(scaleNotes, density) {
 function generatePsytrance(scaleNotes, density) {
   const root = scaleNotes[0], third = scaleNotes[2] || scaleNotes[1];
   for(let i=0; i<16; i++) {
-    if(Math.random() < density * 0.85) {
+    if(Math.random() < density * 0.9) {
       seq[i].note = i%3 === 0? third : root;
       seq[i].octave = 1;
       seq[i].accent = i%4 === 0;
-      seq[i].slide = Math.random() < 0.75;
+      seq[i].slide = Math.random() < 0.8;
     }
   }
 }
@@ -750,15 +664,12 @@ function generateHouse(scaleNotes, density) {
   const groove = [0,2,4,6,8,10,12,14];
   const seventh = scaleNotes[6] || scaleNotes[scaleNotes.length-1];
   groove.forEach(i => {
-    if(Math.random() < density * 0.9) {
+    if(Math.random() < density) {
       seq[i].note = i%4 === 0? scaleNotes[0] : seventh;
       seq[i].octave = 2;
       seq[i].accent = [0,8].includes(i);
-      seq[i].slide = Math.random() < 0.15;
+      seq[i].slide = Math.random() < 0.2;
     }
-  });
-  [1,5,9,13].forEach(i => {
-    if(Math.random() < density * 0.5) { seq[i].note = scaleNotes[0]; seq[i].octave = 1; }
   });
 }
 
@@ -766,20 +677,32 @@ function generateDrumAndBass(scaleNotes, density) {
   const dnbPattern = [0,3,6,9,12,15];
   const root = scaleNotes[0], third = scaleNotes[2] || scaleNotes[1];
   dnbPattern.forEach(i => {
-    if(Math.random() < density * 0.9) {
-      seq[i].note = Math.random() < 0.75? root : third;
+    if(Math.random() < density) {
+      seq[i].note = Math.random() < 0.7? root : third;
       seq[i].octave = 1;
       seq[i].accent = [0,9].includes(i);
-      seq[i].slide = Math.random() < 0.65;
+      seq[i].slide = Math.random() < 0.7;
     }
   });
   [2,5,8,11,14].forEach(i => {
-    if(Math.random() < density * 0.6) {
+    if(Math.random() < density * 0.5) {
       seq[i].note = root;
       seq[i].octave = 2;
       seq[i].slide = true;
     }
   });
+}
+
+function generateAcidClassic(scaleNotes, density) {
+  const root = scaleNotes[0], fifth = scaleNotes[4] || scaleNotes[0];
+  for(let i=0; i<16; i++) {
+    if(Math.random() < density) {
+      seq[i].note = Math.random() < 0.6? root : fifth;
+      seq[i].octave = Math.random() < 0.3? 1 : 2;
+      seq[i].accent = Math.random() < 0.4;
+      seq[i].slide = Math.random() < 0.6 && i > 0;
+    }
+  }
 }
 function updateStepUI() {
   seq.forEach((s, i) => {
@@ -798,93 +721,58 @@ function getStepFreq(step) {
   return noteFreq[baseNote];
 }
 
-// MOTOR HÍBRIDO OPTIMIZADO: Transistor Bass 0-100 + Decay TB-303 50-600ms
-let lastFreq = 65.41;
-let sharedFilter = null;
-let sharedVCA = null;
-
-// Crear nodos compartidos para ahorrar CPU
-function initAudioNodes() {
-  if(sharedFilter) return;
-  sharedFilter = ctx.createBiquadFilter();
-  sharedFilter.type = 'lowpass';
-  sharedVCA = ctx.createGain();
-  sharedVCA.connect(ctx.destination);
-}
-
 function create303Voice(freq, time, slide, accent, duration) {
-  initAudioNodes();
-
   const osc = ctx.createOscillator();
+  const filter = ctx.createBiquadFilter();
+  const vca = ctx.createGain();
+  const dist = ctx.createWaveShaper();
+
   osc.type = waveform;
   osc.frequency.value = freq * Math.pow(2, params.tune/12);
 
-  // 1. DRIVE pre-filtro del Transistor Bass
-  if(params.drive > 0 && driveCurve) {
-    const driveNode = ctx.createWaveShaper();
-    driveNode.curve = driveCurve;
-    driveNode.oversample = '2x';
-    osc.connect(driveNode).connect(sharedFilter);
-  } else {
-    osc.connect(sharedFilter);
+  if(params.dist > 0) {
+    const k = params.dist * 10;
+    const curve = new Float32Array(44100);
+    for(let i=0; i<44100; i++) {
+      const x = i * 2 / 44100 - 1;
+      curve[i] = (1 + k) * x / (1 + k * Math.abs(x));
+    }
+    dist.curve = curve;
+    dist.oversample = '4x';
   }
 
-  // 2. FILTRO: Cutoff 0-100 Transistor Bass = 27Hz-7.4kHz exponencial
-  const cutoffHz = 27 * Math.pow(274.07, params.cutoff / 100);
-  sharedFilter.Q.value = 0.5 + (params.resonance / 100) * 29.5;
+  filter.type = 'lowpass';
+  filter.Q.value = params.resonance;
 
-  // 3. ENV MOD 0-100 Transistor Bass = 0-8kHz
-  const envModHz = (params.envmod / 100) * 8000;
+  const baseCutoff = params.cutoff;
+  const envAmount = params.envmod * (accent? 1 + params.accent : 1);
+  const peakCutoff = Math.min(baseCutoff + envAmount, 18000);
 
-  // 4. ACCENT 0-100 Transistor Bass = +12dB + cutoff boost
-  const accentAmp = accent? Math.pow(10, (params.accent / 100 * 12) / 20) : 1;
-  const accentCutoff = accent? (params.accent / 100) * 2000 : 0;
+  filter.frequency.setValueAtTime(baseCutoff, time);
+  filter.frequency.linearRampToValueAtTime(peakCutoff, time + 0.005);
+  filter.frequency.exponentialRampToValueAtTime(baseCutoff, time + params.decay);
 
-  // 5. DECAY 50-600ms TB-303 hardware optimizado
-  const decaySec = params.decay / 1000;
-  const actualDecay = accent? decaySec * 0.5 : decaySec;
-
-  const peakCutoff = Math.min(cutoffHz + envModHz + accentCutoff, 20000);
-  const now = ctx.currentTime;
-
-  // Aplicar envelope solo si cambia el paso
-  if(time >= now) {
-    sharedFilter.frequency.cancelScheduledValues(time);
-    sharedFilter.frequency.setValueAtTime(cutoffHz, time);
-    sharedFilter.frequency.linearRampToValueAtTime(peakCutoff, time + 0.001);
-    sharedFilter.frequency.exponentialRampToValueAtTime(cutoffHz, time + actualDecay);
-  }
-
-  // 6. VCA con accent
-  const amp = 0.25 * accentAmp;
-  const gainNode = ctx.createGain();
-
-  gainNode.gain.setValueAtTime(0, time);
-  gainNode.gain.linearRampToValueAtTime(amp, time + 0.001);
+  const amp = accent? 0.8 : 0.4;
+  vca.gain.setValueAtTime(0, time);
+  vca.gain.linearRampToValueAtTime(amp, time + 0.003);
 
   if(slide) {
-    gainNode.gain.setValueAtTime(amp, time + duration - 0.01);
+    vca.gain.setValueAtTime(amp, time + duration - 0.01);
   } else {
-    gainNode.gain.exponentialRampToValueAtTime(0.001, time + actualDecay);
+    vca.gain.exponentialRampToValueAtTime(0.001, time + params.decay);
   }
 
-  // 7. DIST post-filtro - la mantengo
-  if(params.dist > 0 && distCurve) {
-    const distNode = ctx.createWaveShaper();
-    distNode.curve = distCurve;
-    distNode.oversample = '2x';
-    sharedFilter.connect(distNode).connect(gainNode);
+  if(params.dist > 0) {
+    osc.connect(dist).connect(filter).connect(vca).connect(ctx.destination);
   } else {
-    sharedFilter.connect(gainNode);
+    osc.connect(filter).connect(vca).connect(ctx.destination);
   }
-
-  gainNode.connect(sharedVCA);
 
   osc.start(time);
   osc.stop(time + duration + 0.1);
 }
 
-let lastStepFreq = 65.41;
+let lastFreq = 65.41;
 function scheduler() {
   const secondsPerStep = 60.0 / params.tempo / 4;
 
@@ -900,10 +788,10 @@ function scheduler() {
 
     const freq = getStepFreq(step);
     if(freq) {
-      const isSlide = step.slide && lastStepFreq;
+      const isSlide = step.slide && lastFreq;
       const dur = isSlide? secondsPerStep * 2 : secondsPerStep * 0.9;
       create303Voice(freq, nextNoteTime, step.slide, step.accent, dur);
-      lastStepFreq = freq;
+      lastFreq = freq;
     }
 
     nextNoteTime += secondsPerStep;
@@ -913,49 +801,62 @@ function scheduler() {
   if(isRunning) scheduleTimer = setTimeout(scheduler, 25);
 }
 
-// MIDI ROLAND TB-303 FORMAT 0 PPQ 96 - IDÉNTICO AL v8 QUE TE FUNCIONABA
+// MIDI FORMAT 0 - COMPATIBLE ROLAND TB-303 PLUGIN + FL STUDIO MOBILE
 document.getElementById('downloadMidi').onclick = () => {
-  const PPQN = 96;
-  const ticksPerStep = 24;
+  const PPQN = 96; // 96 ticks per quarter = estándar Roland
+  const ticksPerStep = 24; // 16th note = 96/4
   let events = [];
 
+  // Tempo Meta Event - debe ir primero
   const mpqn = Math.floor(60000000 / params.tempo);
   events.push({t: 0, d: [0xFF, 0x51, 0x03, (mpqn>>16)&0xFF, (mpqn>>8)&0xFF, mpqn&0xFF]});
+
+  // Time Signature 4/4
   events.push({t: 0, d: [0xFF, 0x58, 0x04, 0x04, 0x02, 0x18, 0x08]});
 
-  const name = 'TB-303';
+  // Track Name
+  const name = 'TB-303 Bassline';
   let nameBytes = [0xFF, 0x03, name.length];
   for(let i=0; i<name.length; i++) nameBytes.push(name.charCodeAt(i));
   events.push({t: 0, d: nameBytes});
 
+  // Notas en canal 0 - estilo Roland: notas cortas tipo blip
   seq.forEach((step, i) => {
     const freq = getStepFreq(step);
     if(freq) {
       const startTick = i * ticksPerStep;
       const midiNote = Math.max(0, Math.min(127, Math.round(69 + 12 * Math.log2(freq / 440))));
       const vel = step.accent? 127 : 100;
+      // Roland usa duraciones cortas: 20 ticks normal, 23 ticks si hay slide
       const dur = step.slide? 23 : 20;
 
-      events.push({t: startTick, d: [0x90, midiNote, vel]});
-      events.push({t: startTick + dur, d: [0x80, midiNote, 0x40]});
+      events.push({t: startTick, d: [0x90, midiNote, vel]}); // Note On Ch1
+      events.push({t: startTick + dur, d: [0x80, midiNote, 0x40]}); // Note Off Ch1
     }
   });
 
-  events.push({t: 384, d: [0xFF, 0x2F, 0x00]});
+  // End of Track
+  events.push({t: 16 * ticksPerStep, d: [0xFF, 0x2F, 0x00]});
+
+  // Ordenar por tick
   events.sort((a,b) => a.t - b.t);
 
+  // Convertir a delta times y construir chunk
   let track = [];
-  let prevTick = 0;
+  let lastTick = 0;
 
   events.forEach(ev => {
-    const delta = ev.t - prevTick;
+    const delta = ev.t - lastTick;
     track.push(...toVLQ(delta));
     track.push(...ev.d);
-    prevTick = ev.t;
+    lastTick = ev.t;
   });
 
+  // Construir archivo: MThd + MTrk
   let midi = [];
-  midi.push(0x4D,0x54,0x68,0x64, 0x00,0x06, 0x00, 0x00,0x01, 0x00,0x60);
+  // MThd: 4D 54 68 64, length=6, format=0, ntrks=1, division=96
+  midi.push(0x4D,0x54,0x68,0x64, 0x00,0x00,0x00,0x06, 0x00,0x00, 0x00,0x01, 0x00,0x60);
+  // MTrk
   midi.push(0x4D,0x54,0x72,0x6B);
   midi.push((track.length>>24)&0xFF, (track.length>>16)&0xFF, (track.length>>8)&0xFF, track.length&0xFF);
   midi.push(...track);
@@ -963,20 +864,24 @@ document.getElementById('downloadMidi').onclick = () => {
   downloadBlob(new Uint8Array(midi), 'tb303_pattern.mid', 'audio/midi');
 };
 
+// VLQ según spec MIDI oficial - idéntico al usado por Roland
 function toVLQ(value) {
   value = Math.floor(value);
-  if (value === 0) return [0];
+  if (value === 0) return [0x00];
+
   let bytes = [];
   bytes.push(value & 0x7F);
   value >>= 7;
+
   while (value > 0) {
     bytes.push((value & 0x7F) | 0x80);
     value >>= 7;
   }
+
   return bytes.reverse();
 }
 
-// WAV - Renderiza con motor optimizado
+// DESCARGA WAV - Renderiza 4 compases
 document.getElementById('downloadWav').onclick = async () => {
   const secondsPerStep = 60.0 / params.tempo / 4;
   const totalDuration = secondsPerStep * 16 * 4;
@@ -1004,51 +909,47 @@ function renderStepToContext(octx, freq, time, slide, accent, duration) {
   const osc = octx.createOscillator();
   const filter = octx.createBiquadFilter();
   const vca = octx.createGain();
+  const dist = octx.createWaveShaper();
 
   osc.type = waveform;
   osc.frequency.value = freq * Math.pow(2, params.tune/12);
 
-  if(params.drive > 0 && driveCurve) {
-    const driveNode = octx.createWaveShaper();
-    driveNode.curve = driveCurve;
-    driveNode.oversample = '2x';
-    osc.connect(driveNode).connect(filter);
-  } else {
-    osc.connect(filter);
+  if(params.dist > 0) {
+    const k = params.dist * 10;
+    const curve = new Float32Array(44100);
+    for(let i=0; i<44100; i++) {
+      const x = i * 2 / 44100 - 1;
+      curve[i] = (1 + k) * x / (1 + k * Math.abs(x));
+    }
+    dist.curve = curve;
+    dist.oversample = '4x';
   }
 
-  const cutoffHz = 27 * Math.pow(274.07, params.cutoff / 100);
   filter.type = 'lowpass';
-  filter.Q.value = 0.5 + (params.resonance / 100) * 29.5;
+  filter.Q.value = params.resonance;
 
-  const envModHz = (params.envmod / 100) * 8000;
-  const accentAmp = accent? Math.pow(10, (params.accent / 100 * 12) / 20) : 1;
-  const accentCutoff = accent? (params.accent / 100) * 2000 : 0;
-  const decaySec = params.decay / 1000;
-  const actualDecay = accent? decaySec * 0.5 : decaySec;
+  const baseCutoff = params.cutoff;
+  const envAmount = params.envmod * (accent? 1 + params.accent : 1);
+  const peakCutoff = Math.min(baseCutoff + envAmount, 18000);
 
-  const peakCutoff = Math.min(cutoffHz + envModHz + accentCutoff, 20000);
-  filter.frequency.setValueAtTime(cutoffHz, time);
-  filter.frequency.linearRampToValueAtTime(peakCutoff, time + 0.001);
-  filter.frequency.exponentialRampToValueAtTime(cutoffHz, time + actualDecay);
+  filter.frequency.setValueAtTime(baseCutoff, time);
+  filter.frequency.linearRampToValueAtTime(peakCutoff, time + 0.005);
+  filter.frequency.exponentialRampToValueAtTime(baseCutoff, time + params.decay);
 
-  const amp = 0.25 * accentAmp;
+  const amp = accent? 0.8 : 0.4;
   vca.gain.setValueAtTime(0, time);
-  vca.gain.linearRampToValueAtTime(amp, time + 0.001);
+  vca.gain.linearRampToValueAtTime(amp, time + 0.003);
 
   if(slide) {
     vca.gain.setValueAtTime(amp, time + duration - 0.01);
   } else {
-    vca.gain.exponentialRampToValueAtTime(0.001, time + actualDecay);
+    vca.gain.exponentialRampToValueAtTime(0.001, time + params.decay);
   }
 
-  if(params.dist > 0 && distCurve) {
-    const distNode = octx.createWaveShaper();
-    distNode.curve = distCurve;
-    distNode.oversample = '2x';
-    filter.connect(distNode).connect(vca).connect(octx.destination);
+  if(params.dist > 0) {
+    osc.connect(dist).connect(filter).connect(vca).connect(octx.destination);
   } else {
-    filter.connect(vca).connect(octx.destination);
+    osc.connect(filter).connect(vca).connect(octx.destination);
   }
 
   osc.start(time);
