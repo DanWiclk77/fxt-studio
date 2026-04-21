@@ -3,113 +3,122 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>TB-303 Neon</title>
+<title>TB-303 Emulator Pro</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
-*{box-sizing:border-box;margin:0}
-body{background:radial-gradient(ellipse at center,#0f1419 0%,#0a0a0f 100%);font-family:'Orbitron',monospace;color:#b8d4e3;display:flex;justify-content:center;align-items:center;min-height:100vh;padding:20px}
-.tb303{background:linear-gradient(145deg,#1a1f2e 0%,#0f1419 100%);width:100%;max-width:1050px;padding:20px;border-radius:12px;box-shadow:0 0 60px rgba(0,217,255,.15),0 20px 60px rgba(0,0,0,.8),inset 0 1px 0 rgba(255,255,255,.05);border:2px solid #00d9ff;position:relative}
-.tb303::before{content:'';position:absolute;top:-2px;left:-2px;right:-2px;bottom:-2px;background:linear-gradient(45deg,#00d9ff,#0066cc,#00d9ff);border-radius:12px;z-index:-1;opacity:.3;filter:blur(10px)}
-.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;padding-bottom:15px;border-bottom:2px solid rgba(0,217,255,.3)}
-.logo{font-weight:900;font-size:28px;letter-spacing:3px;color:#00d9ff;text-shadow:0 0 20px rgba(0,217,255,.8)}
-.logo span{font-weight:400;font-size:12px;margin-left:12px;color:#6b8a9f;letter-spacing:2px}
-.controls{display:grid;grid-template-columns:repeat(6,1fr);gap:15px;margin-bottom:15px;background:linear-gradient(145deg,#0d1117 0%,#080a0f 100%);padding:18px;border-radius:8px;border:1px solid rgba(0,217,255,.2);box-shadow:inset 0 2px 8px rgba(0,0,0,.6)}
-.knob-group{text-align:center}
-.knob-group label{display:block;font-size:9px;color:#00d9ff;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px;font-weight:700;text-shadow:0 0 8px rgba(0,217,255,.5)}
-input[type=range]{width:100%;height:6px;background:#0a0a0f;border-radius:3px;outline:none;-webkit-appearance:none;border:1px solid rgba(0,217,255,.3)}
-input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;background:linear-gradient(145deg,#00d9ff,#0099cc);border-radius:50%;cursor:pointer;box-shadow:0 0 15px rgba(0,217,255,.8);border:2px solid #0a0a0f}
-input[type=range]::-moz-range-thumb{width:16px;height:16px;background:linear-gradient(145deg,#00d9ff,#0099cc);border-radius:50%;cursor:pointer;box-shadow:0 0 15px rgba(0,217,255,.8);border:2px solid #0a0a0f}
-.value{font-size:10px;color:#00d9ff;margin-top:5px;font-weight:700;text-shadow:0 0 10px rgba(0,217,255,.6)}
-.switch-row{display:flex;gap:12px;align-items:center;background:linear-gradient(145deg,#0d1117 0%,#080a0f 100%);padding:12px 15px;border-radius:8px;margin-bottom:12px;flex-wrap:wrap;border:1px solid rgba(0,217,255,.2);box-shadow:inset 0 2px 8px rgba(0,0,0,.6)}
-.switch{display:flex;align-items:center;gap:8px;font-size:10px;text-transform:uppercase;color:#6b8a9f;font-weight:700;letter-spacing:1px}
-button{background:linear-gradient(145deg,#1a2332,#0f1419);border:1px solid rgba(0,217,255,.4);color:#b8d4e3;padding:8px 14px;border-radius:4px;cursor:pointer;font-weight:700;text-transform:uppercase;font-size:10px;letter-spacing:1px;transition:all .2s;box-shadow:0 2px 8px rgba(0,0,0,.5);font-family:'Orbitron',monospace}
-button:hover{background:linear-gradient(145deg,#243447,#1a2332);border-color:#00d9ff;box-shadow:0 0 15px rgba(0,217,255,.4)}
-button.active{background:linear-gradient(145deg,#00d9ff,#0099cc);color:#0a0a0f;border-color:#00d9ff;box-shadow:0 0 20px rgba(0,217,255,.8)}
-select{background:#0a0a0f;color:#00d9ff;border:1px solid rgba(0,217,255,.4);padding:7px 8px;border-radius:4px;font-size:10px;font-weight:700;font-family:'Orbitron',monospace;letter-spacing:1px;cursor:pointer;box-shadow:inset 0 2px 4px rgba(0,0,0,.6)}
-select:focus{outline:none;border-color:#00d9ff;box-shadow:0 0 15px rgba(0,217,255,.4)}
-.pattern-btns button{padding:8px 22px;font-size:14px}
-.sequencer{background:linear-gradient(145deg,#0d1117 0%,#080a0f 100%);padding:18px;border-radius:8px;border:1px solid rgba(0,217,255,.2);box-shadow:inset 0 2px 8px rgba(0,0,0,.6)}
-.steps{display:grid;grid-template-columns:repeat(16,1fr);gap:4px;margin-bottom:10px}
-.step{background:linear-gradient(145deg,#0a0a0f,#060708);border:1px solid rgba(0,217,255,.15);padding:6px 2px;text-align:center;border-radius:4px;display:flex;flex-direction:column;gap:3px;box-shadow:inset 0 2px 4px rgba(0,0,0,.8)}
-.step.playing{box-shadow:0 0 20px rgba(0,217,255,.8),inset 0 2px 4px rgba(0,0,0,.8);border-color:#00d9ff}
-.step select{width:100%;background:#000;color:#00ff88;border:1px solid rgba(0,255,136,.3);font-size:10px;text-align:center;padding:2px}
-.step-controls{display:flex;justify-content:space-around;align-items:center;gap:2px}
-.step-btn{background:linear-gradient(145deg,#1a2332,#0f1419);border:1px solid rgba(0,217,255,.3);color:#6b8a9f;font-size:8px;padding:2px 4px;border-radius:3px;cursor:pointer;line-height:1;min-width:18px;font-weight:700}
-.step-btn:hover{background:linear-gradient(145deg,#243447,#1a2332);border-color:#00d9ff}
-.step-btn.active{background:linear-gradient(145deg,#00d9ff,#0099cc);color:#0a0a0f;border-color:#00d9ff;box-shadow:0 0 12px rgba(0,217,255,.8)}
-.oct-indicator{font-size:8px;color:#00d9ff;font-weight:900;text-shadow:0 0 8px rgba(0,217,255,.8)}
-.step-labels{display:grid;grid-template-columns:repeat(16,1fr);gap:4px;font-size:8px;text-align:center;color:#4a5f6f;margin-bottom:6px;font-weight:700}
-.led-row{display:grid;grid-template-columns:repeat(16,1fr);gap:4px;margin-bottom:6px}
-.led{height:7px;background:#0a0a0f;border-radius:4px;border:1px solid rgba(0,217,255,.2);box-shadow:inset 0 2px 4px rgba(0,0,0,.8)}
-.led.on{background:#00d9ff;box-shadow:0 0 15px rgba(0,217,255,1);border-color:#00d9ff}
-#currentPat{color:#00d9ff;font-weight:900;text-shadow:0 0 10px rgba(0,217,255,.8)}
-@media(max-width:768px){.controls{grid-template-columns:repeat(3,1fr)}.logo{font-size:22px}.steps{grid-template-columns:repeat(8,1fr)}}
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#1a1a1a;font-family:'Roboto Condensed',sans-serif;display:flex;justify-content:center;align-items:center;min-height:100vh;padding:15px}
+.tb303{background:linear-gradient(180deg,#e8e8e0 0%,#d0d0c8 100%);width:100%;max-width:1100px;padding:20px;border-radius:4px;box-shadow:0 15px 40px rgba(0,0,0,.8),inset 0 2px 0 rgba(255,255,255,.8),inset 0 -1px 0 rgba(0,0,0,.3);border:3px solid #222}
+.top-section{border:2px solid #222;padding:12px;margin-bottom:12px;background:#d8d8d0;position:relative}
+.brand-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.logo{font-size:24px;font-weight:900;color:#1a1a1a;letter-spacing:1px}
+.logo::before{content:'R';display:inline-block;width:20px;height:20px;background:#1a1a1a;color:#d8d8d0;text-align:center;line-height:20px;margin-right:6px;font-size:14px}
+.bassline{font-size:22px;font-weight:900;color:#1a1a1a;letter-spacing:2px}
+.model{font-size:11px;color:#333;text-align:right;margin-top:2px}
+.knobs-row{display:grid;grid-template-columns:repeat(7,1fr);gap:12px;padding:15px 0;border-top:1px solid #aaa;border-bottom:1px solid #aaa}
+.knob{text-align:center}
+.knob-label{font-size:8px;font-weight:700;color:#1a1a1a;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px}
+.knob input[type=range]{width:100%;height:4px;background:#333;border-radius:2px;outline:none;-webkit-appearance:none;border:1px solid #000}
+.knob input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;background:radial-gradient(circle,#666 0%,#333 100%);border-radius:50%;cursor:pointer;border:2px solid #1a1a1a;box-shadow:0 2px 4px rgba(0,0,0,.6)}
+.knob input[type=range]::-moz-range-thumb{width:14px;height:14px;background:radial-gradient(circle,#666 0%,#333 100%);border-radius:50%;cursor:pointer;border:2px solid #1a1a1a;box-shadow:0 2px 4px rgba(0,0,0,.6)}
+.knob-val{font-size:9px;color:#d63000;font-weight:900;margin-top:4px}
+.controls-row{display:flex;gap:10px;flex-wrap:wrap;padding:10px 0;border-bottom:1px solid #aaa;margin-bottom:10px}
+.ctrl-group{display:flex;align-items:center;gap:6px}
+.ctrl-label{font-size:9px;font-weight:700;color:#1a1a1a;text-transform:uppercase}
+.btn{background:linear-gradient(180deg,#4a4a4a 0%,#2a2a2a 100%);border:2px solid #1a1a1a;color:#ddd;padding:6px 12px;border-radius:2px;cursor:pointer;font-weight:700;font-size:10px;text-transform:uppercase;box-shadow:0 2px 4px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.1);font-family:'Roboto Condensed',sans-serif;letter-spacing:.5px}
+.btn:hover{background:linear-gradient(180deg,#5a5a5a 0%,#3a3a3a 100%)}
+.btn.active{background:linear-gradient(180deg,#d63000 0%,#a02000 100%);color:#fff;border-color:#000}
+select{background:#1a1a1a;color:#ff6b00;border:2px solid #333;padding:5px 8px;border-radius:2px;font-size:10px;font-weight:700;font-family:'Roboto Condensed',sans-serif;cursor:pointer}
+.seq-section{background:#c8c8c0;padding:15px;border:2px solid #222;margin-top:12px}
+.seq-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #999}
+.pattern-btns{display:flex;gap:6px}
+.pattern-btns button{padding:6px 18px;font-size:13px}
+.step-labels{display:grid;grid-template-columns:repeat(16,1fr);gap:3px;font-size:8px;text-align:center;color:#555;margin-bottom:4px;font-weight:700}
+.led-row{display:grid;grid-template-columns:repeat(16,1fr);gap:3px;margin-bottom:6px}
+.led{height:6px;background:#400;border-radius:1px;border:1px solid #200;box-shadow:inset 0 1px 2px rgba(0,0,0,.8)}
+.led.on{background:#ff0000;box-shadow:0 0 8px #ff0000,inset 0 1px 0 rgba(255,255,255,.3)}
+.steps{display:grid;grid-template-columns:repeat(16,1fr);gap:3px}
+.step{background:linear-gradient(180deg,#2a2a2a 0%,#1a1a1a 100%);border:2px solid #000;padding:4px 2px;border-radius:1px;display:flex;flex-direction:column;gap:2px;box-shadow:inset 0 1px 3px rgba(0,0,0,.8)}
+.step.playing{box-shadow:0 0 12px #ff6b00,inset 0 1px 3px rgba(0,0,0,.8);border-color:#ff6b00}
+.step select{width:100%;background:#000;color:#00ff00;border:1px solid #333;font-size:9px;text-align:center;padding:1px;font-weight:700}
+.step-ctrls{display:flex;justify-content:space-between;gap:1px}
+.step-btn{background:linear-gradient(180deg,#3a3a3a 0%,#2a2a2a 100%);border:1px solid #000;color:#999;font-size:7px;padding:2px 3px;border-radius:1px;cursor:pointer;line-height:1;min-width:16px;font-weight:900}
+.step-btn:hover{background:linear-gradient(180deg,#4a4a4a 0%,#3a3a3a 100%)}
+.step-btn.active{background:linear-gradient(180deg,#ff6b00 0%,#d63000 100%);color:#fff;border-color:#000;box-shadow:0 0 6px #ff6b00}
+.oct-ind{font-size:7px;color:#ff6b00;font-weight:900;text-align:center}
+.info-bar{font-size:8px;color:#555;margin-top:8px;text-align:center;font-weight:700;letter-spacing:.5px}
+#currentPat{color:#d63000;font-weight:900}
+@media(max-width:768px){.knobs-row{grid-template-columns:repeat(4,1fr)}.steps{grid-template-columns:repeat(8,1fr)}.logo{font-size:18px}.bassline{font-size:16px}}
 </style>
 </head>
 <body>
 <div class="tb303">
-<div class="header">
-<div class="logo">TB-303<span>BASS LINE NEON</span></div>
-<div><button id="runBtn">RUN</button><button id="clearBtn">CLEAR</button></div>
+<div class="top-section">
+<div class="brand-row">
+<div><div class="logo">Roland</div></div>
+<div><div class="bassline">Bass Line</div><div class="model">TB-303 Computer Controlled</div></div>
 </div>
-<div class="controls">
-<div class="knob-group"><label>Tuning</label><input type="range" id="tune" min="-12" max="12" value="0" step="1"><div class="value" id="tuneVal">0</div></div>
-<div class="knob-group"><label>Cut Off Freq</label><input type="range" id="cutoff" min="100" max="8000" value="1000" step="10"><div class="value" id="cutoffVal">1000</div></div>
-<div class="knob-group"><label>Resonance</label><input type="range" id="resonance" min="0" max="30" value="10" step="0.1"><div class="value" id="resVal">10.0</div></div>
-<div class="knob-group"><label>Env Mod</label><input type="range" id="envmod" min="0" max="8000" value="2000" step="10"><div class="value" id="envmodVal">2000</div></div>
-<div class="knob-group"><label>Decay</label><input type="range" id="decay" min="0.05" max="2" value="0.3" step="0.01"><div class="value" id="decayVal">0.30</div></div>
-<div class="knob-group"><label>Accent</label><input type="range" id="accent" min="0" max="1" value="0.5" step="0.01"><div class="value" id="accentVal">0.50</div></div>
+<div class="knobs-row">
+<div class="knob"><div class="knob-label">Tuning</div><input type="range" id="tune" min="-12" max="12" value="0" step="1"><div class="knob-val" id="tuneVal">0</div></div>
+<div class="knob"><div class="knob-label">Cut Off Freq</div><input type="range" id="cutoff" min="100" max="8000" value="1000" step="10"><div class="knob-val" id="cutoffVal">1000</div></div>
+<div class="knob"><div class="knob-label">Resonance</div><input type="range" id="resonance" min="0" max="30" value="10" step="0.1"><div class="knob-val" id="resVal">10.0</div></div>
+<div class="knob"><div class="knob-label">Env Mod</div><input type="range" id="envmod" min="0" max="8000" value="2000" step="10"><div class="knob-val" id="envmodVal">2000</div></div>
+<div class="knob"><div class="knob-label">Decay</div><input type="range" id="decay" min="0.05" max="2" value="0.3" step="0.01"><div class="knob-val" id="decayVal">0.30</div></div>
+<div class="knob"><div class="knob-label">Accent</div><input type="range" id="accent" min="0" max="1" value="0.5" step="0.01"><div class="knob-val" id="accentVal">0.50</div></div>
+<div class="knob"><div class="knob-label">Volume</div><input type="range" id="vol" min="0" max="1" value="0.7" step="0.01"><div class="knob-val" id="volVal">0.70</div></div>
 </div>
-<div class="switch-row">
-<div class="switch"><label>Wave:</label><button id="sawBtn" class="active">SAW</button><button id="squareBtn">SQUARE</button></div>
-<div class="switch"><label>Tempo:</label><input type="range" id="tempo" min="60" max="200" value="128" step="1" style="width:90px"><span id="tempoVal" style="width:30px;display:inline-block">128</span></div>
-<div class="switch"><label>Dist:</label><input type="range" id="dist" min="0" max="100" value="0" step="1" style="width:70px"><span id="distVal" style="width:25px;display:inline-block">0</span></div>
-<div class="pattern-btns"><button id="patA" class="active">A</button><button id="patB">B</button></div>
 </div>
-<div class="switch-row">
-<div class="switch"><label>Root:</label><select id="rootSelect"><option value="0">C</option><option value="1">C#</option><option value="2">D</option><option value="3">D#</option><option value="4">E</option><option value="5">F</option><option value="6">F#</option><option value="7">G</option><option value="8">G#</option><option value="9">A</option><option value="10">A#</option><option value="11">B</option></select></div>
-<div class="switch"><label>Scale:</label><select id="scaleSelect"><option value="minor">Natural Minor</option><option value="major">Major</option><option value="harmonic">Harmonic Minor</option><option value="melodic">Melodic Minor</option><option value="pentatonic_maj">Pentatonic Major</option><option value="pentatonic_min">Pentatonic Minor</option><option value="blues">Blues</option><option value="chromatic">Chromatic</option></select></div>
-<div class="switch"><label>Genre:</label><select id="genreSelect"><option value="acid">Acid Techno</option><option value="melodic">Melodic Techno</option><option value="techhouse">Tech House</option><option value="minimal">Minimal Techno</option><option value="hightech">High Tech Minimal</option><option value="trance">Trance</option><option value="dnb">Drum & Bass</option></select></div>
-<div class="switch"><label>Density:</label><input type="range" id="density" min="20" max="100" value="60" step="5" style="width:70px"><span id="densityVal" style="width:35px;display:inline-block">60%</span></div>
-<button id="randomBtn">RANDOM</button>
+<div class="controls-row">
+<div class="ctrl-group"><span class="ctrl-label">Wave:</span><button id="sawBtn" class="btn active">SAW</button><button id="squareBtn" class="btn">SQUARE</button></div>
+<div class="ctrl-group"><span class="ctrl-label">Tempo:</span><input type="range" id="tempo" min="60" max="200" value="128" step="1" style="width:80px"><span id="tempoVal" style="width:28px;display:inline-block;font-size:10px;font-weight:900;color:#d63000">128</span></div>
+<div class="ctrl-group"><span class="ctrl-label">Dist:</span><input type="range" id="dist" min="0" max="100" value="0" step="1" style="width:60px"><span id="distVal" style="width:22px;display:inline-block;font-size:10px;font-weight:900;color:#d63000">0</span></div>
+<div class="pattern-btns"><button id="patA" class="btn active">A</button><button id="patB" class="btn">B</button></div>
+<div class="ctrl-group"><button id="runBtn" class="btn">RUN</button><button id="clearBtn" class="btn">CLEAR</button></div>
 </div>
-<div class="switch-row">
-<div class="switch"><label>Export:</label><button id="exportWav">WAV</button><button id="exportMidi">MIDI</button></div>
+<div class="controls-row">
+<div class="ctrl-group"><span class="ctrl-label">Root:</span><select id="rootSelect"><option value="0">C</option><option value="1">C#</option><option value="2">D</option><option value="3">D#</option><option value="4">E</option><option value="5">F</option><option value="6">F#</option><option value="7">G</option><option value="8">G#</option><option value="9">A</option><option value="10">A#</option><option value="11">B</option></select></div>
+<div class="ctrl-group"><span class="ctrl-label">Scale:</span><select id="scaleSelect"><option value="minor">Minor</option><option value="major">Major</option><option value="harmonic">Harmonic</option><option value="melodic">Melodic</option><option value="pentatonic_min">Pent Min</option><option value="pentatonic_maj">Pent Maj</option><option value="blues">Blues</option><option value="chromatic">Chromatic</option></select></div>
+<div class="ctrl-group"><span class="ctrl-label">Genre:</span><select id="genreSelect"><option value="acid">Acid Techno</option><option value="melodic">Melodic Techno</option><option value="techhouse">Tech House</option><option value="minimal">Minimal</option><option value="hightech">High Tech Min</option><option value="trance">Trance</option><option value="dnb">Drum & Bass</option></select></div>
+<div class="ctrl-group"><span class="ctrl-label">Density:</span><input type="range" id="density" min="20" max="100" value="60" step="5" style="width:60px"><span id="densityVal" style="width:32px;display:inline-block;font-size:10px;font-weight:900;color:#d63000">60%</span></div>
+<button id="randomBtn" class="btn">RANDOM</button>
 </div>
-<div class="sequencer">
+<div class="controls-row">
+<div class="ctrl-group"><span class="ctrl-label">Export:</span><button id="exportWav" class="btn">WAV</button><button id="exportMidi" class="btn">MIDI</button></div>
+</div>
+<div class="seq-section">
+<div class="seq-header"><div class="ctrl-label">STEP SEQUENCER</div><div class="ctrl-label">PATTERN <span id="currentPat">A</span></div></div>
 <div class="step-labels"><div>1</div><div>2</div><div>3</div><div>4</div><div>5</div><div>6</div><div>7</div><div>8</div><div>9</div><div>10</div><div>11</div><div>12</div><div>13</div><div>14</div><div>15</div><div>16</div></div>
 <div class="led-row" id="leds"></div>
 <div class="steps" id="steps"></div>
-<div style="font-size:9px;color:#4a5f6f;margin-top:8px;text-align:center;font-weight:700;letter-spacing:1px">PATTERN <span id="currentPat">A</span> | NOTA | O- O+ | S A</div>
+<div class="info-bar">NOTA | O- O+ | S A</div>
 </div>
 </div>
 <script>
 const ctx=new (window.AudioContext||window.webkitAudioContext)();
 let isRunning=false,currentStep=0,nextNoteTime=0,waveform='sawtooth',scheduleTimer,currentPattern='A';
-const params={tune:0,cutoff:1000,resonance:10,envmod:2000,decay:0.3,accent:0.5,tempo:128,dist:0,density:60,root:0};
+const p={tune:0,cutoff:1000,resonance:10,envmod:2000,decay:0.3,accent:0.5,tempo:128,dist:0,density:60,root:0,vol:0.7};
 const scales={major:[0,2,4,5,7,9,11],minor:[0,2,3,5,7,8,10],harmonic:[0,2,3,5,7,8,11],melodic:[0,2,3,5,7,9,11],pentatonic_maj:[0,2,4,7,9],pentatonic_min:[0,3,5,7,10],blues:[0,3,5,6,7,10],chromatic:[0,1,2,3,4,5,6,7,8,9,10,11]};
 const baseNotes=['C2','C#2','D2','D#2','E2','F2','F#2','G2','G#2','A2','A#2','B2'];
 const noteFreq={'C1':32.70,'C#1':34.65,'D1':36.71,'D#1':38.89,'E1':41.20,'F1':43.65,'F#1':46.25,'G1':49.00,'G#1':51.91,'A1':55.00,'A#1':58.27,'B1':61.74,'C2':65.41,'C#2':69.30,'D2':73.42,'D#2':77.78,'E2':82.41,'F2':87.31,'F#2':92.50,'G2':98.00,'G#2':103.8,'A2':110.0,'A#2':116.5,'B2':123.5,'C3':130.8,'C#3':138.6,'D3':146.8,'D#3':155.6,'E3':164.8,'F3':174.6,'F#3':185.0,'G3':196.0,'G#3':207.7,'A3':220.0,'A#3':233.1,'B3':246.9};
-const midiNoteMap={'C1':36,'C#1':37,'D1':38,'D#1':39,'E1':40,'F1':41,'F#1':42,'G1':43,'G#1':44,'A1':45,'A#1':46,'B1':47,'C2':48,'C#2':49,'D2':50,'D#2':51,'E2':52,'F2':53,'F#2':54,'G2':55,'G#2':56,'A2':57,'A#2':58,'B2':59,'C3':60,'C#3':61,'D3':62,'D#3':63,'E3':64,'F3':65,'F#3':66,'G3':67,'G#3':68,'A3':69,'A#3':70,'B3':71};
+const midiMap={'C1':36,'C#1':37,'D1':38,'D#1':39,'E1':40,'F1':41,'F#1':42,'G1':43,'G#1':44,'A1':45,'A#1':46,'B1':47,'C2':48,'C#2':49,'D2':50,'D#2':51,'E2':52,'F2':53,'F#2':54,'G2':55,'G#2':56,'A2':57,'A#2':58,'B2':59,'C3':60,'C#3':61,'D3':62,'D#3':63,'E3':64,'F3':65,'F#3':66,'G3':67,'G#3':68,'A3':69,'A#3':70,'B3':71};
 const patterns={A:Array(16).fill().map(()=>({note:'OFF',octave:2,slide:false,accent:false})),B:Array(16).fill().map(()=>({note:'OFF',octave:2,slide:false,accent:false}))};
 let seq=patterns.A;
 
-// Build sequencer UI
+// Build UI
 const stepsDiv=document.getElementById('steps'),ledsDiv=document.getElementById('leds');
 for(let i=0;i<16;i++){
-stepsDiv.innerHTML+=`<div class="step"><select data-step="${i}"><option value="OFF">OFF</option>${baseNotes.map(n=>`<option value="${n}">${n}</option>`).join('')}</select><div class="step-controls"><button class="step-btn oct-down" data-step="${i}">O-</button><span class="oct-indicator" id="oct-${i}">2</span><button class="step-btn oct-up" data-step="${i}">O+</button></div><div class="step-controls"><button class="step-btn slide-btn" data-step="${i}">S</button><button class="step-btn accent-btn" data-step="${i}">A</button></div></div>`;
+stepsDiv.innerHTML+=`<div class="step"><select data-step="${i}"><option value="OFF">OFF</option>${baseNotes.map(n=>`<option value="${n}">${n}</option>`).join('')}</select><div class="step-ctrls"><button class="step-btn oct-down" data-step="${i}">O-</button><span class="oct-ind" id="oct-${i}">2</span><button class="step-btn oct-up" data-step="${i}">O+</button></div><div class="step-ctrls"><button class="step-btn slide-btn" data-step="${i}">S</button><button class="step-btn accent-btn" data-step="${i}">A</button></div></div>`;
 ledsDiv.innerHTML+=`<div class="led"></div>`;
 }
 
-// Event listeners - Knobs
+// Knob listeners
 document.querySelectorAll('input[type=range]').forEach(input=>{
-input.addEventListener('input',e=>{
-const id=e.target.id;params[id]=parseFloat(e.target.value);
-const val=params[id];
-document.getElementById(id+'Val').textContent=id==='density'?val+'%':id==='decay'||id==='accent'||id==='resonance'?val.toFixed(2):val;
-})});
-
-document.getElementById('rootSelect').onchange=e=>params.root=parseInt(e.target.value);
+input.oninput=e=>{
+const id=e.target.id;p[id]=parseFloat(e.target.value);
+const val=p[id];
+document.getElementById(id+'Val').textContent=id==='density'?val+'%':id==='decay'||id==='accent'||id==='resonance'||id==='vol'?val.toFixed(2):val;
+}});
+document.getElementById('rootSelect').onchange=e=>p.root=parseInt(e.target.value);
 
 // Waveform
 document.getElementById('sawBtn').onclick=()=>{waveform='sawtooth';document.getElementById('sawBtn').classList.add('active');document.getElementById('squareBtn').classList.remove('active')};
@@ -127,46 +136,46 @@ document.querySelectorAll('.oct-up').forEach(btn=>btn.onclick=e=>{const i=e.targ
 document.querySelectorAll('.slide-btn').forEach(btn=>btn.onclick=e=>{const i=e.target.dataset.step;seq[i].slide=!seq[i].slide;e.target.classList.toggle('active',seq[i].slide)});
 document.querySelectorAll('.accent-btn').forEach(btn=>btn.onclick=e=>{const i=e.target.dataset.step;seq[i].accent=!seq[i].accent;e.target.classList.toggle('active',seq[i].accent)});
 
-// Run/Stop
+// Run/Clear
 document.getElementById('clearBtn').onclick=()=>{seq.forEach(s=>{s.note='OFF';s.octave=2;s.slide=false;s.accent=false});updateUI()};
 document.getElementById('runBtn').onclick=async()=>{
 if(ctx.state==='suspended')await ctx.resume();
 isRunning=!isRunning;
 document.getElementById('runBtn').classList.toggle('active');
 document.getElementById('runBtn').textContent=isRunning?'STOP':'RUN';
-if(isRunning){currentStep=0;nextNoteTime=ctx.currentTime+0.1;scheduler()}else{clearTimeout(scheduleTimer);document.querySelectorAll('.led').forEach(l=>l.classList.remove('on'));document.querySelectorAll('.step').forEach(s=>s.classList.remove('playing'))}
+if(isRunning){currentStep=0;nextNoteTime=ctx.currentTime+.1;scheduler()}else{clearTimeout(scheduleTimer);document.querySelectorAll('.led').forEach(l=>l.classList.remove('on'));document.querySelectorAll('.step').forEach(s=>s.classList.remove('playing'))}
 };
 
-// Random generator
+// Random Generator
 document.getElementById('randomBtn').onclick=()=>{
-const scale=document.getElementById('scaleSelect').value,genre=document.getElementById('genreSelect').value,density=params.density/100;
-generatePattern(scale,genre,density);
+const scale=document.getElementById('scaleSelect').value,genre=document.getElementById('genreSelect').value,density=p.density/100;
+genPattern(scale,genre,density);
 };
 
 function getScaleNotes(scaleName,root){
 return scales[scaleName].map(i=>baseNotes[(root+i)%12]);
 }
 
-function generatePattern(scaleName,genre,density){
-const scaleNotes=getScaleNotes(scaleName,params.root);
+function genPattern(scaleName,genre,density){
+const notes=getScaleNotes(scaleName,p.root);
 seq.forEach(s=>{s.note='OFF';s.octave=2;s.slide=false;s.accent=false});
-if(genre==='acid')genAcid(scaleNotes,density);
-else if(genre==='melodic')genMelodic(scaleNotes,density);
-else if(genre==='techhouse')genTechHouse(scaleNotes,density);
-else if(genre==='minimal')genMinimal(scaleNotes,density);
-else if(genre==='hightech')genHighTech(scaleNotes,density);
-else if(genre==='trance')genTrance(scaleNotes,density);
-else if(genre==='dnb')genDnB(scaleNotes,density);
+if(genre==='acid')genAcid(notes,density);
+else if(genre==='melodic')genMelodic(notes,density);
+else if(genre==='techhouse')genTechHouse(notes,density);
+else if(genre==='minimal')genMinimal(notes,density);
+else if(genre==='hightech')genHighTech(notes,density);
+else if(genre==='trance')genTrance(notes,density);
+else if(genre==='dnb')genDnB(notes,density);
 updateUI();
 }
 
-function genAcid(notes,d){const root=notes[0],fifth=notes[4]||notes[0];for(let i=0;i<16;i++)if(Math.random()<d)if(i%4===0||Math.random()<.7){seq[i].note=Math.random()<.6?root:fifth;seq[i].octave=Math.random()<.3?1:2;seq[i].accent=i%4===0||Math.random()<.3;seq[i].slide=Math.random()<.6&&i>0}}
-function genMelodic(notes,d){const prog=[0,2,4,2];for(let i=0;i<16;i++)if(Math.random()<d){const p=Math.floor(i/4)%4;seq[i].note=notes[prog[p]%notes.length];seq[i].octave=i%8<4?2:3;seq[i].accent=i%4===0||Math.random()<.2;seq[i].slide=Math.random()<.3}}
-function genTechHouse(notes,d){[0,3,4,7,10,12,15].forEach(i=>{if(Math.random()<d*1.2){seq[i].note=notes[Math.floor(Math.random()*notes.length)];seq[i].octave=2;seq[i].accent=[0,4,8,12].includes(i);seq[i].slide=Math.random()<.2}})}
-function genMinimal(notes,d){const main=notes[0],alt=notes[2]||notes[1];[0,6,8,14].forEach(i=>{if(Math.random()<d){seq[i].note=Math.random()<.7?main:alt;seq[i].octave=2;seq[i].accent=i===0;seq[i].slide=false}})}
-function genHighTech(notes,d){const drop=[4,5,12,13];for(let i=0;i<16;i++){if(drop.includes(i))continue;if(i%2===1&&Math.random()<d*.9){seq[i].note=notes[Math.floor(Math.random()*3)];seq[i].octave=2;seq[i].accent=Math.random()<.7;seq[i].slide=false}if(i%4===0&&Math.random()<d*.8){seq[i].note=notes[0];seq[i].octave=1;seq[i].accent=true;seq[i].slide=false}if(Math.random()<d*.4){seq[i].note=notes[Math.floor(Math.random()*2)];seq[i].octave=3;seq[i].accent=Math.random()<.4}}}
-function genTrance(notes,d){const arp=[0,2,4,7,4,2];for(let i=0;i<16;i++)if(Math.random()<d){const a=i%arp.length;seq[i].note=notes[arp[a]%notes.length];seq[i].octave=i<8?2:3;seq[i].accent=i%4===0;seq[i].slide=Math.random()<.4&&i>0}}
-function genDnB(notes,d){const sub=notes[0],high=notes[4]||notes[2];[0,3,6,8,11,14].forEach(i=>{if(Math.random()<d*.9){seq[i].note=sub;seq[i].octave=1;seq[i].accent=[0,8].includes(i);seq[i].slide=false}});[1,5,9,13].forEach(i=>{if(Math.random()<d*.7){seq[i].note=high;seq[i].octave=2;seq[i].accent=Math.random()<.5;seq[i].slide=Math.random()<.3}if(Math.random()<d*.5&&i+1<16){seq[i+1].note=sub;seq[i+1].octave=2;seq[i+1].accent=false;seq[i+1].slide=true}})}
+function genAcid(n,d){const r=n[0],f=n[4]||n[0];for(let i=0;i<16;i++)if(Math.random()<d)if(i%4===0||Math.random()<.7){seq[i].note=Math.random()<.6?r:f;seq[i].octave=Math.random()<.3?1:2;seq[i].accent=i%4===0||Math.random()<.3;seq[i].slide=Math.random()<.6&&i>0}}
+function genMelodic(n,d){const prog=[0,2,4,2];for(let i=0;i<16;i++)if(Math.random()<d){const p=Math.floor(i/4)%4;seq[i].note=n[prog[p]%n.length];seq[i].octave=i%8<4?2:3;seq[i].accent=i%4===0||Math.random()<.2;seq[i].slide=Math.random()<.3}}
+function genTechHouse(n,d){[0,3,4,7,10,12,15].forEach(i=>{if(Math.random()<d*1.2){seq[i].note=n[Math.floor(Math.random()*n.length)];seq[i].octave=2;seq[i].accent=[0,4,8,12].includes(i);seq[i].slide=Math.random()<.2}})}
+function genMinimal(n,d){const m=n[0],a=n[2]||n[1];[0,6,8,14].forEach(i=>{if(Math.random()<d){seq[i].note=Math.random()<.7?m:a;seq[i].octave=2;seq[i].accent=i===0;seq[i].slide=false}})}
+function genHighTech(n,d){const drop=[4,5,12,13];for(let i=0;i<16;i++){if(drop.includes(i))continue;if(i%2===1&&Math.random()<d*.9){seq[i].note=n[Math.floor(Math.random()*3)];seq[i].octave=2;seq[i].accent=Math.random()<.7;seq[i].slide=false}if(i%4===0&&Math.random()<d*.8){seq[i].note=n[0];seq[i].octave=1;seq[i].accent=true;seq[i].slide=false}if(Math.random()<d*.4){seq[i].note=n[Math.floor(Math.random()*2)];seq[i].octave=3;seq[i].accent=Math.random()<.4}}}
+function genTrance(n,d){const arp=[0,2,4,7,4,2];for(let i=0;i<16;i++)if(Math.random()<d){const a=i%arp.length;seq[i].note=n[arp[a]%n.length];seq[i].octave=i<8?2:3;seq[i].accent=i%4===0;seq[i].slide=Math.random()<.4&&i>0}}
+function genDnB(n,d){const sub=n[0],high=n[4]||n[2];[0,3,6,8,11,14].forEach(i=>{if(Math.random()<d*.9){seq[i].note=sub;seq[i].octave=1;seq[i].accent=[0,8].includes(i);seq[i].slide=false}});[1,5,9,13].forEach(i=>{if(Math.random()<d*.7){seq[i].note=high;seq[i].octave=2;seq[i].accent=Math.random()<.5;seq[i].slide=Math.random()<.3}if(Math.random()<d*.5&&i+1<16){seq[i+1].note=sub;seq[i+1].octave=2;seq[i+1].accent=false;seq[i+1].slide=true}})}
 
 function updateUI(){
 seq.forEach((s,i)=>{
@@ -189,27 +198,28 @@ if(step.note==='OFF')return null;
 let n=step.note;
 if(step.octave===1)n=step.note.replace('2','1');
 if(step.octave===3)n=step.note.replace('2','3');
-return midiNoteMap[n];
+return midiMap[n];
 }
 
-// Audio engine
+// Audio Engine
 function create303Voice(freq,time,slide,accent,duration,dest=ctx.destination){
-const osc=ctx.createOscillator(),filter=ctx.createBiquadFilter(),vca=ctx.createGain(),dist=ctx.createWaveShaper();
-osc.type=waveform;osc.frequency.value=freq*Math.pow(2,params.tune/12);
-if(params.dist>0){const k=params.dist*10,curve=new Float32Array(44100);for(let i=0;i<44100;i++){const x=i*2/44100-1;curve[i]=(1+k)*x/(1+k*Math.abs(x))}dist.curve=curve;dist.oversample='4x'}
-filter.type='lowpass';filter.Q.value=params.resonance;
-const base=params.cutoff,envAmt=params.envmod*(accent?1+params.accent:1),peak=Math.min(base+envAmt,18000);
-filter.frequency.setValueAtTime(base,time);filter.frequency.linearRampToValueAtTime(peak,time+.005);filter.frequency.exponentialRampToValueAtTime(base,time+params.decay);
+const osc=ctx.createOscillator(),filter=ctx.createBiquadFilter(),vca=ctx.createGain(),dist=ctx.createWaveShaper(),master=ctx.createGain();
+osc.type=waveform;osc.frequency.value=freq*Math.pow(2,p.tune/12);
+if(p.dist>0){const k=p.dist*10,curve=new Float32Array(44100);for(let i=0;i<44100;i++){const x=i*2/44100-1;curve[i]=(1+k)*x/(1+k*Math.abs(x))}dist.curve=curve;dist.oversample='4x'}
+filter.type='lowpass';filter.Q.value=p.resonance;
+const base=p.cutoff,envAmt=p.envmod*(accent?1+p.accent:1),peak=Math.min(base+envAmt,18000);
+filter.frequency.setValueAtTime(base,time);filter.frequency.linearRampToValueAtTime(peak,time+.005);filter.frequency.exponentialRampToValueAtTime(base,time+p.decay);
 const amp=accent?.8:.4;
 vca.gain.setValueAtTime(0,time);vca.gain.linearRampToValueAtTime(amp,time+.003);
-if(slide)vca.gain.setValueAtTime(amp,time+duration-.01);else vca.gain.exponentialRampToValueAtTime(.001,time+params.decay);
-if(params.dist>0)osc.connect(dist).connect(filter).connect(vca).connect(dest);else osc.connect(filter).connect(vca).connect(dest);
+if(slide)vca.gain.setValueAtTime(amp,time+duration-.01);else vca.gain.exponentialRampToValueAtTime(.001,time+p.decay);
+master.gain.value=p.vol;
+if(p.dist>0)osc.connect(dist).connect(filter).connect(vca).connect(master).connect(dest);else osc.connect(filter).connect(vca).connect(master).connect(dest);
 osc.start(time);osc.stop(time+duration+.1);
 }
 
 let lastFreq=65.41;
 function scheduler(){
-const stepTime=60/params.tempo/4;
+const stepTime=60/p.tempo/4;
 while(nextNoteTime<ctx.currentTime+.1){
 const step=seq[currentStep];
 document.querySelectorAll('.led').forEach((l,i)=>l.classList.toggle('on',i===currentStep));
@@ -222,30 +232,32 @@ if(isRunning)scheduleTimer=setTimeout(scheduler,25);
 
 document.body.addEventListener('click',()=>{if(ctx.state==='suspended')ctx.resume()},{once:true});
 <script>
-// EXPORT WAV
+// EXPORT WAV - Graba 4 compases
 document.getElementById('exportWav').onclick=async()=>{
-const stepTime=60/params.tempo/4,totalDur=stepTime*16*4,sampleRate=44100;
+const stepTime=60/p.tempo/4,totalDur=stepTime*16*4,sampleRate=44100;
 const offlineCtx=new OfflineAudioContext(2,sampleRate*totalDur,sampleRate);
 let t=.1,lastF=65.41;
 for(let bar=0;bar<4;bar++){
 for(let step=0;step<16;step++){
-const s=seq[step],freq=getStepFreq(s);
+const s=seq,freq=getStepFreq(s);
 if(freq){const isSlide=s.slide&&lastF,dur=isSlide?stepTime*2:stepTime*.9;renderStepOffline(offlineCtx,freq,t,s.slide,s.accent,dur);lastF=freq}
 t+=stepTime}}
 const buffer=await offlineCtx.startRendering();
 const wav=bufferToWav(buffer);
-downloadBlob(wav,`TB303_${currentPattern}_${allNotes[params.root]}.wav`,'audio/wav');
+downloadBlob(wav,`TB303_${currentPattern}_${allNotes[p.root]}_${document.getElementById('genreSelect').value}.wav`);
 };
 
 function renderStepOffline(octx,freq,time,slide,accent,duration){
-const osc=octx.createOscillator(),filter=octx.createBiquadFilter(),vca=octx.createGain();
-osc.type=waveform;osc.frequency.value=freq*Math.pow(2,params.tune/12);
-filter.type='lowpass';filter.Q.value=params.resonance;
-const base=params.cutoff,envAmt=params.envmod*(accent?1+params.accent:1),peak=Math.min(base+envAmt,18000);
-filter.frequency.setValueAtTime(base,time);filter.frequency.linearRampToValueAtTime(peak,time+.005);filter.frequency.exponentialRampToValueAtTime(base,time+params.decay);
+const osc=octx.createOscillator(),filter=octx.createBiquadFilter(),vca=octx.createGain(),master=octx.createGain();
+osc.type=waveform;osc.frequency.value=freq*Math.pow(2,p.tune/12);
+filter.type='lowpass';filter.Q.value=p.resonance;
+const base=p.cutoff,envAmt=p.envmod*(accent?1+p.accent:1),peak=Math.min(base+envAmt,18000);
+filter.frequency.setValueAtTime(base,time);filter.frequency.linearRampToValueAtTime(peak,time+.005);filter.frequency.exponentialRampToValueAtTime(base,time+p.decay);
 const amp=accent?.8:.4;
-vca.gain.setValueAtTime(0,time);vca.gain.linearRampToValueAtTime(amp,time+.003);vca.gain.exponentialRampToValueAtTime(.001,time+params.decay);
-osc.connect(filter).connect(vca).connect(octx.destination);osc.start(time);osc.stop(time+duration+.1);
+vca.gain.setValueAtTime(0,time);vca.gain.linearRampToValueAtTime(amp,time+.003);vca.gain.exponentialRampToValueAtTime(.001,time+p.decay);
+master.gain.value=p.vol;
+osc.connect(filter).connect(vca).connect(master).connect(octx.destination);
+osc.start(time);osc.stop(time+duration+.1);
 }
 
 function bufferToWav(buffer){
@@ -253,19 +265,19 @@ const len=buffer.length*buffer.numberOfChannels*2+44,view=new DataView(new Array
 const writeString=(o,s)=>{for(let i=0;i<s.length;i++)view.setUint8(o+i,s.charCodeAt(i))};
 writeString(0,'RIFF');view.setUint32(4,len-8,true);writeString(8,'WAVE');writeString(12,'fmt ');view.setUint32(16,16,true);view.setUint16(20,1,true);view.setUint16(22,buffer.numberOfChannels,true);view.setUint32(24,buffer.sampleRate,true);view.setUint32(28,buffer.sampleRate*4,true);view.setUint16(32,buffer.numberOfChannels*2,true);view.setUint16(34,16,true);writeString(36,'data');view.setUint32(40,len-44,true);
 let offset=44;for(let i=0;i<buffer.length;i++){for(let ch=0;ch<buffer.numberOfChannels;ch++){const sample=Math.max(-1,Math.min(1,buffer.getChannelData(ch)[i]));view.setInt16(offset,sample*0x7FFF,true);offset+=2}}
-return new Blob([view],{type:'audio/wav'});
+return new Blob(,{type:'audio/wav'});
 }
 
-// EXPORT MIDI
+// EXPORT MIDI - 4 compases con slide/accent
 document.getElementById('exportMidi').onclick=()=>{
 const ticksPerBeat=96,ticksPerStep=ticksPerBeat/4;let events=[],currentTick=0;
 for(let bar=0;bar<4;bar++){
 for(let step=0;step<16;step++){
-const s=seq[step],midiNote=getMidiNote(s);
+const s=seq,midiNote=getMidiNote(s);
 if(midiNote){const velocity=s.accent?127:90,duration=s.slide?ticksPerStep*2:Math.floor(ticksPerStep*.9);events.push({tick:currentTick,type:'noteOn',note:midiNote,velocity:velocity});events.push({tick:currentTick+duration,type:'noteOff',note:midiNote,velocity:0})}
 currentTick+=ticksPerStep}}
-const midiData=createMidiFile(events,params.tempo);
-downloadBlob(midiData,`TB303_${currentPattern}_${allNotes[params.root]}.mid`,'audio/midi');
+const midiData=createMidiFile(events,p.tempo);
+downloadBlob(midiData,`TB303_${currentPattern}_${allNotes[p.root]}_${document.getElementById('genreSelect').value}.mid`);
 };
 
 function createMidiFile(events,bpm){
@@ -292,6 +304,9 @@ function downloadBlob(blob,filename){
 const url=URL.createObjectURL(blob),a=document.createElement('a');
 a.href=url;a.download=filename;document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
 }
+
+// Fix para allNotes que faltaba
+const allNotes=['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
 </script>
 </body>
 </html>
