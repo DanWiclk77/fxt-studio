@@ -4,37 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#0A0A0A"/>
-    <title>FXT Studio AI v5.3</title>
-    <link rel="manifest" href='data:application/json,{"name":"FXT Studio AI","short_name":"FXT","start_url":".","display":"standalone","background_color":"#0A0A0A","theme_color":"#0A0A0A","icons":[{"src":"https://via.placeholder.com/512/0A/EAEAEA?text=FXT","sizes":"512x512"}]}'>
+    <title>FXT Studio AI v6.0 - Producer</title>
     <script src="https://unpkg.com/tone@14.7.77/build/Tone.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@magenta/music@1.23.1/es6/core.js"></script>
     <style>
         *{box-sizing:border-box}body{font-family:system-ui;background:#0A0A0A;color:#EAEAEA;margin:0;padding:12px}
         h1{font-size:18px;margin:0 0 12px 0}.row{display:flex;gap:8px;margin-bottom:12px}
-.agent{background:#1A;border:1px solid #333;border-radius:12px;padding:12px;margin-bottom:12px}
-.agent h2{margin:0 0 8px 0;font-size:15px;display:flex;justify-content:space-between;align-items:center}
+       .agent{background:#1A1A1A;border:1px solid #333;border-radius:12px;padding:12px;margin-bottom:12px}
+       .agent h2{margin:0 0 8px 0;font-size:15px;display:flex;justify-content:space-between;align-items:center}
         button{background:#EAEAEA;color:#0A0A0A;border:none;padding:10px 14px;border-radius:8px;font-weight:600;width:100%;margin-top:8px;cursor:pointer;font-size:14px}
         button:disabled{background:#333;color:#666;cursor:not-allowed}
-.file{background:#252525;padding:6px 8px;border-radius:6px;margin:4px 0;font-size:11px;display:flex;justify-content:space-between;align-items:center}
-.status{color:#00FF88;font-size:11px}.error{color:#FF4444;font-size:11px}
+       .file{background:#252525;padding:6px 8px;border-radius:6px;margin:4px 0;font-size:11px;display:flex;justify-content:space-between;align-items:center}
+       .status{color:#00FF88;font-size:11px}.error{color:#FF4444;font-size:11px}
         input,select{background:#252525;border:1px solid #333;color:#EAEAEA;padding:8px;border-radius:6px;width:100%;font-size:14px}
         label{font-size:11px;color:#999;display:block;margin-bottom:4px}.col{flex:1}
-        #log{background:#000;padding:8px;border-radius:6px;font-size:9px;color:#0F0;height:180px;overflow:auto;margin-top:8px;white-space:pre-wrap}
-.chat{border:1px solid #333;border-radius:8px;padding:8px;margin:8px 0;max-height:150px;overflow:auto;background:#111}
-.chat-msg{font-size:11px;margin:4px 0;padding:4px;border-radius:4px}
-.chat-user{background:#252525;text-align:right;color:#8FF}
-.chat-ai{background:#1A1A1A;color:#EAEAEA}
-.chat-box{display:flex;gap:4px;margin-top:4px}
-.chat-box input{flex:1;padding:6px;font-size:12px}
-.chat-box button{width:auto;padding:6px 10px;margin:0;font-size:12px}
-.badge{background:#00FF88;color:#000;font-size:9px;padding:2px 6px;border-radius:4px;font-weight:700}
+        #log{background:#000;padding:8px;border-radius:6px;font-size:9px;color:#0F0;height:160px;overflow:auto;margin-top:8px;white-space:pre-wrap}
+       .chat{border:1px solid #333;border-radius:8px;padding:8px;margin:8px 0;max-height:150px;overflow:auto;background:#111}
+       .chat-msg{font-size:11px;margin:4px 0;padding:4px;border-radius:4px}
+       .chat-user{background:#252525;text-align:right;color:#8FF}
+       .chat-ai{background:#1A1A1A;color:#EAEAEA}
+       .chat-box{display:flex;gap:4px;margin-top:4px}
+       .chat-box input{flex:1;padding:6px;font-size:12px}
+       .chat-box button{width:auto;padding:6px 10px;margin:0;font-size:12px}
+       .badge{background:#00FF88;color:#000;font-size:9px;padding:2px 6px;border-radius:4px;font-weight:700}
     </style>
 </head>
 <body>
-    <h1>FXT Studio AI v5.3 <span class="badge">PRO</span></h1>
+    <h1>FXT Studio AI v6.0 <span class="badge">PRODUCER</span></h1>
     <div id="log">Iniciando...</div>
     <div class="agent">
-        <label>OpenAI API Key - requerida para que los agentes generen</label>
+        <label>OpenAI API Key - opcional, solo si quieres que la IA componga</label>
         <input id="apikey" type="password" placeholder="sk-proj-..." onchange="localStorage.setItem('OPENAI_KEY', this.value)">
     </div>
     <div class="row">
@@ -49,45 +48,22 @@
                 <option>A# major</option><option>A# minor</option><option>B major</option><option>B minor</option>
             </select>
         </div>
+    </div>
     <div class="agent">
-        <h2>1. Producer FXT <span class="status" id="prod-status"></span></h2>
+        <h2>Producer FXT <span class="status" id="prod-status"></span></h2>
         <div class="chat" id="prod-chatbox">
-            <div class="chat-msg chat-ai">Pídeme: "bassline + acordes i-VI-iv-V + arpegio + melodía lead en F minor, 8 compases"</div>
+            <div class="chat-msg chat-ai">Dime qué quieres: "bassline + acordes i-VI-iv-V + arpegio + melodía lead en F minor, 8 compases". Si no pones API Key uso patrones default.</div>
         </div>
         <div class="chat-box">
             <input id="prod-input" placeholder="Ej: bassline, acordes, arpegio y melodía en F minor">
-            <button onclick="App.chatAgent('producer')">Enviar</button>
+            <button onclick="App.chatProducer()">Enviar</button>
         </div>
         <button onclick="App.runProducer()">Generar Stems</button>
         <div id="prod-files"></div>
     </div>
-    <div class="agent">
-        <h2>2. Mix Engineer <span class="status" id="mix-status"></span></h2>
-        <div class="chat" id="mix-chatbox">
-            <div class="chat-msg chat-ai">Dime el balance: "kick -6dB, sidechain 80%, comp ratio 3:1"</div>
-        </div>
-        <div class="chat-box">
-            <input id="mix-input" placeholder="Describe la mezcla">
-            <button onclick="App.chatAgent('mixer')">Enviar</button>
-        </div>
-        <button id="mix-btn" onclick="App.runMixer()" disabled>Mezclar Stems</button>
-        <div id="mix-files"></div>
-    </div>
-    <div class="agent">
-        <h2>3. Mastering Engineer <span class="status" id="mast-status"></span></h2>
-        <div class="chat" id="mast-chatbox">
-            <div class="chat-msg chat-ai">Dime targets: "CLUB -5.5 LUFS, Beatport -8.5 LUFS"</div>
-        </div>
-        <div class="chat-box">
-            <input id="mast-input" placeholder="Describe el master">
-            <button onclick="App.chatAgent('mastering')">Enviar</button>
-        </div>
-        <button id="mast-btn" onclick="App.runMastering()" disabled>Masterizar 5 Plataformas</button>
-        <div id="mast-files"></div>
-    </div>
 <script>
 'use strict';
-document.title='FXT v5.3 OK';
+document.title='FXT v6.0 OK';
 const App = (function(){
     const logEl = document.getElementById('log');
     function log(msg, err=false){
@@ -95,13 +71,12 @@ const App = (function(){
         logEl.innerHTML += '\n' + time + ': ' + (err?'<span style="color:#F44">':'') + msg + (err?'</span>':'');
         logEl.scrollTop = logEl.scrollHeight;
     }
-    window.onerror = function(m,s,ln,col){log('ERROR JS línea '+ln+': '+m,true);updateStatus('prod-status','❌ Error JS');return true};
-    log('1. Script v5.3 iniciado');
+    window.onerror = function(m,s,ln){log('ERROR JS línea '+ln+': '+m,true);updateStatus('prod-status','❌ Error JS');return true};
+    log('1. Script v6.0 iniciado');
 
     document.getElementById('apikey').value=localStorage.getItem('OPENAI_KEY')||'';
     log('2. DOM listo');
 
-    const Storage={save:function(p){localStorage.setItem('fxt',JSON.stringify(p))},load:function(){const d=localStorage.getItem('fxt');return d?JSON.parse(d):null}};
     const Scales={
         'C major':['C','D','E','F','G','A','B'],'C minor':['C','D','Eb','F','G','Ab','Bb'],
         'C# major':['C#','D#','F','F#','G#','A#','C'],'C# minor':['C#','D#','E','F#','G#','A','B'],
@@ -116,82 +91,29 @@ const App = (function(){
         'A# major':['A#','C','D','D#','F','G','A'],'A# minor':['A#','C','C#','D#','F#','G#'],
         'B major':['B','C#','D#','E','F#','G#','A#'],'B minor':['B','C#','D','E','F#','G','A']
     };
-    log('3. Escalas OK');
+    log('3. 24 escalas cargadas');
 
-    let project = Storage.load() || {id:crypto.randomUUID(),stems:[],midi:[],mix:null,masters:{},producerObjective:null,mixerObjective:null,masteringObjective:null};
+    let project = {stems:[],midi:[],producerObjective:null};
 
     function updateStatus(id,t){const el=document.getElementById(id);if(el){el.textContent=t;el.className=t.includes('❌')?'error':'status'}}
-    function addChatMsg(agent,role,text){const box=document.getElementById(agent+'-chatbox');const div=document.createElement('div');div.className='chat-msg chat-'+role;div.textContent=text;box.appendChild(div);box.scrollTop=box.scrollHeight}
-    function renderFiles(id,files){document.getElementById(id).innerHTML=files.map(function(f){return '<div class="file"><span>'+f.name+' '+(f.lufs?f.lufs+' LUFS':'')+'</span><a href="'+f.url+'" download="'+f.name+'">Descargar</a></div>'}).join('')}
+    function addChatMsg(role,text){const box=document.getElementById('prod-chatbox');const div=document.createElement('div');div.className='chat-msg chat-'+role;div.textContent=text;box.appendChild(div);box.scrollTop=box.scrollHeight}
+    function renderFiles(files){document.getElementById('prod-files').innerHTML=files.map(function(f){return '<div class="file"><span>'+f.name+'</span><a href="'+f.url+'" download="'+f.name+'">Descargar</a></div>'}).join('')}
 
-    const AI = {
-        async ask(systemPrompt,userPrompt){
-            const key=localStorage.getItem('OPENAI_KEY');
-            if(!key)throw new Error('Falta API Key de OpenAI');
-            const res=await fetch('https://api.openai.com/v1/chat/completions',{
-                method:'POST',
-                headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
-                body:JSON.stringify({model:'gpt-4o-mini',messages:[{role:'system',content:systemPrompt},{role:'user',content:userPrompt}],temperature:0.7,max_tokens:800,response_format:{type:'json_object'}})
-            });
-            const data=await res.json();
-            if(data.error)throw new Error(data.error.message);
-            return JSON.parse(data.choices[0].message.content);
-        }
-    };
+    async function askAI(systemPrompt,userPrompt){
+        const key=localStorage.getItem('OPENAI_KEY');
+        if(!key)throw new Error('Sin API Key, usando patrón default');
+        const res=await fetch('https://api.openai.com/v1/chat/completions',{
+            method:'POST',
+            headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
+            body:JSON.stringify({model:'gpt-4o-mini',messages:[{role:'system',content:systemPrompt},{role:'user',content:userPrompt}],temperature:0.7,max_tokens:800,response_format:{type:'json_object'}})
+        });
+        const data=await res.json();
+        if(data.error)throw new Error(data.error.message);
+        return JSON.parse(data.choices[0].message.content);
+    }
 
     const DSP = {
-        async analyzeBuffer(b){
-            try{
-                let peak=0;
-                for(let ch=0;ch<b.numberOfChannels;ch++){
-                    const d=b.getChannelData(ch);
-                    for(let i=0;i<d.length;i++)peak=Math.max(peak,Math.abs(d[i]));
-                }
-                const peakDb=20*Math.log10(peak||0.0001);
-                let rms=0;
-                const d0=b.getChannelData(0);
-                for(let i=0;i<d0.length;i++)rms+=d0[i]*d0[i];
-                rms=Math.sqrt(rms/d0.length);
-                return{peak:peakDb,lufs:parseFloat((20*Math.log10(rms||0.0001)-0.691).toFixed(1))};
-            }catch(e){log('Error análisis: '+e,true);return{lufs:-23,peak:-6}}
-        },
-        async applyMixChain(bufs,opts){
-            log('Mix: renderizando');
-            const l=Math.max.apply(Math,bufs.map(function(b){return b.length}));
-            const ctx=new OfflineAudioContext(2,l,44100);
-            const sum=ctx.createGain();
-            sum.gain.value=opts&&opts.kick_gain?Math.pow(10,opts.kick_gain/20):0.25;
-            bufs.forEach(function(buf){
-                const s=ctx.createBufferSource();
-                s.buffer=buf;
-                s.connect(sum);
-                s.start();
-            });
-            const hpf=ctx.createBiquadFilter();hpf.type='highpass';hpf.frequency.value=20;
-            const comp=ctx.createDynamicsCompressor();
-            comp.threshold.value=opts&&opts.comp_thresh?opts.comp_thresh:-24;
-            comp.ratio.value=opts&&opts.comp_ratio?opts.comp_ratio:2;
-            comp.attack.value=.01;comp.release.value=.1;
-            const tape=ctx.createWaveShaper();const s=44100,c=new Float32Array(s);
-            for(let i=0;i<s;i++){const x=i*2/s-1;c[i]=Math.tanh(x*2)/Math.tanh(2)}
-            tape.curve=c;
-            const clip=ctx.createWaveShaper();const s2=44100,c2=new Float32Array(s2);const ceil=Math.pow(10,-1/20);
-            for(let i=0;i<s2;i++){const x=i*2/s2-1;c2[i]=Math.max(-ceil,Math.min(ceil,x))}
-            clip.curve=c2;
-            sum.connect(hpf).connect(comp).connect(tape).connect(clip).connect(ctx.destination);
-            return ctx.startRendering();
-        },
-        async master(buf,t){
-            const ctx=new OfflineAudioContext(2,buf.length,44100);
-            const src=ctx.createBufferSource();src.buffer=buf;
-            const a=await this.analyzeBuffer(buf);
-            const gainDb=t.lufs-a.lufs;
-            const gain=ctx.createGain();gain.gain.value=Math.pow(10,gainDb/20);
-            const lim=ctx.createDynamicsCompressor();lim.threshold.value=t.ceiling;lim.ratio.value=20;lim.attack.value=.003;lim.release.value=.05;
-            src.connect(gain).connect(lim).connect(ctx.destination);src.start(0);
-            return ctx.startRendering();
-        },
-        bufferToWav(buf){
+        bufferToWav:function(buf){
             const len=buf.length*buf.numberOfChannels*2+44;
             const ab=new ArrayBuffer(len);
             const v=new DataView(ab);
@@ -213,7 +135,7 @@ const App = (function(){
     };
 
     const MIDI = {
-        createMidiFile(notes,bpm){
+        createMidiFile:function(notes){
             try{
                 if(typeof core==='undefined'){log('ERROR: Librería MIDI no cargó',true);return new Blob()}
                 const mm=new core.Midi();const track=mm.addTrack();const ppq=480;const ticksPerStep=ppq/4;
@@ -234,7 +156,7 @@ const App = (function(){
                 return new Blob([mm.toArray()],{type:'audio/midi'});
             }catch(e){log('Error MIDI: '+e,true);return new Blob()}
         },
-        noteToMidi(n){
+        noteToMidi:function(n){
             const notes=['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
             const m=n.match(/([A-G]#?)(\d)/);
             return notes.indexOf(m[1])+(parseInt(m[2])+1)*12;
@@ -242,11 +164,11 @@ const App = (function(){
     };
 
     const Synth = {
-        async initAudio(){
+        initAudio:async function(){
             if(!window.audioCtx){window.audioCtx=new(window.AudioContext||window.webkitAudioContext)();log('AudioContext creado')}
             if(window.audioCtx.state==='suspended'){await window.audioCtx.resume();log('AudioContext resumido')}
         },
-        async renderKick(bpm){
+        renderKick:async function(){
             await this.initAudio();
             const ctx=new OfflineAudioContext(2,44100*2,44100);
             const o=ctx.createOscillator();const g=ctx.createGain();
@@ -255,7 +177,7 @@ const App = (function(){
             o.connect(g).connect(ctx.destination);o.start(0);o.stop(0.3);
             return ctx.startRendering();
         },
-        async renderNotes(notes,bpm,type){
+        renderNotes:async function(notes,bpm,type){
             await this.initAudio();
             const ctx=new OfflineAudioContext(2,44100*8,44100);
             const sd=60/bpm/4;
@@ -283,33 +205,27 @@ const App = (function(){
         }
     };
 
-    async function chatAgent(agentType){
+    async function chatProducer(){
         try{
-            const short=agentType.substring(0,4);
-            const input=document.getElementById(short+'-input');
+            const input=document.getElementById('prod-input');
             const userMsg=input.value.trim();
             if(!userMsg)return;
-            addChatMsg(short,'user',userMsg);
+            addChatMsg('user',userMsg);
             input.value='';
-            const systemPrompts={
-                producer:'Eres Producer FXT de Melodic Techno. El usuario describe qué quiere: bassline, acordes, arpegio, melodía. Responde SOLO un JSON: {"bassline":[{"step":0-15,"note":"F1","slide":true,"accent":false}],"chords":[{"step":0,"notes":["F3","Ab3","C4"],"duration":4}],"arp":[{"step":0,"note":"F4","duration":0.25}],"melody":[{"step":0,"note":"C5","duration":1}]}. Steps 0-15 = 1 compás. duration en beats. Si no pide algo, no lo incluyas. Respeta la tonalidad.',
-                mixer:'Eres Mix Engineer FXT. Responde SOLO JSON: {"sidechain":0.8,"kick_gain":-6,"comp_ratio":2,"comp_thresh":-24}.',
-                mastering:'Eres Mastering Engineer FXT. Responde SOLO JSON: {"targets":{"CLUB":{"lufs":-5.5,"ceiling":-0.3},"BEATPORT":{"lufs":-8.5,"ceiling":-1.0}}}.'
-            };
+            const systemPrompt='Eres Producer FXT de Melodic Techno. Responde SOLO un JSON: {"bassline":[{"step":0-15,"note":"F1","slide":true,"accent":false}],"chords":[{"step":0,"notes":["F3","Ab3","C4"],"duration":4}],"arp":[{"step":0,"note":"F4","duration":0.25}],"melody":[{"step":0,"note":"C5","duration":1}]}. Steps 0-15 = 1 compás. duration en beats. Si no pide algo, no lo incluyas. Respeta la tonalidad.';
             const key=document.getElementById('key').value;
             const bpm=document.getElementById('bpm').value;
             const fullPrompt='Tonalidad: '+key+', BPM: '+bpm+'. Instrucción: '+userMsg;
-            addChatMsg(short,'ai','Generando con IA...');
-            const reply=await AI.ask(systemPrompts[agentType],fullPrompt);
-            document.getElementById(short+'-chatbox').lastChild.remove();
-            addChatMsg(short,'ai','Listo. JSON guardado. Toca Generar.');
-            project[agentType+'Objective']=reply;
-            Storage.save(project);
-            log('Objetivo '+agentType+' guardado');
+            addChatMsg('ai','Generando con IA...');
+            const reply=await askAI(systemPrompt,fullPrompt);
+            document.getElementById('prod-chatbox').lastChild.remove();
+            addChatMsg('ai','Listo. JSON guardado. Toca Generar Stems.');
+            project.producerObjective=reply;
+            log('Objetivo IA guardado');
         }catch(e){
-            document.getElementById(agentType.substring(0,4)+'-chatbox').lastChild.remove();
-            addChatMsg(agentType.substring(0,4),'ai','Error: '+e.message);
-            log('Error chat: '+e.message,true);
+            document.getElementById('prod-chatbox').lastChild.remove();
+            addChatMsg('ai','Sin API Key. Usaré patrón default.');
+            log('Sin API Key: '+e.message);
         }
     }
 
@@ -331,9 +247,9 @@ const App = (function(){
             if(obj&&obj.melody){melodyNotes=obj.melody;log('Melodía IA: '+melodyNotes.length)}
 
             const allNotes=bassNotes.concat(chordNotes||[]).concat(arpNotes||[]).concat(melodyNotes||[]);
-            const midiBlob=MIDI.createMidiFile(allNotes,bpm);
+            const midiBlob=MIDI.createMidiFile(allNotes);
             const midi={name:'fxt_midi.mid',url:URL.createObjectURL(midiBlob)};
-            const kickBuf=await Synth.renderKick(bpm);
+            const kickBuf=await Synth.renderKick();
             const subBuf=await Synth.renderNotes(bassNotes,bpm,'bass');
             const stems=[{name:'01_KICK.wav',url:URL.createObjectURL(DSP.bufferToWav(kickBuf))},{name:'02_BASS.wav',url:URL.createObjectURL(DSP.bufferToWav(subBuf))}];
             if(chordNotes){const chordBuf=await Synth.renderNotes(chordNotes,bpm,'chord');stems.push({name:'03_CHORDS.wav',url:URL.createObjectURL(DSP.bufferToWav(chordBuf))})}
@@ -341,10 +257,8 @@ const App = (function(){
             if(melodyNotes){const leadBuf=await Synth.renderNotes(melodyNotes,bpm,'lead');stems.push({name:'05_LEAD.wav',url:URL.createObjectURL(DSP.bufferToWav(leadBuf))})}
             project.midi=;
             project.stems=stems;
-            Storage.save(project);
-            renderFiles('prod-files',project.midi.concat(project.stems));
+            renderFiles([midi].concat(project.stems));
             updateStatus('prod-status','✓ Listo');
-            document.getElementById('mix-btn').disabled=false;
             log('Producer OK: '+stems.length+' stems');
         }catch(e){
             log('ERROR Producer: '+e.message,true);
@@ -352,66 +266,9 @@ const App = (function(){
         }
     }
 
-    async function runMixer(){
-        try{
-            updateStatus('mix-status','Mezclando...');
-            log('Mixer: inicio');
-            const bufs=await Promise.all(project.stems.map(async function(s){
-                const r=await fetch(s.url);
-                const ab=await r.arrayBuffer();
-                return await new AudioContext().decodeAudioData(ab);
-            }));
-            const mixed=await DSP.applyMixChain(bufs,project.mixerObjective);
-            const an=await DSP.analyzeBuffer(mixed);
-            const wav=DSP.bufferToWav(mixed);
-            const mixdown={name:'mix_pre_master.wav',url:URL.createObjectURL(wav),lufs:an.lufs,peak:an.peak};
-            project.mix=mixdown;
-            Storage.save(project);
-            renderFiles('mix-files',[project.mix]);
-            updateStatus('mix-status','✓ '+project.mix.lufs+' LUFS');
-            document.getElementById('mast-btn').disabled=false;
-            log('Mix OK');
-        }catch(e){
-            log('ERROR Mix: '+e.message,true);
-            updateStatus('mix-status','❌ Error');
-        }
-    }
-
-    async function runMastering(){
-        try{
-            updateStatus('mast-status','Masterizando...');
-            log('Mastering: inicio');
-            const r=await fetch(project.mix.url);
-            const ab=await r.arrayBuffer();
-            const mixBuf=await new AudioContext().decodeAudioData(ab);
-            const defaultTargets={SPOTIFY:{lufs:-14,ceiling:-1.0},BEATPORT:{lufs:-9,ceiling:-1.0},CLUB:{lufs:-6,ceiling:-0.3},YOUTUBE:{lufs:-14,ceiling:-1.0},APPLE_MUSIC:{lufs:-16,ceiling:-1.0}};
-            const targets=project.masteringObjective&&project.masteringObjective.targets?project.masteringObjective.targets:defaultTargets;
-            const results={};
-            for(const p in targets){
-                const t=targets[p];
-                log('Master '+p);
-                const m=await DSP.master(mixBuf,t);
-                const w=DSP.bufferToWav(m);
-                results[p]={name:'master_'+p.toLowerCase()+'.wav',url:URL.createObjectURL(w),lufs:t.lufs,peak:t.ceiling};
-            }
-            project.masters=results;
-            Storage.save(project);
-            renderFiles('mast-files',Object.values(results));
-            updateStatus('mast-status','✓ 5 plataformas');
-            log('Mastering OK');
-        }catch(e){
-            log('ERROR Master: '+e.message,true);
-            updateStatus('mast-status','❌ Error');
-        }
-    }
-
-    // Init
     document.getElementById('apikey').value=localStorage.getItem('OPENAI_KEY')||'';
-    if(project.stems.length)document.getElementById('mix-btn').disabled=false;
-    if(project.mix)document.getElementById('mast-btn').disabled=false;
-    log('8. LISTO. Chatea con Producer y toca Generar.');
+    log('4. LISTO. Escribe qué quieres y toca Generar Stems.');
 
-    // Auto-tests
     try{
         if(Scales['F minor'][0]==='F')log('Test 1/3: Escalas OK');else throw new Error('Escalas');
         if(typeof Tone!=='undefined')log('Test 2/3: Tone.js OK');else throw new Error('Tone');
@@ -419,7 +276,7 @@ const App = (function(){
         log('Tests: 3/3 OK');
     }catch(e){log('Tests fallaron: '+e.message,true)}
 
-    return {chatAgent,runProducer,runMixer,runMastering};
+    return {chatProducer,runProducer};
 })();
 </script>
 </body>
