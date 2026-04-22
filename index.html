@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>TB-303 v9.4 - MIDI Roland Ready</title>
+<title>TB-303 v9.5 - Multi MIDI Export</title>
 <link rel="manifest" href="manifest.json">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#ff4500">
@@ -262,12 +262,77 @@
     border-radius: 3px;
   }
 .led.on { background: #f00; box-shadow: 0 0 6px #f00; }
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    justify-content: center;
+    align-items: center;
+  }
+.modal.show { display: flex; }
+.modal-content {
+    background: #222;
+    border: 2px solid #ff4500;
+    border-radius: 8px;
+    padding: 25px;
+    max-width: 500px;
+    width: 90%;
+  }
+.modal-content h3 {
+    color: #ff4500;
+    margin: 0 0 20px 0;
+    text-transform: uppercase;
+    font-size: 16px;
+  }
+.midi-option {
+    background: #111;
+    border: 1px solid #444;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+.midi-option:hover {
+    border-color: #ff4500;
+    background: #1a1a1a;
+  }
+.midi-option-title {
+    color: #ff4500;
+    font-weight: 700;
+    font-size: 13px;
+    margin-bottom: 5px;
+  }
+.midi-option-desc {
+    color: #888;
+    font-size: 11px;
+    line-height: 1.4;
+  }
+.modal-close {
+    background: #444;
+    color: #eee;
+    border: 1px solid #111;
+    padding: 8px 20px;
+    margin-top: 15px;
+    width: 100%;
+    cursor: pointer;
+    border-radius: 3px;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+.modal-close:hover { background: #555; }
 </style>
 </head>
 <body>
 <div class="tb303">
   <div class="header">
-    <div class="logo">TB-303<span>Roland Cloud Ready</span></div>
+    <div class="logo">TB-303<span>Multi MIDI Export</span></div>
     <div class="note-display">
       <div>
         <div class="label">NOTE</div>
@@ -282,8 +347,31 @@
     <div>
       <button id="runBtn">RUN</button>
       <button id="clearBtn">CLEAR</button>
-      <button id="downloadMidi" class="download">MIDI</button>
+      <button id="downloadMidi" class="download">MIDI ▼</button>
       <button id="downloadWav" class="download">WAV</button>
+    </div>
+  </div>
+
+  <div id="midiModal" class="modal">
+    <div class="modal-content">
+      <h3>Selecciona Formato MIDI</h3>
+      <div class="midi-option" data-format="format1_roland">
+        <div class="midi-option-title">Format 1 - Roland TB-303</div>
+        <div class="midi-option-desc">Format 1 con slide legato real. Compatible con Roland Cloud TB-303 plugin. Canal 0.</div>
+      </div>
+      <div class="midi-option" data-format="format1_standard">
+        <div class="midi-option-title">Format 1 - Standard DAW</div>
+        <div class="midi-option-desc">Format 1 estándar. Funciona en Ableton, Logic, FL Studio, Cubase. Slide como notas separadas.</div>
+      </div>
+      <div class="midi-option" data-format="format0">
+        <div class="midi-option-title">Format 0 - Universal</div>
+        <div class="midi-option-desc">Format 0 clásico. Máxima compatibilidad. Todo en un track. Ideal para hardware antiguo.</div>
+      </div>
+      <div class="midi-option" data-format="ableton_clip">
+        <div class="midi-option-title">Ableton Live Clip</div>
+        <div class="midi-option-desc">Optimizado para arrastrar directo a Ableton Live. Incluye info de tempo y loop.</div>
+      </div>
+      <button class="modal-close" id="closeModal">CANCELAR</button>
     </div>
   </div>
   <div class="soundbank-bar">
@@ -425,7 +513,7 @@
     <div class="led-row" id="leds"></div>
     <div class="steps" id="steps"></div>
     <div style="font-size:10px;color:#888;margin-top:8px;text-align:center">
-      Soundbanks: Groove Bassline Top 10 + User | MIDI Format 1
+      Soundbanks: Groove Bassline Top 10 + User | 4 Formatos MIDI Export
     </div>
   </div>
 </div>
@@ -539,11 +627,11 @@ const FACTORY_BANKS = {
   'User': {}
 };
 
-let soundbanks = JSON.parse(localStorage.getItem('tb303_soundbanks_v94')) || FACTORY_BANKS;
+let soundbanks = JSON.parse(localStorage.getItem('tb303_soundbanks_v95')) || FACTORY_BANKS;
 let currentBank = 'Groove Bassline';
 let currentPattern = '01: Acid Tracks 1987';
 function saveSoundbanks() {
-  localStorage.setItem('tb303_soundbanks_v94', JSON.stringify(soundbanks));
+  localStorage.setItem('tb303_soundbanks_v95', JSON.stringify(soundbanks));
 }
 
 function refreshBankSelect() {
@@ -635,7 +723,6 @@ let reverbLPF = null;
 let reverbGain = null;
 let reverbSend = null;
 
-// Reverb dark: HPF 300Hz -> Convolver -> LPF 4kHz -> Gain
 async function createAcidVReverb() {
   reverbSend = ctx.createGain();
   reverbHPF = ctx.createBiquadFilter();
@@ -708,6 +795,18 @@ for(let i=0;i<16;i++){
   led.className = 'led';
   ledsDiv.appendChild(led);
 }
+
+// MODAL MIDI
+const midiModal = document.getElementById('midiModal');
+document.getElementById('downloadMidi').onclick = () => {
+  midiModal.classList.add('show');
+};
+document.getElementById('closeModal').onclick = () => {
+  midiModal.classList.remove('show');
+};
+midiModal.onclick = (e) => {
+  if(e.target === midiModal) midiModal.classList.remove('show');
+};
 function updateStepUI() {
   seq.forEach((s, i) => {
     updateStepDisplay(i);
@@ -1207,7 +1306,7 @@ function scheduler() {
   if(isRunning) scheduleTimer = setTimeout(scheduler, 25);
 }
 
-// ===== MIDI FORMAT 1 REESCRITO DESDE CERO - ROLAND CLOUD TB-303 =====
+// ===== SISTEMA MIDI MULTI-FORMATO =====
 function toVLQ(value) {
   value = Math.floor(value);
   if (value === 0) return [0];
@@ -1225,28 +1324,23 @@ function freqToMidi(freq) {
   return Math.max(0, Math.min(127, Math.round(69 + 12 * Math.log2(freq / 440))));
 }
 
-document.getElementById('downloadMidi').onclick = () => {
+function buildMidiEvents(format) {
   const PPQN = 96;
   const TICKS_PER_STEP = 24;
-  const TICKS_PER_16TH = 20; // Duración de nota 16th con espacio
+  const TICKS_PER_16TH = 20;
   const events = [];
 
-  // 1. Tempo
+  // Tempo y Time Sig siempre
   const mpqn = Math.floor(60000000 / params.tempo);
   events.push({tick: 0, data: [0xFF, 0x51, 0x03, (mpqn>>16)&0xFF, (mpqn>>8)&0xFF, mpqn&0xFF]});
-
-  // 2. Time Signature 4/4
   events.push({tick: 0, data: [0xFF, 0x58, 0x04, 0x04, 0x02, 0x18, 0x08]});
 
-  // 3. Track Name
-  const trackName = 'TB-303 Bass';
+  const trackName = format === 'ableton_clip'? 'TB-303 Ableton Clip' : 'TB-303 Bass';
   const nameData = [0xFF, 0x03, trackName.length];
   for(let i = 0; i < trackName.length; i++) nameData.push(trackName.charCodeAt(i));
   events.push({tick: 0, data: nameData});
 
-  // 4. Generar notas con slide legato auténtico TB-303
   let lastMidiNote = null;
-  let lastNoteOffTick = 0;
 
   for(let stepIdx = 0; stepIdx < 16; stepIdx++) {
     const step = seq[stepIdx];
@@ -1256,44 +1350,46 @@ document.getElementById('downloadMidi').onclick = () => {
     if(freq) {
       const midiNote = freqToMidi(freq);
       const velocity = step.accent? 127 : 100;
-
-      // Si el step anterior tenía slide, no cerramos la nota anterior = legato
       const prevStep = stepIdx > 0? seq[stepIdx - 1] : null;
-      const isLegato = prevStep && prevStep.slide && prevStep.note!== 'OFF';
 
-      // Cerrar nota anterior solo si NO es legato
-      if(!isLegato && lastMidiNote!== null) {
-        events.push({tick: stepStartTick, data: [0x80, lastMidiNote, 0x00]});
-      }
-
-      // Note On en tick de inicio del step
-      events.push({tick: stepStartTick, data: [0x90, midiNote, velocity]});
-      lastMidiNote = midiNote;
-
-      // Si NO tiene slide, cerrar nota al final del 16th
-      if(!step.slide) {
-        const noteOffTick = stepStartTick + TICKS_PER_16TH;
+      if(format === 'format1_roland') {
+        // ROLAND: Legato real, no cierra nota si slide
+        const isLegato = prevStep && prevStep.slide && prevStep.note!== 'OFF';
+        if(!isLegato && lastMidiNote!== null) {
+          events.push({tick: stepStartTick, data: [0x80, lastMidiNote, 0x00]});
+        }
+        events.push({tick: stepStartTick, data: [0x90, midiNote, velocity]});
+        lastMidiNote = midiNote;
+        if(!step.slide) {
+          const noteOffTick = stepStartTick + TICKS_PER_16TH;
+          events.push({tick: noteOffTick, data: [0x80, midiNote, 0x00]});
+          lastMidiNote = null;
+        }
+      } else {
+        // STANDARD/FORMAT0/ABLETON: Cada nota se cierra, slide como overlap
+        if(lastMidiNote!== null && stepStartTick > 0) {
+          events.push({tick: stepStartTick, data: [0x80, lastMidiNote, 0x00]});
+        }
+        events.push({tick: stepStartTick, data: [0x90, midiNote, velocity]});
+        lastMidiNote = midiNote;
+        const noteOffTick = step.slide? stepStartTick + TICKS_PER_STEP : stepStartTick + TICKS_PER_16TH;
         events.push({tick: noteOffTick, data: [0x80, midiNote, 0x00]});
         lastMidiNote = null;
-        lastNoteOffTick = noteOffTick;
       }
     }
   }
 
-  // 5. Cerrar última nota si quedó abierta con slide
-  if(lastMidiNote!== null) {
-    const endTick = 16 * TICKS_PER_STEP;
-    events.push({tick: endTick, data: [0x80, lastMidiNote, 0x00]});
+  if(format === 'format1_roland' && lastMidiNote!== null) {
+    events.push({tick: 16 * TICKS_PER_STEP, data: [0x80, lastMidiNote, 0x00]});
   }
 
-  // 6. End of Track
-  const totalTicks = 16 * TICKS_PER_STEP;
-  events.push({tick: totalTicks, data: [0xFF, 0x2F, 0x00]});
-
-  // Ordenar eventos por tick
+  events.push({tick: 16 * TICKS_PER_STEP, data: [0xFF, 0x2F, 0x00]});
   events.sort((a, b) => a.tick - b.tick);
+  return events;
+}
 
-  // 7. Construir track chunk con deltas
+function buildMidiFile(format) {
+  const events = buildMidiEvents(format);
   const trackBytes = [];
   let prevTick = 0;
 
@@ -1304,33 +1400,39 @@ document.getElementById('downloadMidi').onclick = () => {
     prevTick = evt.tick;
   }
 
-  // 8. HEADER MIDI FORMAT 1 - 6 bytes de longitud, 1 track, PPQ 96
-  const header = [
-    0x4D, 0x54, 0x68, 0x64, // "MThd"
-    0x00, 0x06, // Header length = 6
-    0x00, 0x01, // Format 1
-    0x00, 0x01, // 1 track
-    0x00, 0x60 // PPQ 96
-  ];
+  let header;
+  if(format === 'format0') {
+    header = [0x4D,0x54,0x68,0x64, 0x00,0x06, 0x00,0x00, 0x00,0x01, 0x00,0x60];
+  } else {
+    header = [0x4D,0x54,0x68,0x64, 0x00,0x06, 0x00,0x01, 0x00,0x01, 0x00,0x60];
+  }
 
-  // 9. TRACK CHUNK
   const trackHeader = [
-    0x4D, 0x54, 0x72, 0x6B, // "MTrk"
+    0x4D,0x54,0x72,0x6B,
     (trackBytes.length >> 24) & 0xFF,
     (trackBytes.length >> 16) & 0xFF,
     (trackBytes.length >> 8) & 0xFF,
     trackBytes.length & 0xFF
   ];
 
-  // 10. Combinar todo
-  const midiFile = new Uint8Array([
-   ...header,
-   ...trackHeader,
-   ...trackBytes
-  ]);
+  return new Uint8Array([...header,...trackHeader,...trackBytes]);
+}
 
-  downloadBlob(midiFile, 'tb303_roland_format1.mid', 'audio/midi');
-};
+// EVENTOS MODAL
+document.querySelectorAll('.midi-option').forEach(opt => {
+  opt.onclick = () => {
+    const format = opt.dataset.format;
+    const midiFile = buildMidiFile(format);
+    const names = {
+      'format1_roland': 'tb303_roland_tb303.mid',
+      'format1_standard': 'tb303_standard.mid',
+      'format0': 'tb303_format0.mid',
+      'ableton_clip': 'tb303_ableton_clip.mid'
+    };
+    downloadBlob(midiFile, names[format], 'audio/midi');
+    midiModal.classList.remove('show');
+  };
+});
 
 document.getElementById('downloadWav').onclick = async () => {
   const secondsPerStep = 60.0 / params.tempo / 4;
