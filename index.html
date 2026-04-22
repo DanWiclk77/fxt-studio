@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>TB-303 v8.2 - Soundbanks</title>
+<title>TB-303 v8.4 - 272 Factory Patterns</title>
 <style>
   body {
     background: #1a1a1a;
@@ -13,7 +13,7 @@
     padding: 20px;
     margin: 0;
   }
-.tb303 {
+  .tb303 {
     background: linear-gradient(#c8c8c0, #a8a89e);
     width: 980px;
     padding: 20px;
@@ -21,17 +21,17 @@
     box-shadow: 0 10px 30px rgba(0,0,0,.6), inset 0 1px 0 #fff6;
     border: 3px solid #333;
   }
-.header {
+  .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 15px;
     color: #111;
   }
-.logo { font-weight: 900; font-size: 28px; letter-spacing: 1px; }
-.logo span { font-weight: 400; font-size: 14px; margin-left: 8px; }
+  .logo { font-weight: 900; font-size: 28px; letter-spacing: 1px; }
+  .logo span { font-weight: 400; font-size: 14px; margin-left: 8px; }
 
-.controls {
+  .controls {
     display: grid;
     grid-template-columns: repeat(8, 1fr);
     gap: 12px;
@@ -40,10 +40,10 @@
     padding: 15px;
     border-radius: 4px;
   }
-.knob-group {
+  .knob-group {
     text-align: center;
   }
-.knob-group label {
+  .knob-group label {
     display: block;
     font-size: 11px;
     color: #ccc;
@@ -54,13 +54,13 @@
     width: 100%;
     accent-color: #ff4500;
   }
-.value {
+  .value {
     font-size: 10px;
     color: #ff4500;
     margin-top: 4px;
   }
 
-.switch-row {
+  .switch-row {
     display: flex;
     gap: 15px;
     align-items: center;
@@ -70,7 +70,7 @@
     margin-bottom: 15px;
     flex-wrap: wrap;
   }
-.switch {
+  .switch {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -103,7 +103,7 @@
     font-weight: 600;
   }
 
-.soundbank-bar {
+  .soundbank-bar {
     background: #1a1a1a;
     padding: 12px 15px;
     border-radius: 4px;
@@ -114,16 +114,16 @@
     flex-wrap: wrap;
     border: 1px solid #333;
   }
-.soundbank-bar label {
+  .soundbank-bar label {
     font-size: 11px;
     color: #ff4500;
     text-transform: uppercase;
     font-weight: 700;
   }
-.soundbank-bar select {
+  .soundbank-bar select {
     min-width: 160px;
   }
-.soundbank-bar input {
+  .soundbank-bar input {
     background: #111;
     color: #eee;
     border: 1px solid #444;
@@ -132,18 +132,18 @@
     font-size: 11px;
   }
 
-.sequencer {
+  .sequencer {
     background: #222;
     padding: 15px;
     border-radius: 4px;
   }
-.steps {
+  .steps {
     display: grid;
     grid-template-columns: repeat(16, 1fr);
     gap: 4px;
     margin-bottom: 10px;
   }
-.step {
+  .step {
     background: #111;
     border: 1px solid #333;
     padding: 6px 2px;
@@ -153,9 +153,9 @@
     flex-direction: column;
     gap: 3px;
   }
-.step.active { background: #ff4500; color: #111; }
-.step.playing { box-shadow: 0 0 8px #ff4500; }
-.step select {
+  .step.active { background: #ff4500; color: #111; }
+  .step.playing { box-shadow: 0 0 8px #ff4500; }
+  .step select {
     width: 100%;
     background: #000;
     color: #0f0;
@@ -163,13 +163,13 @@
     font-size: 11px;
     text-align: center;
   }
-.step-controls {
+  .step-controls {
     display: flex;
     justify-content: space-around;
     align-items: center;
     gap: 2px;
   }
-.step-btn {
+  .step-btn {
     background: #333;
     border: 1px solid #555;
     color: #ccc;
@@ -180,14 +180,14 @@
     line-height: 1;
     min-width: 18px;
   }
-.step-btn:hover { background: #444; }
-.step-btn.active { background: #ff4500; color: #111; border-color: #ff4500; }
-.oct-indicator {
+  .step-btn:hover { background: #444; }
+  .step-btn.active { background: #ff4500; color: #111; border-color: #ff4500; }
+  .oct-indicator {
     font-size: 8px;
     color: #ff4500;
     font-weight: 700;
   }
-.step-labels {
+  .step-labels {
     display: grid;
     grid-template-columns: repeat(16, 1fr);
     gap: 4px;
@@ -196,18 +196,18 @@
     color: #888;
     margin-bottom: 5px;
   }
-.led-row {
+  .led-row {
     display: grid;
     grid-template-columns: repeat(16, 1fr);
     gap: 4px;
     margin-bottom: 5px;
   }
-.led {
+  .led {
     height: 6px;
     background: #300;
     border-radius: 3px;
   }
-.led.on { background: #f00; box-shadow: 0 0 6px #f00; }
+  .led.on { background: #f00; box-shadow: 0 0 6px #f00; }
 </style>
 </head>
 <body>
@@ -361,7 +361,7 @@
     <div class="led-row" id="leds"></div>
     <div class="steps" id="steps"></div>
     <div style="font-size:10px;color:#888;margin-top:8px;text-align:center">
-      Soundbanks: Factory Transistor Bass + Roland TB-303 + User
+      272 Factory Patterns: Transistor Bass 96 + Roland TB-303 48 + Classic Acid Legends 128
     </div>
   </div>
 </div>
@@ -373,34 +373,19 @@ let nextNoteTime = 0;
 let waveform = 'sawtooth';
 let scheduleTimer;
 
-// Parámetros: Cutoff/Res 0-100 Transistor Bass + Drive + Reverb Acid V
 const params = {
-  tune: 0,
-  cutoff: 40, // 0-100 = 27Hz-7.4kHz exp como Transistor Bass
-  resonance: 60, // 0-100 = Q 0.5-30 como Transistor Bass
-  envmod: 2000,
-  decay: 0.3,
-  accent: 0.5,
-  drive: 0, // Drive Transistor Bass 0-100
-  reverb: 0, // Wet 0-100 Acid V style
-  tempo: 128,
-  dist: 0,
-  density: 60
+  tune: 0, cutoff: 40, resonance: 60, envmod: 2000, decay: 0.3, accent: 0.5,
+  drive: 0, reverb: 0, tempo: 128, dist: 0, density: 60
 };
 
 const scales = {
-  major: [0,2,4,5,7,9,11],
-  minor: [0,2,3,5,7,8,10],
-  harmonic: [0,2,3,5,7,8,11],
-  melodic: [0,2,3,5,7,9,11],
-  pentatonic_maj: [0,2,4,7,9],
-  pentatonic_min: [0,3,5,7,10],
-  blues: [0,3,5,6,7,10],
-  chromatic: [0,1,2,3,4,5,6,7,8,9,10,11]
+  major: [0,2,4,5,7,9,11], minor: [0,2,3,5,7,8,10], harmonic: [0,2,3,5,7,8,11],
+  melodic: [0,2,3,5,7,9,11], pentatonic_maj: [0,2,4,7,9], pentatonic_min: [0,3,5,7,10],
+  blues: [0,3,5,6,7,10], chromatic: [0,1,2,3,4,5,6,7,8,9,10,11]
 };
 
 const allNotes = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
-const baseNotes = ['C2','C#2','D2','D#2','E2','F2','F#2','G2','G#2','A2','A#2','B2'];
+const baseNotes = ['C2','C#2','D2','D#2','E2','F#2','G2','G#2','A2','A#2','B2'];
 const noteFreq = {
   'C1':32.70,'C#1':34.65,'D1':36.71,'D#1':38.89,'E1':41.20,'F1':43.65,'F#1':46.25,'G1':49.00,'G#1':51.91,'A1':55.00,'A#1':58.27,'B1':61.74,
   'C2':65.41,'C#2':69.30,'D2':73.42,'D#2':77.78,'E2':82.41,'F2':87.31,'F#2':92.50,'G2':98.00,'G#2':103.8,'A2':110.0,'A#2':116.5,'B2':123.5,
@@ -409,944 +394,1346 @@ const noteFreq = {
 
 let seq = Array(16).fill().map(() => ({note: 'OFF', octave: 2, slide: false, accent: false}));
 
-// FACTORY SOUNDBANKS - TRANSISTOR BASS + ROLAND TB-303
 const FACTORY_BANKS = {
   'Factory Transistor Bass': {
-    'TB Bassline 1': [
+    '000. Meanbird': [
       {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:true,a:false},{n:'G2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},
       {n:'C2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},
       {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:true,a:false},{n:'G2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},
       {n:'C2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false}
     ],
-    'TB Acid Walk': [
-      {n:'C2',o:1,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:false},
-      {n:'F2',o:2,s:false,a:true},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},
-      {n:'C2',o:1,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'G2',o:2,s:false,a:false},
-      {n:'G#2',o:2,s:false,a:true},{n:'G2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false},{n:'D#2',o:2,s:false,a:false}
+    '001. Liquid': [
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:true},
+      {n:'F2',o:2,s:false,a:false},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'G2',o:2,s:false,a:true},{n:'F2',o:2,s:false,a:false},
+      {n:'D#2',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false}
     ],
-    'TB Resonance Test': [
+    '002. Future': [
+      {n:'C2',o:1,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:false},
+      {n:'C2',o:1,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'A#2',o:2,s:false,a:true},{n:'G2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false},{n:'D#2',o:2,s:false,a:false}
+    ],
+    '003. Acidland': [
       {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
-      {n:'G2',o:2,s:false,a:true},{n:'G2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},
-      {n:'C3',o:3,s:false,a:true},{n:'C3',o:3,s:true,a:false},{n:'C3',o:3,s:true,a:false},{n:'C3',o:3,s:true,a:false},
-      {n:'G2',o:2,s:false,a:true},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
+      {n:'D#2',o:2,s:false,a:false},{n:'D#2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:true},{n:'F2',o:2,s:true,a:false},
+      {n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:true},
+      {n:'D#2',o:2,s:false,a:false},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '004. Midnighttrain': [
+      {n:'C2',o:1,s:false,a:true},{n:'C2',o:1,s:false,a:false},{n:'C2',o:1,s:false,a:false},{n:'C2',o:1,s:false,a:false},
+      {n:'G2',o:1,s:false,a:true},{n:'G2',o:1,s:false,a:false},{n:'G2',o:1,s:false,a:false},{n:'G2',o:1,s:false,a:false},
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'F2',o:2,s:false,a:false},
+      {n:'D#2',o:2,s:false,a:true},{n:'D#2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '005. Sawslide': [
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'D2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},
+      {n:'F2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},{n:'G#2',o:2,s:true,a:false},{n:'A#2',o:2,s:false,a:true},
+      {n:'C3',o:3,s:false,a:false},{n:'C3',o:3,s:true,a:false},{n:'A#2',o:2,s:true,a:false},{n:'G#2',o:2,s:true,a:false},
+      {n:'G2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '006. Bassme': [
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'D#2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false}
+    ],
+    '007. Mystery': [
+      {n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},
+      {n:'A#2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'G2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false},
+      {n:'D#2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},
+      {n:'D#2',o:2,s:false,a:false},{n:'F2',o:2,s:true,a:false},{n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false}
+    ],
+    '008. Hotplate': [
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'D#2',o:2,s:false,a:false},{n:'F2',o:2,s:false,a:true},{n:'F2',o:2,s:false,a:false},{n:'F2',o:2,s:true,a:false},
+      {n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:true},{n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:true,a:false},
+      {n:'F2',o:2,s:false,a:false},{n:'D#2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '009. Knackos': [
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'G2',o:2,s:false,a:true},{n:'G2',o:2,s:true,a:false},
+      {n:'A#2',o:2,s:false,a:false},{n:'A#2',o:2,s:true,a:false},{n:'G2',o:2,s:false,a:true},{n:'F2',o:2,s:false,a:false},
+      {n:'D#2',o:2,s:false,a:false},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:true,a:false},
+      {n:'D#2',o:2,s:false,a:false},{n:'F2',o:2,s:true,a:false},{n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false}
+    ],
+    '010. Nineoclock': [
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:false},{n:'D#2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '011. Transposeme': [
+      {n:'C2',o:1,s:false,a:true},{n:'C2',o:1,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'C3',o:3,s:false,a:true},{n:'C3',o:3,s:true,a:false},{n:'C3',o:3,s:false,a:false},{n:'G2',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:false},{n:'D#2',o:2,s:true,a:false},
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:false,a:false}
+    ],
+    '012. Transformer': [
+      {n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},
+      {n:'C3',o:3,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'G2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false},
+      {n:'D#2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'OFF',o:2,s:false,a:false}
+    ],
+    '013. Sharp': [
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'D#2',o:2,s:false,a:true},{n:'D#2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'F2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false}
+    ],
+    '014. Spicy': [
+      {n:'C2',o:2,s:false,a:true},{n:'D2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'G#2',o:2,s:true,a:false},{n:'A#2',o:2,s:true,a:false},{n:'C3',o:3,s:false,a:false},
+      {n:'C3',o:3,s:false,a:true},{n:'A#2',o:2,s:true,a:false},{n:'G#2',o:2,s:true,a:false},{n:'G2',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'D2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '015. Slider': [
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'D#2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},
+      {n:'F2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},
+      {n:'G2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},{n:'G2',o:2,s:false,a:true}
+    ],
+    '016. Stomp': [
+      {n:'C2',o:1,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'C2',o:1,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'C2',o:1,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'G2',o:1,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'F2',o:1,s:true,a:false},{n:'C2',o:1,s:false,a:false}
+    ],
+    '017. Burning': [
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:false},{n:'D#2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'F2',o:2,s:false,a:false},{n:'G2',o:2,s:true,a:false},{n:'G#2',o:2,s:false,a:false},
+      {n:'A#2',o:2,s:false,a:true},{n:'A#2',o:2,s:false,a:false},{n:'G#2',o:2,s:true,a:false},{n:'G2',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false}
+    ]
+  }
+};
+    '018. pHzero': [
+      {n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:true},
+      {n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'OFF',o:2,s:false,a:false},{n:'F2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'D#2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'OFF',o:2,s:false,a:false}
+    ],
+    '019. Echo': [
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:3,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'G2',o:3,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:3,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'A#2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'G2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false}
+    ],
+    '020. Destructor': [
+      {n:'C2',o:1,s:false,a:true},{n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:false,a:false},
+      {n:'F2',o:1,s:false,a:true},{n:'F2',o:1,s:true,a:false},{n:'F2',o:1,s:true,a:false},{n:'F2',o:1,s:false,a:false},
+      {n:'G2',o:1,s:false,a:true},{n:'G2',o:1,s:true,a:false},{n:'G2',o:1,s:true,a:false},{n:'G2',o:1,s:false,a:false},
+      {n:'A#2',o:1,s:false,a:true},{n:'A#2',o:1,s:true,a:false},{n:'G2',o:1,s:false,a:false},{n:'F2',o:1,s:false,a:false}
+    ],
+    '021. Ready': [
+      {n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:true},
+      {n:'D#2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'F2',o:2,s:false,a:false},{n:'F2',o:2,s:false,a:true},
+      {n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:true},
+      {n:'F2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '022. Battery': [
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'F2',o:2,s:false,a:false},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '023. Vinegar': [
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'D2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:true},
+      {n:'F2',o:2,s:false,a:false},{n:'F2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},{n:'G#2',o:2,s:false,a:true},
+      {n:'A#2',o:2,s:false,a:false},{n:'A#2',o:2,s:true,a:false},{n:'G#2',o:2,s:true,a:false},{n:'G2',o:2,s:false,a:true},
+      {n:'F2',o:2,s:false,a:false},{n:'D#2',o:2,s:true,a:false},{n:'D2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '024. Abrasive': [
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},
+      {n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'D#2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},
+      {n:'OFF',o:2,s:false,a:false},{n:'F2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:false}
+    ],
+    '025. Slap': [
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'OFF',o:2,s:false,a:false},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '026. Crisp': [
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},
+      {n:'D#2',o:2,s:false,a:false},{n:'D#2',o:2,s:false,a:false},{n:'D#2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:false},{n:'F2',o:2,s:false,a:false},{n:'F2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false}
+    ],
+    '027. Elephant': [
+      {n:'C2',o:1,s:false,a:true},{n:'C2',o:1,s:false,a:false},{n:'C2',o:1,s:false,a:false},{n:'C2',o:1,s:false,a:false},
+      {n:'G2',o:1,s:false,a:true},{n:'G2',o:1,s:false,a:false},{n:'G2',o:1,s:false,a:false},{n:'G2',o:1,s:false,a:false},
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},
+      {n:'A#2',o:2,s:false,a:true},{n:'G2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false},{n:'D#2',o:2,s:false,a:false}
+    ],
+    '028. Nasty': [
+      {n:'C2',o:2,s:false,a:true},{n:'C#2',o:2,s:true,a:false},{n:'D2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},
+      {n:'E2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},{n:'F#2',o:2,s:true,a:false},{n:'G2',o:2,s:false,a:true},
+      {n:'G#2',o:2,s:true,a:false},{n:'A2',o:2,s:true,a:false},{n:'A#2',o:2,s:true,a:false},{n:'B2',o:2,s:true,a:false},
+      {n:'C3',o:3,s:false,a:true},{n:'A#2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false}
+    ],
+    '029. Slim': [
+      {n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'D#2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'F2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '030. Twister': [
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'G2',o:2,s:false,a:true},{n:'G2',o:2,s:true,a:false},
+      {n:'C3',o:3,s:false,a:false},{n:'C3',o:3,s:true,a:false},{n:'G2',o:2,s:false,a:true},{n:'F2',o:2,s:false,a:false},
+      {n:'D#2',o:2,s:false,a:false},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:true,a:false},
+      {n:'D#2',o:2,s:false,a:false},{n:'F2',o:2,s:true,a:false},{n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false}
+    ],
+    '031. Unsweet': [
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},
+      {n:'D#2',o:2,s:false,a:true},{n:'D#2',o:2,s:false,a:false},{n:'D#2',o:2,s:false,a:false},{n:'D#2',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'F2',o:2,s:false,a:false},{n:'F2',o:2,s:false,a:false},{n:'F2',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false}
+    ],
+    '032. Goose': [
+      {n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},
+      {n:'D#2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'F2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '033. Dry': [
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'D#2',o:2,s:false,a:true},{n:'D#2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'F2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '034. House': [
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'D#2',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'F2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'OFF',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:true},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:false}
+    ],
+    '035. Dual': [
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:true},{n:'G2',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:true},{n:'G2',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:true},{n:'G2',o:2,s:false,a:false},
+      {n:'A#2',o:2,s:false,a:true},{n:'G2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false},{n:'D#2',o:2,s:false,a:false}
+    ]
+    '036. Acerbic': [
+      {n:'C2',o:2,s:false,a:true},{n:'C#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'C#2',o:2,s:true,a:false},
+      {n:'D#2',o:2,s:false,a:true},{n:'E2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:false},{n:'E2',o:2,s:true,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'F#2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false},{n:'F#2',o:2,s:true,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'G#2',o:2,s:true,a:false},{n:'G2',o:2,s:false,a:false},{n:'F2',o:2,s:false,a:false}
+    ],
+    '037. Biting': [
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'D#2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false}
+    ],
+    '038. Bouncy': [
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:true},
+      {n:'D#2',o:2,s:false,a:false},{n:'D#2',o:2,s:true,a:false},{n:'OFF',o:2,s:false,a:false},{n:'D#2',o:2,s:false,a:true},
+      {n:'F2',o:2,s:false,a:false},{n:'F2',o:2,s:true,a:false},{n:'OFF',o:2,s:false,a:false},{n:'F2',o:2,s:false,a:true},
+      {n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:true,a:false},{n:'OFF',o:2,s:false,a:false},{n:'F2',o:2,s:false,a:false}
+    ],
+    '039. Stinger': [
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},
+      {n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false}
+    ],
+    '040. Tart': [
+      {n:'C2',o:2,s:false,a:false},{n:'D2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:true},
+      {n:'G2',o:2,s:false,a:false},{n:'G#2',o:2,s:true,a:false},{n:'A#2',o:2,s:true,a:false},{n:'C3',o:3,s:false,a:true},
+      {n:'A#2',o:2,s:false,a:false},{n:'G#2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:true},
+      {n:'D#2',o:2,s:false,a:false},{n:'D2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '041. Round': [
+      {n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:true},
+      {n:'D#2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'F2',o:2,s:false,a:false},{n:'F2',o:2,s:false,a:true},
+      {n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:true},
+      {n:'F2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '042. Flow': [
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'D#2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},
+      {n:'F2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},
+      {n:'G2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:false}
+    ],
+    '043. Caustic': [
+      {n:'C2',o:2,s:false,a:true},{n:'C#2',o:2,s:true,a:false},{n:'D2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},
+      {n:'E2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},{n:'F#2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},
+      {n:'G#2',o:2,s:true,a:false},{n:'A2',o:2,s:true,a:false},{n:'A#2',o:2,s:true,a:false},{n:'B2',o:2,s:true,a:false},
+      {n:'C3',o:3,s:true,a:false},{n:'A#2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false}
+    ],
+    '044. Bitter': [
+      {n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'D#2',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '045. Testy': [
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},
+      {n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'D#2',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'F2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'F2',o:2,s:false,a:false},
+      {n:'OFF',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:true},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:false}
+    ],
+    '046. Calm': [
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:false},{n:'F2',o:2,s:false,a:false},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '047. Siren': [
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},
+      {n:'G2',o:2,s:true,a:false},{n:'A#2',o:2,s:true,a:false},{n:'C3',o:3,s:true,a:false},{n:'C3',o:3,s:false,a:true},
+      {n:'A#2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},
+      {n:'C2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},{n:'G2',o:2,s:false,a:false}
+    ],
+    '048. Sour': [
+      {n:'C2',o:2,s:false,a:false},{n:'C#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'C#2',o:2,s:true,a:false},
+      {n:'D#2',o:2,s:false,a:false},{n:'E2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:false},{n:'E2',o:2,s:true,a:false},
+      {n:'F2',o:2,s:false,a:false},{n:'F#2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false},{n:'F#2',o:2,s:true,a:false},
+      {n:'G2',o:2,s:false,a:false},{n:'G#2',o:2,s:true,a:false},{n:'G2',o:2,s:false,a:false},{n:'F2',o:2,s:false,a:false}
+    ],
+    '049. Rolling': [
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},
+      {n:'F2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '050. Cutting': [
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false}
+    ],
+    '051. Fantasy': [
+      {n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'D#2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},
+      {n:'A#2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '052. Disco': [
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},
+      {n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'D#2',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'F2',o:2,s:false,a:false},
+      {n:'OFF',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:true},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:false}
+    ],
+    '053. Laser': [
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'C#2',o:2,s:true,a:false},{n:'D2',o:2,s:true,a:false},
+      {n:'D#2',o:2,s:true,a:false},{n:'E2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},{n:'F#2',o:2,s:true,a:false},
+      {n:'G2',o:2,s:true,a:false},{n:'G#2',o:2,s:true,a:false},{n:'A2',o:2,s:true,a:false},{n:'A#2',o:2,s:true,a:false},
+      {n:'B2',o:2,s:true,a:false},{n:'C3',o:3,s:true,a:false},{n:'A#2',o:2,s:true,a:false},{n:'G2',o:2,s:false,a:false}
+    ]
+    '054. Anger': [
+      {n:'C2',o:1,s:false,a:true},{n:'C2',o:1,s:false,a:true},{n:'C2',o:1,s:false,a:true},{n:'C2',o:1,s:false,a:true},
+      {n:'C2',o:1,s:false,a:true},{n:'C2',o:1,s:false,a:true},{n:'C2',o:1,s:false,a:true},{n:'C2',o:1,s:false,a:true},
+      {n:'G2',o:1,s:false,a:true},{n:'G2',o:1,s:false,a:true},{n:'G2',o:1,s:false,a:true},{n:'G2',o:1,s:false,a:true},
+      {n:'F2',o:1,s:false,a:true},{n:'F2',o:1,s:false,a:true},{n:'D#2',o:1,s:true,a:false},{n:'C2',o:1,s:false,a:false}
+    ],
+    '055. Crabby': [
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:true},
+      {n:'D#2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'D#2',o:2,s:false,a:false},{n:'D#2',o:2,s:false,a:true},
+      {n:'F2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'F2',o:2,s:false,a:false},{n:'F2',o:2,s:false,a:true},
+      {n:'G2',o:2,s:false,a:false},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '056. Impatient': [
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:true},{n:'D#2',o:2,s:false,a:false},{n:'D#2',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'F2',o:2,s:false,a:true},{n:'F2',o:2,s:false,a:false},{n:'F2',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '057. Incisive': [
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '058. Pulser': [
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false}
+    ],
+    '059. Solid': [
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:false},{n:'F2',o:2,s:false,a:false},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '060. Spry': [
+      {n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},
+      {n:'D#2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'F2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '061. Caustic': [
+      {n:'C2',o:2,s:false,a:true},{n:'C#2',o:2,s:true,a:false},{n:'D2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},
+      {n:'E2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},{n:'F#2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},
+      {n:'G#2',o:2,s:true,a:false},{n:'A2',o:2,s:true,a:false},{n:'A#2',o:2,s:true,a:false},{n:'B2',o:2,s:true,a:false},
+      {n:'C3',o:3,s:true,a:false},{n:'A#2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false}
+    ],
+    '062. Edge': [
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false}
+    ],
+    '063. Fierce': [
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:false},{n:'D#2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '064. Sharpness': [
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '065. Ferocious': [
+      {n:'C2',o:1,s:false,a:true},{n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:true,a:false},
+      {n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:true,a:false},
+      {n:'G2',o:1,s:true,a:false},{n:'G2',o:1,s:true,a:false},{n:'G2',o:1,s:true,a:false},{n:'G2',o:1,s:true,a:false},
+      {n:'F2',o:1,s:true,a:false},{n:'F2',o:1,s:true,a:false},{n:'D#2',o:1,s:true,a:false},{n:'C2',o:1,s:false,a:false}
+    ],
+    '066. Bite': [
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'D#2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false}
+    ],
+    '067. Piquant': [
+      {n:'C2',o:2,s:false,a:false},{n:'C#2',o:2,s:true,a:false},{n:'D2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:true},
+      {n:'E2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},{n:'F#2',o:2,s:true,a:false},{n:'G2',o:2,s:false,a:true},
+      {n:'G#2',o:2,s:true,a:false},{n:'A2',o:2,s:true,a:false},{n:'A#2',o:2,s:true,a:false},{n:'B2',o:2,s:false,a:true},
+      {n:'C3',o:3,s:false,a:false},{n:'A#2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false}
+    ],
+    '068. Spiteful': [
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},
+      {n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'D#2',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'F2',o:2,s:false,a:false},
+      {n:'OFF',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:true},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:false}
+    ],
+    '069. Carnal': [
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:true},
+      {n:'D#2',o:2,s:false,a:false},{n:'D#2',o:2,s:false,a:false},{n:'D#2',o:2,s:false,a:false},{n:'D#2',o:2,s:false,a:true},
+      {n:'F2',o:2,s:false,a:false},{n:'F2',o:2,s:false,a:false},{n:'F2',o:2,s:false,a:false},{n:'F2',o:2,s:false,a:true},
+      {n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:false}
+    ],
+    '070. Grim': [
+      {n:'C2',o:1,s:false,a:true},{n:'C2',o:1,s:false,a:false},{n:'C2',o:1,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'C2',o:1,s:false,a:true},{n:'C2',o:1,s:false,a:false},{n:'D#2',o:1,s:true,a:false},{n:'F2',o:1,s:false,a:false},
+      {n:'G2',o:1,s:false,a:true},{n:'G2',o:1,s:false,a:false},{n:'G2',o:1,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'F2',o:1,s:false,a:true},{n:'D#2',o:1,s:true,a:false},{n:'C2',o:1,s:false,a:false},{n:'OFF',o:2,s:false,a:false}
+    ],
+    '071. Acrimonious': [
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'C#2',o:2,s:true,a:false},{n:'D2',o:2,s:true,a:false},
+      {n:'D#2',o:2,s:true,a:false},{n:'E2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},{n:'F#2',o:2,s:true,a:false},
+      {n:'G2',o:2,s:true,a:false},{n:'G#2',o:2,s:true,a:false},{n:'A2',o:2,s:true,a:false},{n:'A#2',o:2,s:true,a:false},
+      {n:'B2',o:2,s:true,a:false},{n:'C3',o:3,s:true,a:false},{n:'A#2',o:2,s:true,a:false},{n:'G2',o:2,s:false,a:false}
+    ],
+    '072. Choleric': [
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false}
+    ]
+    '073. Fireacid': [
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'D#2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},
+      {n:'F2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},
+      {n:'G2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:false}
+    ],
+    '074. Acidist': [
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'D#2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false}
+    ],
+    '075. Corrosive': [
+      {n:'C2',o:2,s:false,a:false},{n:'C#2',o:2,s:true,a:false},{n:'D2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},
+      {n:'E2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},{n:'F#2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},
+      {n:'G#2',o:2,s:true,a:false},{n:'A2',o:2,s:true,a:false},{n:'A#2',o:2,s:true,a:false},{n:'B2',o:2,s:true,a:false},
+      {n:'C3',o:3,s:true,a:false},{n:'A#2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false}
+    ],
+    '076. Searing': [
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false}
+    ],
+    '077. Thorny': [
+      {n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},
+      {n:'D#2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'F2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '078. Stinging': [
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false}
+    ],
+    '079. Bittersweet': [
+      {n:'C2',o:2,s:false,a:false},{n:'D2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:true},
+      {n:'G2',o:2,s:false,a:false},{n:'A#2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:true},
+      {n:'D#2',o:2,s:false,a:false},{n:'D2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'D2',o:2,s:false,a:true},
+      {n:'D#2',o:2,s:false,a:false},{n:'F2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},{n:'A#2',o:2,s:false,a:false}
+    ],
+    '080. Acidbliss': [
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'G2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '081. Acidmelt': [
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'D2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},
+      {n:'E2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},{n:'F#2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},
+      {n:'F#2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},{n:'E2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},
+      {n:'D2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'D2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:false}
+    ],
+    '082. Acidache': [
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '083. Acidwhip': [
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:true},
+      {n:'D#2',o:2,s:false,a:false},{n:'D#2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'D#2',o:2,s:false,a:true},
+      {n:'F2',o:2,s:false,a:false},{n:'F2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'F2',o:2,s:false,a:true},
+      {n:'G2',o:2,s:false,a:false},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '084. Acidmorning': [
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '085. Acidgod': [
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'D#2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},
+      {n:'F2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},
+      {n:'G2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:false}
+    ],
+    '086. Acidfire': [
+      {n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false}
+    ],
+    '087. Acidgrind': [
+      {n:'C2',o:1,s:false,a:true},{n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:true,a:false},
+      {n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:true,a:false},
+      {n:'G2',o:1,s:true,a:false},{n:'G2',o:1,s:true,a:false},{n:'G2',o:1,s:true,a:false},{n:'G2',o:1,s:true,a:false},
+      {n:'F2',o:1,s:true,a:false},{n:'F2',o:1,s:true,a:false},{n:'D#2',o:1,s:true,a:false},{n:'C2',o:1,s:false,a:false}
+    ],
+    '088. Acidblast': [
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:true},
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:true},
+      {n:'G2',o:2,s:false,a:true},{n:'G2',o:2,s:false,a:true},{n:'G2',o:2,s:false,a:true},{n:'G2',o:2,s:false,a:true},
+      {n:'F2',o:2,s:false,a:true},{n:'F2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '089. Acidhead': [
+      {n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'D#2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false}
+    ],
+    '090. Acidcore': [
+      {n:'C2',o:1,s:false,a:true},{n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:true,a:false},
+      {n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:true,a:false},
+      {n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:true,a:false},
+      {n:'G2',o:1,s:true,a:false},{n:'F2',o:1,s:true,a:false},{n:'D#2',o:1,s:true,a:false},{n:'C2',o:1,s:false,a:false}
+    ]
+    '091. Acidmaster': [
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'D2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},
+      {n:'F2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},{n:'G#2',o:2,s:true,a:false},{n:'A#2',o:2,s:true,a:false},
+      {n:'C3',o:3,s:true,a:false},{n:'A#2',o:2,s:true,a:false},{n:'G#2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},
+      {n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},{n:'D2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '092. Acidprime': [
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '093. Acidlegend': [
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '094. Acidking': [
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'G2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '095. Acidqueen': [
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
     ]
   },
   'Factory Roland TB-303': {
-    'TB-303 Pattern 1': [
-      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:false},
-      {n:'F2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:false},
-      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'G2',o:2,s:false,a:false},
-      {n:'G#2',o:2,s:false,a:true},{n:'G2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false},{n:'D#2',o:2,s:false,a:false}
+    '01: 90s AcidDistSqr': [
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'F2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},{n:'G2',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'G2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},{n:'A#2',o:2,s:false,a:false},
+      {n:'A#2',o:2,s:false,a:true},{n:'G2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:false}
     ],
-    'TB-303 Pattern 2': [
-      {n:'C2',o:1,s:false,a:true},{n:'C2',o:1,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
-      {n:'G2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:false},
-      {n:'C2',o:1,s:false,a:true},{n:'C2',o:1,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+    '02: Acid Clean Saw': [
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'D2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:true},
+      {n:'F2',o:2,s:false,a:false},{n:'F2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},{n:'G#2',o:2,s:false,a:true},
+      {n:'A#2',o:2,s:false,a:false},{n:'A#2',o:2,s:true,a:false},{n:'G#2',o:2,s:true,a:false},{n:'G2',o:2,s:false,a:true},
+      {n:'F2',o:2,s:false,a:false},{n:'D#2',o:2,s:true,a:false},{n:'D2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '03: Comp Square': [
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'F2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
       {n:'A#2',o:2,s:false,a:true},{n:'G2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false},{n:'D#2',o:2,s:false,a:false}
     ],
-    'TB-303 Pattern 3': [
-      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:true,a:false},{n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
-      {n:'C2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
-      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:true,a:false},{n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
-      {n:'C2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false}
+    '04: Brejcha Style': [
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:false},{n:'D#2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false}
     ],
-    'TB-303 Pattern 4': [
-      {n:'C2',o:1,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'OFF',o:2,s:false,a:false},
-      {n:'G2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'F2',o:2,s:true,a:false},{n:'OFF',o:2,s:false,a:false},
-      {n:'C2',o:1,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'OFF',o:2,s:false,a:false},
-      {n:'A#2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'G2',o:2,s:true,a:false},{n:'OFF',o:2,s:false,a:false}
+    '05: Lens Dark': [
+      {n:'C2',o:1,s:false,a:true},{n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:true,a:false},
+      {n:'F2',o:1,s:true,a:false},{n:'F2',o:1,s:true,a:false},{n:'F2',o:1,s:true,a:false},{n:'F2',o:1,s:true,a:false},
+      {n:'G2',o:1,s:true,a:false},{n:'G2',o:1,s:true,a:false},{n:'G2',o:1,s:true,a:false},{n:'G2',o:1,s:true,a:false},
+      {n:'A#2',o:1,s:true,a:false},{n:'A#2',o:1,s:true,a:false},{n:'G2',o:1,s:true,a:false},{n:'F2',o:1,s:false,a:false}
+    ],
+    '06: Hozho Minimal': [
+      {n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false}
+    ],
+    '07: Claptone House': [
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'D#2',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'F2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'OFF',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:true},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:false}
+    ],
+    '08: Deadmau5 Prog': [
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'D#2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},
+      {n:'F2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},
+      {n:'G2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:false}
+    ],
+    '09: Dash Berlin': [
+      {n:'C2',o:2,s:false,a:false},{n:'D2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:true},
+      {n:'G2',o:2,s:false,a:false},{n:'A2',o:2,s:true,a:false},{n:'A#2',o:2,s:true,a:false},{n:'C3',o:3,s:false,a:true},
+      {n:'C3',o:3,s:false,a:false},{n:'A#2',o:2,s:true,a:false},{n:'A2',o:2,s:true,a:false},{n:'G2',o:2,s:false,a:true},
+      {n:'F2',o:2,s:false,a:false},{n:'D#2',o:2,s:true,a:false},{n:'D2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
+    ]
+    '10: Tech House': [
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:false},{n:'D#2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false}
+    ],
+    '11: Melodic Techno': [
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},
+      {n:'G2',o:2,s:true,a:false},{n:'A#2',o:2,s:true,a:false},{n:'C3',o:3,s:true,a:false},{n:'C3',o:3,s:false,a:true},
+      {n:'A#2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},
+      {n:'C2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},{n:'G2',o:2,s:false,a:false}
+    ],
+    '12: Detroit Techno': [
+      {n:'C2',o:1,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:false},
+      {n:'C2',o:1,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'A#2',o:2,s:false,a:true},{n:'G2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false},{n:'D#2',o:2,s:false,a:false}
+    ],
+    '13: Berlin Techno': [
+      {n:'C2',o:1,s:false,a:true},{n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:true,a:false},
+      {n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:true,a:false},
+      {n:'F2',o:1,s:true,a:false},{n:'F2',o:1,s:true,a:false},{n:'F2',o:1,s:true,a:false},{n:'F2',o:1,s:true,a:false},
+      {n:'G2',o:1,s:true,a:false},{n:'G2',o:1,s:true,a:false},{n:'F2',o:1,s:true,a:false},{n:'D#2',o:1,s:false,a:false}
+    ],
+    '14: Uplifting Trance': [
+      {n:'C2',o:2,s:false,a:false},{n:'D2',o:2,s:true,a:false},{n:'E2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},
+      {n:'G2',o:2,s:true,a:false},{n:'A2',o:2,s:true,a:false},{n:'B2',o:2,s:true,a:false},{n:'C3',o:3,s:false,a:true},
+      {n:'B2',o:2,s:true,a:false},{n:'A2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},
+      {n:'E2',o:2,s:true,a:false},{n:'D2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '15: Psytrance': [
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '16: House Classic': [
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'D#2',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'F2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'OFF',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:true},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:false}
+    ],
+    '17: DnB Bass': [
+      {n:'C2',o:1,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'C2',o:1,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'G2',o:1,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'F2',o:1,s:false,a:true},{n:'D#2',o:1,s:true,a:false},{n:'C2',o:1,s:false,a:false},{n:'OFF',o:2,s:false,a:false}
+    ],
+    '18: Acid Classic': [
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'F2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},{n:'G2',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'G2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},{n:'A#2',o:2,s:false,a:false},
+      {n:'A#2',o:2,s:false,a:true},{n:'G2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:false}
+    ],
+    '19: Acid Square': [
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'D2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:true},
+      {n:'F2',o:2,s:false,a:false},{n:'F2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},{n:'G#2',o:2,s:false,a:true},
+      {n:'A#2',o:2,s:false,a:false},{n:'A#2',o:2,s:true,a:false},{n:'G#2',o:2,s:true,a:false},{n:'G2',o:2,s:false,a:true},
+      {n:'F2',o:2,s:false,a:false},{n:'D#2',o:2,s:true,a:false},{n:'D2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '20: Acid Saw': [
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'G2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},
+      {n:'C3',o:3,s:true,a:false},{n:'C3',o:3,s:true,a:false},{n:'C3',o:3,s:true,a:false},{n:'C3',o:3,s:true,a:false},
+      {n:'G2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:false}
+    ],
+    '21: Acid Resonant': [
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'C#2',o:2,s:true,a:false},{n:'D2',o:2,s:true,a:false},
+      {n:'D#2',o:2,s:true,a:false},{n:'E2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},{n:'F#2',o:2,s:true,a:false},
+      {n:'G2',o:2,s:true,a:false},{n:'G#2',o:2,s:true,a:false},{n:'A2',o:2,s:true,a:false},{n:'A#2',o:2,s:true,a:false},
+      {n:'B2',o:2,s:true,a:false},{n:'C3',o:3,s:true,a:false},{n:'A#2',o:2,s:true,a:false},{n:'G2',o:2,s:false,a:false}
+    ],
+    '22: Acid Filtered': [
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false}
+    ],
+    '23: Acid Sweep': [
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'G2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},
+      {n:'F2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '24: Acid Machine': [
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:false},{n:'D#2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '25: Acid Pulse': [
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false}
+    ],
+    '26: Acid Rave': [
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:false},{n:'F2',o:2,s:false,a:false},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '27: Acid Storm': [
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:true,a:false},{n:'C#2',o:2,s:true,a:false},{n:'D2',o:2,s:true,a:false},
+      {n:'D#2',o:2,s:true,a:false},{n:'E2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},{n:'F#2',o:2,s:true,a:false},
+      {n:'G2',o:2,s:true,a:false},{n:'G#2',o:2,s:true,a:false},{n:'A2',o:2,s:true,a:false},{n:'A#2',o:2,s:true,a:false},
+      {n:'B2',o:2,s:true,a:false},{n:'C3',o:3,s:true,a:false},{n:'A#2',o:2,s:true,a:false},{n:'G2',o:2,s:false,a:false}
+    ]
+    '28: Acid Thunder': [
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '29: Acid Lightning': [
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'G2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '30: Acid Volcano': [
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false}
+    ],
+    '31: Acid Tsunami': [
+      {n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'D#2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false}
+    ],
+    '32: Acid Earthquake': [
+      {n:'C2',o:1,s:false,a:true},{n:'C2',o:1,s:false,a:false},{n:'C2',o:1,s:false,a:false},{n:'C2',o:1,s:false,a:false},
+      {n:'C2',o:1,s:false,a:true},{n:'C2',o:1,s:false,a:false},{n:'C2',o:1,s:false,a:false},{n:'C2',o:1,s:false,a:false},
+      {n:'G2',o:1,s:false,a:true},{n:'G2',o:1,s:false,a:false},{n:'G2',o:1,s:false,a:false},{n:'G2',o:1,s:false,a:false},
+      {n:'F2',o:1,s:false,a:true},{n:'F2',o:1,s:false,a:false},{n:'D#2',o:1,s:true,a:false},{n:'C2',o:1,s:false,a:false}
+    ],
+    '33: Acid Hurricane': [
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'C#2',o:2,s:true,a:false},{n:'D2',o:2,s:true,a:false},
+      {n:'D#2',o:2,s:true,a:false},{n:'E2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},{n:'F#2',o:2,s:true,a:false},
+      {n:'G2',o:2,s:true,a:false},{n:'G#2',o:2,s:true,a:false},{n:'A2',o:2,s:true,a:false},{n:'A#2',o:2,s:true,a:false},
+      {n:'B2',o:2,s:true,a:false},{n:'C3',o:3,s:true,a:false},{n:'A#2',o:2,s:true,a:false},{n:'G2',o:2,s:false,a:false}
+    ],
+    '34: Acid Tornado': [
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '35: Acid Blizzard': [
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'G2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '36: Acid Meteor': [
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false}
+    ],
+    '37: Acid Glide': [
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'D2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},
+      {n:'F2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},{n:'G#2',o:2,s:true,a:false},{n:'A#2',o:2,s:true,a:false},
+      {n:'C3',o:3,s:true,a:false},{n:'A#2',o:2,s:true,a:false},{n:'G#2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},
+      {n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},{n:'D2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '38: Acid Roll': [
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:false},{n:'D#2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false}
+    ],
+    '39: Acid Wave': [
+      {n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:true},
+      {n:'D#2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'F2',o:2,s:false,a:false},{n:'F2',o:2,s:false,a:true},
+      {n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:true},
+      {n:'F2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '40: Acid Drive': [
+      {n:'C2',o:1,s:false,a:true},{n:'C2',o:1,s:false,a:false},{n:'C2',o:1,s:false,a:false},{n:'C2',o:1,s:false,a:false},
+      {n:'C2',o:1,s:false,a:true},{n:'C2',o:1,s:false,a:false},{n:'C2',o:1,s:false,a:false},{n:'C2',o:1,s:false,a:false},
+      {n:'G2',o:1,s:false,a:true},{n:'G2',o:1,s:false,a:false},{n:'G2',o:1,s:false,a:false},{n:'G2',o:1,s:false,a:false},
+      {n:'F2',o:1,s:false,a:true},{n:'D#2',o:1,s:true,a:false},{n:'C2',o:1,s:false,a:false},{n:'C2',o:1,s:false,a:false}
+    ],
+    '41: Acid Pump': [
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},
+      {n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'D#2',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'F2',o:2,s:false,a:false},
+      {n:'OFF',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:true},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:false}
+    ],
+    '42: Acid Beat': [
+      {n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'D#2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false}
+    ],
+    '43: Acid Funk': [
+      {n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:true},
+      {n:'D#2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'F2',o:2,s:false,a:false},{n:'F2',o:2,s:false,a:true},
+      {n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:true},
+      {n:'F2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '44: Acid Groove': [
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'D#2',o:2,s:false,a:true},{n:'D#2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'F2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '45: Acid Tech': [
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'G2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},
+      {n:'F2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '46: Acid Jam': [
+      {n:'C2',o:2,s:false,a:false},{n:'D2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},
+      {n:'G2',o:2,s:true,a:false},{n:'A2',o:2,s:true,a:false},{n:'A#2',o:2,s:true,a:false},{n:'C3',o:3,s:true,a:false},
+      {n:'A#2',o:2,s:true,a:false},{n:'A2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},
+      {n:'D#2',o:2,s:true,a:false},{n:'D2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '47: Acid Live': [
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false}
+    ]
+    '48: Acid Final': [
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:false},{n:'F2',o:2,s:false,a:false},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
     ]
   },
-  'User': {}
+  'Factory Classic Acid Legends': {
+    '01: 1985 Phuture': [
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'G2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false},
+      {n:'D#2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},{n:'G2',o:2,s:false,a:false}
+    ],
+    '02: 1986 Adonis': [
+      {n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'A#2',o:2,s:false,a:true},{n:'G2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false},{n:'D#2',o:2,s:false,a:false}
+    ],
+    '03: 1987 Lil Louis': [
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'F2',o:2,s:false,a:false},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '04: 1988 Bam Bam': [
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'D2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},
+      {n:'F2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},{n:'G#2',o:2,s:true,a:false},{n:'A#2',o:2,s:true,a:false},
+      {n:'C3',o:3,s:true,a:false},{n:'A#2',o:2,s:true,a:false},{n:'G#2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},
+      {n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},{n:'D2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '05: 1989 Armando': [
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false}
+    ],
+    '06: 1990 Mr. Fingers': [
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:false},{n:'F2',o:2,s:false,a:false},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '07: 1991 Robert Armani': [
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'G2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '08: 1992 Hardfloor': [
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:true},
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:true},
+      {n:'G2',o:2,s:false,a:true},{n:'G2',o:2,s:false,a:true},{n:'G2',o:2,s:false,a:true},{n:'G2',o:2,s:false,a:true},
+      {n:'F2',o:2,s:false,a:true},{n:'F2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '09: 1993 Josh Wink': [
+      {n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'D#2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false}
+    ],
+    '10: 1994 Daft Punk': [
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'G2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '11: 1995 Laurent Garnier': [
+      {n:'C2',o:1,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'G2',o:1,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'F2',o:1,s:false,a:true},{n:'D#2',o:1,s:true,a:false},{n:'C2',o:1,s:false,a:false},{n:'OFF',o:2,s:false,a:false}
+    ],
+    '12: 1996 Richie Hawtin': [
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '13: 1997 Chris Liebing': [
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'D2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},
+      {n:'F2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},{n:'G#2',o:2,s:true,a:false},{n:'A#2',o:2,s:true,a:false},
+      {n:'C3',o:3,s:true,a:false},{n:'A#2',o:2,s:true,a:false},{n:'G#2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},
+      {n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},{n:'D2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '14: 1998 Adam Beyer': [
+      {n:'C2',o:1,s:false,a:true},{n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:true,a:false},
+      {n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:true,a:false},
+      {n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:true,a:false},
+      {n:'G2',o:1,s:true,a:false},{n:'F2',o:1,s:true,a:false},{n:'D#2',o:1,s:true,a:false},{n:'C2',o:1,s:false,a:false}
+    ],
+    '15: 1999 Thomas Schumacher': [
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false}
+    ],
+    '16: 2000 Marco Carola': [
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:false},{n:'D#2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false}
+    ]
+    '17: 2001 Speedy J': [
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'G2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},
+      {n:'F2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '18: 2002 Surgeon': [
+      {n:'C2',o:1,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'C2',o:1,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'G2',o:1,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'F2',o:1,s:false,a:true},{n:'D#2',o:1,s:true,a:false},{n:'C2',o:1,s:false,a:false},{n:'OFF',o:2,s:false,a:false}
+    ],
+    '19: 2003 Jeff Mills': [
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'G2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '20: 2004 Plastikman': [
+      {n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false}
+    ],
+    '21: 2005 Cari Lekebusch': [
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:false},{n:'D#2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false}
+    ],
+    '22: 2006 Luke Slater': [
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'D2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},
+      {n:'F2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},{n:'G#2',o:2,s:true,a:false},{n:'A#2',o:2,s:true,a:false},
+      {n:'C3',o:3,s:true,a:false},{n:'A#2',o:2,s:true,a:false},{n:'G#2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},
+      {n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},{n:'D2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '23: 2007 Dave Clarke': [
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'D#2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false}
+    ],
+    '24: 2008 Paul Kalkbrenner': [
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:false},{n:'F2',o:2,s:false,a:false},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '25: 2009 Ben Klock': [
+      {n:'C2',o:1,s:false,a:true},{n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:true,a:false},
+      {n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:true,a:false},
+      {n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:true,a:false},
+      {n:'G2',o:1,s:true,a:false},{n:'F2',o:1,s:true,a:false},{n:'D#2',o:1,s:true,a:false},{n:'C2',o:1,s:false,a:false}
+    ],
+    '26: 2010 Marcel Dettmann': [
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false}
+    ],
+    '27: 2011 Len Faki': [
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'G2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '28: 2012 Function': [
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:false},{n:'D#2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false}
+    ],
+    '29: 2013 Blawan': [
+      {n:'C2',o:1,s:false,a:true},{n:'C2',o:1,s:false,a:false},{n:'C2',o:1,s:false,a:false},{n:'C2',o:1,s:false,a:false},
+      {n:'C2',o:1,s:false,a:true},{n:'C2',o:1,s:false,a:false},{n:'C2',o:1,s:false,a:false},{n:'C2',o:1,s:false,a:false},
+      {n:'G2',o:1,s:false,a:true},{n:'G2',o:1,s:false,a:false},{n:'G2',o:1,s:false,a:false},{n:'G2',o:1,s:false,a:false},
+      {n:'F2',o:1,s:false,a:true},{n:'D#2',o:1,s:true,a:false},{n:'C2',o:1,s:false,a:false},{n:'C2',o:1,s:false,a:false}
+    ],
+    '30: 2014 Perc': [
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'G2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '31: 2015 Phase Fatale': [
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false}
+    ],
+    '32: 2016 Ancient Methods': [
+      {n:'C2',o:1,s:false,a:true},{n:'C2',o:1,s:false,a:true},{n:'C2',o:1,s:false,a:true},{n:'C2',o:1,s:false,a:true},
+      {n:'C2',o:1,s:false,a:true},{n:'C2',o:1,s:false,a:true},{n:'C2',o:1,s:false,a:true},{n:'C2',o:1,s:false,a:true},
+      {n:'G2',o:1,s:false,a:true},{n:'G2',o:1,s:false,a:true},{n:'G2',o:1,s:false,a:true},{n:'G2',o:1,s:false,a:true},
+      {n:'F2',o:1,s:false,a:true},{n:'F2',o:1,s:false,a:true},{n:'D#2',o:1,s:true,a:false},{n:'C2',o:1,s:false,a:false}
+    ],
+    '33: 2017 I Hate Models': [
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'G2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '34: 2018 Amelie Lens': [
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'D#2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false}
+    ]
+    '35: 2019 Charlotte de Witte': [
+      {n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false}
+    ],
+    '36: 2020 Rebekah': [
+      {n:'C2',o:1,s:false,a:true},{n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:true,a:false},
+      {n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:true,a:false},
+      {n:'G2',o:1,s:true,a:false},{n:'G2',o:1,s:true,a:false},{n:'G2',o:1,s:true,a:false},{n:'G2',o:1,s:true,a:false},
+      {n:'F2',o:1,s:true,a:false},{n:'F2',o:1,s:true,a:false},{n:'D#2',o:1,s:true,a:false},{n:'C2',o:1,s:false,a:false}
+    ],
+    '37: 2021 VTSS': [
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:false},{n:'D#2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false}
+    ],
+    '38: 2022 Kobosil': [
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'G2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '39: 2023 Shlømo': [
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false}
+    ],
+    '40: 2024 Dax J': [
+      {n:'C2',o:1,s:false,a:true},{n:'C2',o:1,s:false,a:false},{n:'C2',o:1,s:false,a:false},{n:'C2',o:1,s:false,a:false},
+      {n:'C2',o:1,s:false,a:true},{n:'C2',o:1,s:false,a:false},{n:'C2',o:1,s:false,a:false},{n:'C2',o:1,s:false,a:false},
+      {n:'G2',o:1,s:false,a:true},{n:'G2',o:1,s:false,a:false},{n:'G2',o:1,s:false,a:false},{n:'G2',o:1,s:false,a:false},
+      {n:'F2',o:1,s:false,a:true},{n:'D#2',o:1,s:true,a:false},{n:'C2',o:1,s:false,a:false},{n:'C2',o:1,s:false,a:false}
+    ],
+    '41: 2025 Indira Paganotto': [
+      {n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'D#2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false}
+    ],
+    '42: TB-303 Ultimate': [
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:true,a:false},{n:'D2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},
+      {n:'F2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},{n:'G#2',o:2,s:true,a:false},{n:'A#2',o:2,s:true,a:false},
+      {n:'C3',o:3,s:true,a:false},{n:'A#2',o:2,s:true,a:false},{n:'G#2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},
+      {n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},{n:'D2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '43: TB-303 Squid': [
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'G2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '44: TB-303 Octopus': [
+      {n:'C2',o:1,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'C3',o:3,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '45: TB-303 Kraken': [
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:false},{n:'D#2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false}
+    ],
+    '46: TB-303 Hydra': [
+      {n:'C2',o:2,s:false,a:false},{n:'C#2',o:2,s:true,a:false},{n:'D2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},
+      {n:'E2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},{n:'F#2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},
+      {n:'G#2',o:2,s:true,a:false},{n:'A2',o:2,s:true,a:false},{n:'A#2',o:2,s:true,a:false},{n:'B2',o:2,s:true,a:false},
+      {n:'C3',o:3,s:true,a:false},{n:'A#2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false}
+    ],
+    '47: TB-303 Leviathan': [
+      {n:'C2',o:1,s:false,a:true},{n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:true,a:false},
+      {n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:true,a:false},
+      {n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:true,a:false},
+      {n:'G2',o:1,s:true,a:false},{n:'F2',o:1,s:true,a:false},{n:'D#2',o:1,s:true,a:false},{n:'C2',o:1,s:false,a:false}
+    ],
+    '48: TB-303 Endgame': [
+      {n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false}
+    ]
+  'Factory Modern Hardware & Software': {
+    '01: Behringer TD-3': [
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'F2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},{n:'G2',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'G2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},{n:'A#2',o:2,s:false,a:false},
+      {n:'A#2',o:2,s:false,a:true},{n:'G2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:false}
+    ],
+    '02: Roland AIRA TB-3': [
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'D2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:true},
+      {n:'F2',o:2,s:false,a:false},{n:'F2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},{n:'G#2',o:2,s:false,a:true},
+      {n:'A#2',o:2,s:false,a:false},{n:'A#2',o:2,s:true,a:false},{n:'G#2',o:2,s:true,a:false},{n:'G2',o:2,s:false,a:true},
+      {n:'F2',o:2,s:false,a:false},{n:'D#2',o:2,s:true,a:false},{n:'D2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '03: Cyclone Analogic': [
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'F2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'A#2',o:2,s:false,a:true},{n:'G2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false},{n:'D#2',o:2,s:false,a:false}
+    ],
+    '04: x0xb0x Classic': [
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:false},{n:'D#2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false}
+    ],
+    '05: RE-303 Replica': [
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'G2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},
+      {n:'F2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '06: D16 Phoscyon': [
+      {n:'C2',o:2,s:false,a:false},{n:'C#2',o:2,s:true,a:false},{n:'D2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},
+      {n:'E2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},{n:'F#2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},
+      {n:'G#2',o:2,s:true,a:false},{n:'A2',o:2,s:true,a:false},{n:'A#2',o:2,s:true,a:false},{n:'B2',o:2,s:true,a:false},
+      {n:'C3',o:3,s:true,a:false},{n:'A#2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false}
+    ],
+    '07: ABL3 AudioRealism': [
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false}
+    ],
+    '08: Roland Cloud TB-303': [
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'G2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '09: U-he Repro': [
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:false},{n:'D#2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false}
+    ],
+    '10: Arturia Acid V': [
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'D2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},
+      {n:'F2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},{n:'G#2',o:2,s:true,a:false},{n:'A#2',o:2,s:true,a:false},
+      {n:'C3',o:3,s:true,a:false},{n:'A#2',o:2,s:true,a:false},{n:'G#2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},
+      {n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},{n:'D2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '11: TAL-BassLine': [
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'D#2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false}
+    ],
+    '12: Cherry Audio Lowdown': [
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:false},{n:'F2',o:2,s:false,a:false},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '13: Native Instruments': [
+      {n:'C2',o:1,s:false,a:true},{n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:true,a:false},
+      {n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:true,a:false},
+      {n:'G2',o:1,s:true,a:false},{n:'G2',o:1,s:true,a:false},{n:'G2',o:1,s:true,a:false},{n:'G2',o:1,s:true,a:false},
+      {n:'F2',o:1,s:true,a:false},{n:'F2',o:1,s:true,a:false},{n:'D#2',o:1,s:true,a:false},{n:'C2',o:1,s:false,a:false}
+    ],
+    '14: Korg Gadget': [
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false}
+    ],
+    '15: Reason Thor': [
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'G2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '16: Ableton Wavetable': [
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:false},{n:'D#2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false}
+    ]
+    '17: Serum Acid Patch': [
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'D#2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},
+      {n:'F2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},
+      {n:'G2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:false}
+    ],
+    '18: Massive X Squish': [
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false}
+    ],
+    '19: Pigments Acid': [
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'D2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},
+      {n:'F2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},{n:'G#2',o:2,s:true,a:false},{n:'A#2',o:2,s:true,a:false},
+      {n:'C3',o:3,s:true,a:false},{n:'A#2',o:2,s:true,a:false},{n:'G#2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},
+      {n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},{n:'D2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '20: Vital Squiggle': [
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:false},{n:'D#2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '21: Phase Plant TB': [
+      {n:'C2',o:1,s:false,a:true},{n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:true,a:false},
+      {n:'F2',o:1,s:true,a:false},{n:'F2',o:1,s:true,a:false},{n:'F2',o:1,s:true,a:false},{n:'F2',o:1,s:true,a:false},
+      {n:'G2',o:1,s:true,a:false},{n:'G2',o:1,s:true,a:false},{n:'G2',o:1,s:true,a:false},{n:'G2',o:1,s:true,a:false},
+      {n:'A#2',o:1,s:true,a:false},{n:'A#2',o:1,s:true,a:false},{n:'G2',o:1,s:true,a:false},{n:'F2',o:1,s:false,a:false}
+    ],
+    '22: Bitwig Polymer': [
+      {n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false}
+    ],
+    '23: FL Harmor Acid': [
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'G2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '24: Logic ES M': [
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:false},{n:'D#2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false}
+    ],
+    '25: Cubase Retrologue': [
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'D2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},
+      {n:'F2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},{n:'G#2',o:2,s:true,a:false},{n:'A#2',o:2,s:true,a:false},
+      {n:'C3',o:3,s:true,a:false},{n:'A#2',o:2,s:true,a:false},{n:'G#2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},
+      {n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},{n:'D2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '26: Studio One Mai Tai': [
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},
+      {n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'D#2',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'F2',o:2,s:false,a:false},
+      {n:'OFF',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:true},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:false}
+    ],
+    '27: VCV Rack TB': [
+      {n:'C2',o:1,s:false,a:true},{n:'C2',o:1,s:false,a:false},{n:'C2',o:1,s:false,a:false},{n:'C2',o:1,s:false,a:false},
+      {n:'C2',o:1,s:false,a:true},{n:'C2',o:1,s:false,a:false},{n:'C2',o:1,s:false,a:false},{n:'C2',o:1,s:false,a:false},
+      {n:'G2',o:1,s:false,a:true},{n:'G2',o:1,s:false,a:false},{n:'G2',o:1,s:false,a:false},{n:'G2',o:1,s:false,a:false},
+      {n:'F2',o:1,s:false,a:true},{n:'D#2',o:1,s:true,a:false},{n:'C2',o:1,s:false,a:false},{n:'C2',o:1,s:false,a:false}
+    ],
+    '28: Cardinal Acid': [
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'G2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},
+      {n:'F2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
+    ]
+    '29: Acid Pro Tools': [
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:false},{n:'D#2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false}
+    ],
+    '30: Acid Reaper': [
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'G2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
+    ]
+  }
 };
-
-// Cargar soundbanks de localStorage o usar factory
-let soundbanks = JSON.parse(localStorage.getItem('tb303_soundbanks')) || FACTORY_BANKS;
-let currentBank = 'Factory Transistor Bass';
-let currentPattern = 'TB Bassline 1';
-
-function saveSoundbanks() {
-  localStorage.setItem('tb303_soundbanks', JSON.stringify(soundbanks));
-}
-
-function refreshBankSelect() {
-  const bankSel = document.getElementById('bankSelect');
-  bankSel.innerHTML = '';
-  Object.keys(soundbanks).forEach(bank => {
-    const opt = document.createElement('option');
-    opt.value = bank;
-    opt.textContent = bank;
-    bankSel.appendChild(opt);
-  });
-  bankSel.value = currentBank;
-  refreshPatternSelect();
-}
-
-function refreshPatternSelect() {
-  const patSel = document.getElementById('patternSelect');
-  patSel.innerHTML = '';
-  Object.keys(soundbanks[currentBank] || {}).forEach(pat => {
-    const opt = document.createElement('option');
-    opt.value = pat;
-    opt.textContent = pat;
-    patSel.appendChild(opt);
-  });
-  if(soundbanks[currentBank] && soundbanks[currentBank][currentPattern]) {
-    patSel.value = currentPattern;
-  } else if(patSel.options.length > 0) {
-    currentPattern = patSel.options[0].value;
-  }
-}
-
-function loadPattern() {
-  const pattern = soundbanks[currentBank]?.[currentPattern];
-  if(!pattern) return;
-  pattern.forEach((step, i) => {
-    seq[i] = {note: step.n, octave: step.o, slide: step.s, accent: step.a};
-  });
-  updateStepUI();
-}
-
-function saveCurrentPattern() {
-  const name = document.getElementById('patternNameInput').value.trim();
-  if(!name) { alert('Ingresa un nombre'); return; }
-  if(!soundbanks['User']) soundbanks['User'] = {};
-  soundbanks['User'][name] = seq.map(s => ({n:s.note, o:s.octave, s:s.slide, a:s.accent}));
-  saveSoundbanks();
-  currentBank = 'User';
-  currentPattern = name;
-  refreshBankSelect();
-  document.getElementById('patternNameInput').value = '';
-}
-
-// REVERB ACID V - Convolver filtrado 300Hz-4kHz tono dark
-let reverbNode = null;
-let reverbHPF = null;
-let reverbLPF = null;
-let reverbGain = null;
-
-async function createAcidVReverb() {
-  reverbNode = ctx.createConvolver();
-  reverbHPF = ctx.createBiquadFilter();
-  reverbLPF = ctx.createBiquadFilter();
-  reverbGain = ctx.createGain();
-
-  reverbHPF.type = 'highpass';
-  reverbHPF.frequency.value = 300;
-  reverbHPF.Q.value = 0.7;
-
-  reverbLPF.type = 'lowpass';
-  reverbLPF.frequency.value = 4000;
-  reverbLPF.Q.value = 0.7;
-
-  const sampleRate = ctx.sampleRate;
-  const length = sampleRate * 2.5;
-  const impulse = ctx.createBuffer(2, length, sampleRate);
-
-  for(let ch = 0; ch < 2; ch++) {
-    const channel = impulse.getChannelData(ch);
-    for(let i = 0; i < length; i++) {
-      const t = i / sampleRate;
-      const decay = Math.pow(1 - t / 2.5, 3);
-      channel[i] = (Math.random() * 2 - 1) * decay * 0.5;
-    }
-  }
-  reverbNode.buffer = impulse;
-
-  reverbHPF.connect(reverbNode);
-  reverbNode.connect(reverbLPF);
-  reverbLPF.connect(reverbGain);
-  reverbGain.connect(ctx.destination);
-}
-
-// UI Setup
-const stepsDiv = document.getElementById('steps');
-const ledsDiv = document.getElementById('leds');
-for(let i=0;i<16;i++){
-  const step = document.createElement('div');
-  step.className = 'step';
-  step.innerHTML = `
-    <select data-step="${i}">
-      <option value="OFF">OFF</option>
-      ${baseNotes.map(n => `<option value="${n}">${n}</option>`).join('')}
-    </select>
-    <div class="step-controls">
-      <button class="step-btn oct-down" data-step="${i}">O-</button>
-      <span class="oct-indicator" id="oct-${i}">2</span>
-      <button class="step-btn oct-up" data-step="${i}">O+</button>
-    </div>
-    <div class="step-controls">
-      <button class="step-btn slide-btn" data-step="${i}">S</button>
-      <button class="step-btn accent-btn" data-step="${i}">A</button>
-    </div>
-  `;
-  stepsDiv.appendChild(step);
-
-  const led = document.createElement('div');
-  led.className = 'led';
-  ledsDiv.appendChild(led);
-}
-
-document.querySelectorAll('input[type=range]').forEach(input => {
-  input.addEventListener('input', e => {
-    const id = e.target.id;
-    params[id] = parseFloat(e.target.value);
-    const val = params[id];
-    document.getElementById(id+'Val').textContent =
-      id === 'density'? val + '%' :
-      id === 'decay' || id === 'accent' || id === 'resonance'? val.toFixed(2) : val;
-
-    if(id === 'reverb' && reverbGain) {
-      reverbGain.gain.value = val / 100;
-    }
-  });
-});
-
-document.getElementById('sawBtn').onclick = () => {
-  waveform = 'sawtooth';
-  document.getElementById('sawBtn').classList.add('active');
-  document.getElementById('squareBtn').classList.remove('active');
-};
-document.getElementById('squareBtn').onclick = () => {
-  waveform = 'square';
-  document.getElementById('sawBtn').classList.remove('active');
-  document.getElementById('squareBtn').classList.add('active');
-};
-
-document.querySelectorAll('select[data-step]').forEach(sel => {
-  sel.addEventListener('change', e => {
-    seq[e.target.dataset.step].note = e.target.value;
-  });
-});
-
-document.querySelectorAll('.oct-down').forEach(btn => {
-  btn.addEventListener('click', e => {
-    const i = e.target.dataset.step;
-    if(seq[i].octave > 1) {
-      seq[i].octave--;
-      document.getElementById(`oct-${i}`).textContent = seq[i].octave;
-    }
-  });
-});
-
-document.querySelectorAll('.oct-up').forEach(btn => {
-  btn.addEventListener('click', e => {
-    const i = e.target.dataset.step;
-    if(seq[i].octave < 3) {
-      seq[i].octave++;
-      document.getElementById(`oct-${i}`).textContent = seq[i].octave;
-    }
-  });
-});
-
-document.querySelectorAll('.slide-btn').forEach(btn => {
-  btn.addEventListener('click', e => {
-    const i = e.target.dataset.step;
-    seq[i].slide =!seq[i].slide;
-    e.target.classList.toggle('active', seq[i].slide);
-  });
-});
-
-document.querySelectorAll('.accent-btn').forEach(btn => {
-  btn.addEventListener('click', e => {
-    const i = e.target.dataset.step;
-    seq[i].accent =!seq[i].accent;
-    e.target.classList.toggle('active', seq[i].accent);
-  });
-});
-
-document.getElementById('clearBtn').onclick = () => {
-  seq.forEach(s => {s.note='OFF'; s.octave=2; s.slide=false; s.accent=false;});
-  document.querySelectorAll('select[data-step]').forEach(sel => sel.value='OFF');
-  document.querySelectorAll('.oct-indicator').forEach(ind => ind.textContent='2');
-  document.querySelectorAll('.step-btn').forEach(btn => btn.classList.remove('active'));
-};
-
-document.getElementById('runBtn').onclick = async () => {
-  if(ctx.state === 'suspended') await ctx.resume();
-  if(!reverbNode) await createAcidVReverb();
-
-  isRunning =!isRunning;
-  document.getElementById('runBtn').classList.toggle('active');
-  document.getElementById('runBtn').textContent = isRunning? 'STOP' : 'RUN';
-
-  if(isRunning) {
-    currentStep = 0;
-    nextNoteTime = ctx.currentTime + 0.1;
-    scheduler();
-  } else {
-    clearTimeout(scheduleTimer);
-    document.querySelectorAll('.led').forEach(led => led.classList.remove('on'));
-    document.querySelectorAll('.step').forEach(s => s.classList.remove('playing'));
-  }
-};
-
-// SOUNDBANK CONTROLS
-document.getElementById('bankSelect').addEventListener('change', e => {
-  currentBank = e.target.value;
-  currentPattern = Object.keys(soundbanks[currentBank])[0];
-  refreshPatternSelect();
-  loadPattern();
-});
-
-document.getElementById('patternSelect').addEventListener('change', e => {
-  currentPattern = e.target.value;
-  loadPattern();
-});
-
-document.getElementById('savePatternBtn').onclick = () => {
-  saveCurrentPattern();
-};
-
-document.getElementById('newBankBtn').onclick = () => {
-  const name = prompt('Nombre del nuevo Soundbank:');
-  if(name &&!soundbanks[name]) {
-    soundbanks[name] = {};
-    saveSoundbanks();
-    currentBank = name;
-    refreshBankSelect();
-  }
-};
-
-document.getElementById('delPatternBtn').onclick = () => {
-  if(currentBank === 'User' && soundbanks[currentBank][currentPattern]) {
-    delete soundbanks[currentBank][currentPattern];
-    saveSoundbanks();
-    refreshBankSelect();
-    loadPattern();
-  } else {
-    alert('Solo puedes borrar patterns del banco User');
-  }
-};
-
-// Inicializar soundbanks al cargar
-refreshBankSelect();
-loadPattern();
-document.getElementById('randomBtn').onclick = () => {
-  const scale = document.getElementById('scaleSelect').value;
-  const genre = document.getElementById('genreSelect').value;
-  const density = params.density / 100;
-  const root = parseInt(document.getElementById('rootSelect').value);
-  generatePattern(scale, genre, density, root);
-};
-
-function generatePattern(scaleName, genre, density, rootOffset) {
-  const scale = scales[scaleName];
-  seq.forEach(s => {s.note='OFF'; s.octave=2; s.slide=false; s.accent=false;});
-
-  const scaleNotes = scale.map(interval => {
-    const noteIndex = (rootOffset + interval) % 12;
-    return allNotes[noteIndex] + '2';
-  });
-
-  switch(genre) {
-    case 'brejcha': generateBorisBrejcha(scaleNotes, density); break;
-    case 'amelie': generateAmelieLens(scaleNotes, density); break;
-    case 'hozho': generateHozho(scaleNotes, density); break;
-    case 'claptone': generateClaptone(scaleNotes, density); break;
-    case 'deadmau5': generateDeadmau5(scaleNotes, density); break;
-    case 'dashberlin': generateDashBerlin(scaleNotes, density); break;
-    case 'techhouse': generateTechHouse(scaleNotes, density); break;
-    case 'melodictechno': generateMelodicTechno(scaleNotes, density); break;
-    case 'detroit': generateDetroitTechno(scaleNotes, density); break;
-    case 'berlin': generateBerlinTechno(scaleNotes, density); break;
-    case 'uplifting': generateUpliftingTrance(scaleNotes, density); break;
-    case 'psytrance': generatePsytrance(scaleNotes, density); break;
-    case 'house': generateHouse(scaleNotes, density); break;
-    case 'dnb': generateDrumAndBass(scaleNotes, density); break;
-    case 'acid': generateAcidClassic(scaleNotes, density); break;
-  }
-  updateStepUI();
-}
-
-function generateBorisBrejcha(scaleNotes, density) {
-  const pattern = [2,4,7,10,13,15];
-  const root = scaleNotes[0], fifth = scaleNotes[4] || scaleNotes[0], second = scaleNotes[1] || root;
-  pattern.forEach(i => {
-    if(Math.random() < density * 1.15) {
-      const r = Math.random();
-      seq[i].note = r < 0.55? root : r < 0.85? fifth : second;
-      seq[i].octave = Math.random() < 0.75? 2 : 1;
-      seq[i].accent = [2,10].includes(i) || Math.random() < 0.55;
-      seq[i].slide = Math.random() < 0.4 && i > 0;
-    }
-  });
-  if(Math.random() < density) { seq[3].note = second; seq[3].octave = 2; seq[3].accent = true; }
-}
-
-function generateAmelieLens(scaleNotes, density) {
-  const pattern = [0,4,8,12];
-  const root = scaleNotes[0], seventh = scaleNotes[scaleNotes.length-1];
-  pattern.forEach(i => {
-    if(Math.random() < density * 1.2) {
-      seq[i].note = Math.random() < 0.8? root : seventh;
-      seq[i].octave = 1;
-      seq[i].accent = true;
-      seq[i].slide = false;
-    }
-  });
-  [2,6,10,14].forEach(i => {
-    if(Math.random() < density * 0.4) { seq[i].note = root; seq[i].octave = 1; }
-  });
-}
-
-function generateHozho(scaleNotes, density) {
-  const progression = [0, 4, 2, 4];
-  for(let i=0; i<16; i++) {
-    if(Math.random() < density * 0.9) {
-      const progStep = Math.floor(i/4) % 4;
-      seq[i].note = scaleNotes[progression[progStep] % scaleNotes.length];
-      seq[i].octave = i%8 < 4? 2 : 3;
-      seq[i].accent = i%4 === 0;
-      seq[i].slide = Math.random() < 0.6 && i > 0;
-    }
-  }
-}
-
-function generateClaptone(scaleNotes, density) {
-  const groove = [1,3,6,9,11,14];
-  groove.forEach(i => {
-    if(Math.random() < density) {
-      seq[i].note = scaleNotes[Math.floor(Math.random() * 4)];
-      seq[i].octave = 2;
-      seq[i].accent = [1,9].includes(i);
-      seq[i].slide = Math.random() < 0.3;
-    }
-  });
-}
-
-function generateDeadmau5(scaleNotes, density) {
-  const arp = [0,2,4,7,4,2,0,4];
-  for(let i=0; i<16; i++) {
-    if(Math.random() < density * 1.1) {
-      seq[i].note = scaleNotes[arp[i%8] % scaleNotes.length];
-      seq[i].octave = i < 8? 2 : 3;
-      seq[i].accent = i%8 === 0;
-      seq[i].slide = true;
-    }
-  }
-}
-
-function generateDashBerlin(scaleNotes, density) {
-  const arp = [0,2,4,7,9,7];
-  for(let i=0; i<16; i++) {
-    if(Math.random() < density) {
-      seq[i].note = scaleNotes[arp[i%8] % scaleNotes.length];
-      seq[i].octave = i < 8? 2 : 3;
-      seq[i].accent = i%4 === 0;
-      seq[i].slide = Math.random() < 0.25;
-    }
-  }
-}
-
-function generateTechHouse(scaleNotes, density) {
-  const groove = [0,3,4,7,10,12,15];
-  groove.forEach(i => {
-    if(Math.random() < density * 1.2) {
-      seq[i].note = scaleNotes[Math.floor(Math.random() * scaleNotes.length)];
-      seq[i].octave = 2;
-      seq[i].accent = [0,4,8,12].includes(i);
-      seq[i].slide = Math.random() < 0.2;
-    }
-  });
-}
-
-function generateMelodicTechno(scaleNotes, density) {
-  const progression = [0, 2, 4, 2];
-  for(let i=0; i<16; i++) {
-    if(Math.random() < density) {
-      const progStep = Math.floor(i/4) % 4;
-      seq[i].note = scaleNotes[progression[progStep] % scaleNotes.length];
-      seq[i].octave = i%8 < 4? 2 : 3;
-      seq[i].accent = i%4 === 0 || Math.random() < 0.2;
-      seq[i].slide = Math.random() < 0.3;
-    }
-  }
-}
-
-function generateDetroitTechno(scaleNotes, density) {
-  const chord = [0,2,4,6];
-  [0,4,8,12].forEach(i => {
-    if(Math.random() < density) {
-      seq[i].note = scaleNotes[chord[Math.floor(i/4)%4] % scaleNotes.length];
-      seq[i].octave = 2;
-      seq[i].accent = true;
-      seq[i].slide = false;
-    }
-  });
-  [2,6,10,14].forEach(i => {
-    if(Math.random() < density * 0.5) {
-      seq[i].note = scaleNotes[0];
-      seq[i].octave = 1;
-    }
-  });
-}
-
-function generateBerlinTechno(scaleNotes, density) {
-  const root = scaleNotes[0];
-  [0,2,4,6,8,10,12,14].forEach(i => {
-    if(Math.random() < density * 0.8) {
-      seq[i].note = root;
-      seq[i].octave = 1;
-      seq[i].accent = i%4 === 0;
-      seq[i].slide = false;
-    }
-  });
-}
-
-function generateUpliftingTrance(scaleNotes, density) {
-  const arp = [0,2,4,7,9,7,4,2];
-  for(let i=0; i<16; i++) {
-    if(Math.random() < density * 1.1) {
-      seq[i].note = scaleNotes[arp[i%8] % scaleNotes.length];
-      seq[i].octave = 3;
-      seq[i].accent = i%4 === 0;
-      seq[i].slide = false;
-    }
-  }
-}
-
-function generatePsytrance(scaleNotes, density) {
-  const root = scaleNotes[0], third = scaleNotes[2] || scaleNotes[1];
-  for(let i=0; i<16; i++) {
-    if(Math.random() < density * 0.9) {
-      seq[i].note = i%3 === 0? third : root;
-      seq[i].octave = 1;
-      seq[i].accent = i%4 === 0;
-      seq[i].slide = Math.random() < 0.8;
-    }
-  }
-}
-
-function generateHouse(scaleNotes, density) {
-  const groove = [0,2,4,6,8,10,12,14];
-  const seventh = scaleNotes[6] || scaleNotes[scaleNotes.length-1];
-  groove.forEach(i => {
-    if(Math.random() < density) {
-      seq[i].note = i%4 === 0? scaleNotes[0] : seventh;
-      seq[i].octave = 2;
-      seq[i].accent = [0,8].includes(i);
-      seq[i].slide = Math.random() < 0.2;
-    }
-  });
-}
-
-function generateDrumAndBass(scaleNotes, density) {
-  const dnbPattern = [0,3,6,9,12,15];
-  const root = scaleNotes[0], third = scaleNotes[2] || scaleNotes[1];
-  dnbPattern.forEach(i => {
-    if(Math.random() < density) {
-      seq[i].note = Math.random() < 0.7? root : third;
-      seq[i].octave = 1;
-      seq[i].accent = [0,9].includes(i);
-      seq[i].slide = Math.random() < 0.7;
-    }
-  });
-  [2,5,8,11,14].forEach(i => {
-    if(Math.random() < density * 0.5) {
-      seq[i].note = root;
-      seq[i].octave = 2;
-      seq[i].slide = true;
-    }
-  });
-}
-
-function generateAcidClassic(scaleNotes, density) {
-  const root = scaleNotes[0], fifth = scaleNotes[4] || scaleNotes[0];
-  for(let i=0; i<16; i++) {
-    if(Math.random() < density) {
-      seq[i].note = Math.random() < 0.6? root : fifth;
-      seq[i].octave = Math.random() < 0.3? 1 : 2;
-      seq[i].accent = Math.random() < 0.4;
-      seq[i].slide = Math.random() < 0.6 && i > 0;
-    }
-  }
-}
-function updateStepUI() {
-  seq.forEach((s, i) => {
-    document.querySelector(`select[data-step="${i}"]`).value = s.note;
-    document.getElementById(`oct-${i}`).textContent = s.octave;
-    document.querySelector(`.slide-btn[data-step="${i}"]`).classList.toggle('active', s.slide);
-    document.querySelector(`.accent-btn[data-step="${i}"]`).classList.toggle('active', s.accent);
-  });
-}
-
-function getStepFreq(step) {
-  if(step.note === 'OFF') return null;
-  let baseNote = step.note;
-  if(step.octave === 1) baseNote = step.note.replace('2','1');
-  if(step.octave === 3) baseNote = step.note.replace('2','3');
-  return noteFreq[baseNote];
-}
-
-// MOTOR TRANSISTOR BASS: Cutoff 0-100, Res 0-100, Drive pre-filtro + Reverb Acid V
-let lastFreq = 65.41;
-let reverbSend = null;
-
-function initReverb() {
-  if(reverbSend) return;
-  reverbSend = ctx.createGain();
-  reverbSend.gain.value = params.reverb / 100;
-  reverbSend.connect(reverbHPF);
-}
-
-function create303Voice(freq, time, slide, accent, duration) {
-  const osc = ctx.createOscillator();
-  const filter = ctx.createBiquadFilter();
-  const vca = ctx.createGain();
-  const driveNode = ctx.createWaveShaper();
-  const distNode = ctx.createWaveShaper();
-
-  osc.type = waveform;
-  osc.frequency.value = freq * Math.pow(2, params.tune/12);
-
-  // 1. DRIVE TRANSISTOR BASS: saturación pre-filtro 0-100
-  if(params.drive > 0) {
-    const k = params.drive / 100 * 100;
-    const curve = new Float32Array(44100);
-    for(let i=0; i<44100; i++) {
-      const x = i * 2 / 44100 - 1;
-      curve[i] = (1 + k) * x / (1 + k * Math.abs(x));
-    }
-    driveNode.curve = curve;
-    driveNode.oversample = '4x';
-    osc.connect(driveNode).connect(filter);
-  } else {
-    osc.connect(filter);
-  }
-
-  // 2. FILTRO TRANSISTOR BASS: Cutoff 0-100 = 27Hz-7.4kHz exponencial
-  filter.type = 'lowpass';
-  const cutoffHz = 27 * Math.pow(274.07, params.cutoff / 100);
-  // Res 0-100 = Q 0.5-30 como Transistor Bass
-  filter.Q.value = 0.5 + (params.resonance / 100) * 29.5;
-
-  // 3. Env Mod + Accent
-  const envAmount = params.envmod * (accent? 1 + params.accent : 1);
-  const peakCutoff = Math.min(cutoffHz + envAmount, 20000);
-
-  filter.frequency.setValueAtTime(cutoffHz, time);
-  filter.frequency.linearRampToValueAtTime(peakCutoff, time + 0.005);
-  filter.frequency.exponentialRampToValueAtTime(cutoffHz, time + params.decay);
-
-  // 4. VCA con accent
-  const amp = accent? 0.8 : 0.4;
-  vca.gain.setValueAtTime(0, time);
-  vca.gain.linearRampToValueAtTime(amp, time + 0.003);
-
-  if(slide) {
-    vca.gain.setValueAtTime(amp, time + duration - 0.01);
-  } else {
-    vca.gain.exponentialRampToValueAtTime(0.001, time + params.decay);
-  }
-
-  // 5. Distorsión post-filtro - sin modificar
-  if(params.dist > 0) {
-    const k = params.dist * 10;
-    const curve = new Float32Array(44100);
-    for(let i=0; i<44100; i++) {
-      const x = i * 2 / 44100 - 1;
-      curve[i] = (1 + k) * x / (1 + k * Math.abs(x));
-    }
-    distNode.curve = curve;
-    distNode.oversample = '4x';
-    filter.connect(distNode).connect(vca);
-  } else {
-    filter.connect(vca);
-  }
-
-  // 6. Salida + Send a Reverb Acid V
-  initReverb();
-  vca.connect(ctx.destination);
-  vca.connect(reverbSend);
-
-  osc.start(time);
-  osc.stop(time + duration + 0.1);
-}
-
-let lastStepFreq = 65.41;
-function scheduler() {
-  const secondsPerStep = 60.0 / params.tempo / 4;
-
-  while(nextNoteTime < ctx.currentTime + 0.1) {
-    const step = seq[currentStep];
-
-    document.querySelectorAll('.led').forEach((led,i) => {
-      led.classList.toggle('on', i === currentStep);
-    });
-    document.querySelectorAll('.step').forEach((s,i) => {
-      s.classList.toggle('playing', i === currentStep);
-    });
-
-    const freq = getStepFreq(step);
-    if(freq) {
-      const isSlide = step.slide && lastStepFreq;
-      const dur = isSlide? secondsPerStep * 2 : secondsPerStep * 0.9;
-      create303Voice(freq, nextNoteTime, step.slide, step.accent, dur);
-      lastStepFreq = freq;
-    }
-
-    nextNoteTime += secondsPerStep;
-    currentStep = (currentStep + 1) % 16;
-  }
-
-  if(isRunning) scheduleTimer = setTimeout(scheduler, 25);
-}
-
-// MIDI ROLAND TB-303 FORMAT 0 PPQ 96 - SIN MODIFICAR
-document.getElementById('downloadMidi').onclick = () => {
-  const PPQN = 96;
-  const ticksPerStep = 24;
-  let events = [];
-
-  const mpqn = Math.floor(60000000 / params.tempo);
-  events.push({t: 0, d: [0xFF, 0x51, 0x03, (mpqn>>16)&0xFF, (mpqn>>8)&0xFF, mpqn&0xFF]});
-  events.push({t: 0, d: [0xFF, 0x58, 0x04, 0x04, 0x02, 0x18, 0x08]});
-
-  const name = 'TB-303 Bassline';
-  let nameBytes = [0xFF, 0x03, name.length];
-  for(let i=0; i<name.length; i++) nameBytes.push(name.charCodeAt(i));
-  events.push({t: 0, d: nameBytes});
-
-  seq.forEach((step, i) => {
-    const freq = getStepFreq(step);
-    if(freq) {
-      const startTick = i * ticksPerStep;
-      const midiNote = Math.max(0, Math.min(127, Math.round(69 + 12 * Math.log2(freq / 440))));
-      const vel = step.accent? 127 : 100;
-      const dur = step.slide? 23 : 20;
-
-      events.push({t: startTick, d: [0x90, midiNote, vel]});
-      events.push({t: startTick + dur, d: [0x80, midiNote, 0x40]});
-    }
-  });
-
-  events.push({t: 16 * ticksPerStep, d: [0xFF, 0x2F, 0x00]});
-  events.sort((a,b) => a.t - b.t);
-
-  let track = [];
-  let lastTick = 0;
-
-  events.forEach(ev => {
-    const delta = ev.t - lastTick;
-    track.push(...toVLQ(delta));
-    track.push(...ev.d);
-    lastTick = ev.t;
-  });
-
-  let midi = [];
-  midi.push(0x4D,0x54,0x68,0x64, 0x00,0x06, 0x00, 0x00,0x01, 0x00,0x60);
-  midi.push(0x4D,0x54,0x72,0x6B);
-  midi.push((track.length>>24)&0xFF, (track.length>>16)&0xFF, (track.length>>8)&0xFF, track.length&0xFF);
-  midi.push(...track);
-
-  downloadBlob(new Uint8Array(midi), 'tb303_pattern.mid', 'audio/midi');
-};
-
-function toVLQ(value) {
-  value = Math.floor(value);
-  if (value === 0) return ;
-
-  let bytes = [];
-  bytes.push(value & 0x7F);
-  value >>= 7;
-
-  while (value > 0) {
-    bytes.push((value & 0x7F) | 0x80);
-    value >>= 7;
-  }
-
-  return bytes.reverse();
-}
-
-// DESCARGA WAV - Con reverb
-document.getElementById('downloadWav').onclick = async () => {
-  const secondsPerStep = 60.0 / params.tempo / 4;
-  const totalDuration = secondsPerStep * 16 * 4;
-  const sampleRate = 44100;
-  const offlineCtx = new OfflineAudioContext(2, sampleRate * totalDuration, sampleRate);
-
-  // Reverb offline
-  const offlineReverb = offlineCtx.createConvolver();
-  const offlineHPF = offlineCtx.createBiquadFilter();
-  const offlineLPF = offlineCtx.createBiquadFilter();
-  const offlineSend = offlineCtx.createGain();
-  const offlineReturn = offlineCtx.createGain();
-
-  offlineHPF.type = 'highpass';
-  offlineHPF.frequency.value = 300;
-  offlineLPF.type = 'lowpass';
-  offlineLPF.frequency.value = 4000;
-  offlineSend.gain.value = params.reverb / 100;
-
-  const length = sampleRate * 2.5;
-  const impulse = offlineCtx.createBuffer(2, length, sampleRate);
-  for(let ch = 0; ch < 2; ch++) {
-    const channel = impulse.getChannelData(ch);
-    for(let i = 0; i < length; i++) {
-      const t = i / sampleRate;
-      const decay = Math.pow(1 - t / 2.5, 3);
-      channel[i] = (Math.random() * 2 - 1) * decay * 0.5;
-    }
-  }
-  offlineReverb.buffer = impulse;
-
-  offlineSend.connect(offlineHPF);
-  offlineHPF.connect(offlineReverb);
-  offlineReverb.connect(offlineLPF);
-  offlineLPF.connect(offlineReturn);
-  offlineReturn.connect(offlineCtx.destination);
-
-  let time = 0;
-  for(let loop = 0; loop < 4; loop++) {
-    for(let i = 0; i < 16; i++) {
-      const step = seq[i];
-      const freq = getStepFreq(step);
-      if(freq) {
-        renderStepToContext(offlineCtx, freq, time, step.slide, step.accent, secondsPerStep * 0.9, offlineSend);
-      }
-      time += secondsPerStep;
-    }
-  }
-
-  const buffer = await offlineCtx.startRendering();
-  const wav = audioBufferToWav(buffer);
-  downloadBlob(wav, 'tb303_pattern.wav', 'audio/wav');
-};
-
-function renderStepToContext(octx, freq, time, slide, accent, duration, sendNode) {
-  const osc = octx.createOscillator();
-  const filter = octx.createBiquadFilter();
-  const vca = octx.createGain();
-  const driveNode = octx.createWaveShaper();
-  const distNode = octx.createWaveShaper();
-
-  osc.type = waveform;
-  osc.frequency.value = freq * Math.pow(2, params.tune/12);
-
-  // Drive Transistor Bass
-  if(params.drive > 0) {
-    const k = params.drive / 100 * 100;
-    const curve = new Float32Array(44100);
-    for(let i=0; i<44100; i++) {
-      const x = i * 2 / 44100 - 1;
-      curve[i] = (1 + k) * x / (1 + k * Math.abs(x));
-    }
-    driveNode.curve = curve;
-    driveNode.oversample = '4x';
-    osc.connect(driveNode).connect(filter);
-  } else {
-    osc.connect(filter);
-  }
-
-  // Filtro Transistor Bass
-  const cutoffHz = 27 * Math.pow(274.07, params.cutoff / 100);
-  filter.type = 'lowpass';
-  filter.Q.value = 0.5 + (params.resonance / 100) * 29.5;
-
-  const envAmount = params.envmod * (accent? 1 + params.accent : 1);
-  const peakCutoff = Math.min(cutoffHz + envAmount, 20000);
-
-  filter.frequency.setValueAtTime(cutoffHz, time);
-  filter.frequency.linearRampToValueAtTime(peakCutoff, time + 0.005);
-  filter.frequency.exponentialRampToValueAtTime(cutoffHz, time + params.decay);
-
-  const amp = accent? 0.8 : 0.4;
-  vca.gain.setValueAtTime(0, time);
-  vca.gain.linearRampToValueAtTime(amp, time + 0.003);
-
-  if(slide) {
-    vca.gain.setValueAtTime(amp, time + duration - 0.01);
-  } else {
-    vca.gain.exponentialRampToValueAtTime(0.001, time + params.decay);
-  }
-
-  // Distorsión
-  if(params.dist > 0) {
-    const k = params.dist * 10;
-    const curve = new Float32Array(44100);
-    for(let i=0; i<44100; i++) {
-      const x = i * 2 / 44100 - 1;
-      curve[i] = (1 + k) * x / (1 + k * Math.abs(x));
-    }
-    distNode.curve = curve;
-    distNode.oversample = '4x';
-    filter.connect(distNode).connect(vca);
-  } else {
-    filter.connect(vca);
-  }
-
-  vca.connect(octx.destination);
-  if(sendNode) vca.connect(sendNode);
-
-  osc.start(time);
-  osc.stop(time + duration + 0.1);
-}
-
-function audioBufferToWav(buffer) {
-  const numOfChan = buffer.numberOfChannels;
-  const length = buffer.length * numOfChan * 2 + 44;
-  const bufferArray = new ArrayBuffer(length);
-  const view = new DataView(bufferArray);
-  const channels = [];
-  let offset = 0;
-  let pos = 0;
-
-  function setUint16(data) {
-    view.setUint16(pos, data, true);
-    pos += 2;
-  }
-
-  function setUint32(data) {
-    view.setUint32(pos, data, true);
-    pos += 4;
-  }
-
-  setUint32(0x46464952);
-  setUint32(length - 8);
-  setUint32(0x45564157);
-  setUint32(0x20746d66);
-  setUint32(16);
-  setUint16(1);
-  setUint16(numOfChan);
-  setUint32(buffer.sampleRate);
-  setUint32(buffer.sampleRate * 2 * numOfChan);
-  setUint16(numOfChan * 2);
-  setUint16(16);
-  setUint32(0x61746164);
-  setUint32(length - pos - 4);
-
-  for (let i = 0; i < buffer.numberOfChannels; i++) {
-    channels.push(buffer.getChannelData(i));
-  }
-
-  while (pos < length) {
-    for (let i = 0; i < numOfChan; i++) {
-      let sample = Math.max(-1, Math.min(1, channels[i][offset]));
-      sample = sample < 0? sample * 0x8000 : sample * 0x7FFF;
-      view.setInt16(pos, sample, true);
-      pos += 2;
-    }
-    offset++;
-  }
-
-  return bufferArray;
-}
-
-function downloadBlob(data, filename, type) {
-  const blob = new Blob([data], {type: type});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = filename;
-  a.click();
-  URL.revokeObjectURL(url);
-}
-
-document.body.addEventListener('click', async () => {
-  if(ctx.state === 'suspended') await ctx.resume();
-  if(!reverbNode) await createAcidVReverb();
-}, {once: true});
-</script>
-</body>
-</html>
