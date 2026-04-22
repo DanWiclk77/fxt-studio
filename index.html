@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>TB-303 v9.1 - Groove Bassline</title>
+<title>TB-303 v9.2 - Groove Bassline</title>
 <link rel="manifest" href="manifest.json">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#ff4500">
@@ -38,11 +38,13 @@
     align-items: center;
     margin-bottom: 15px;
     color: #111;
+    gap: 15px;
+    flex-wrap: wrap;
   }
 .logo { font-weight: 900; font-size: 28px; letter-spacing: 1px; }
 .logo span { font-weight: 400; font-size: 14px; margin-left: 8px; }
 
-/* NUEVO: Display de nota actual */
+/* Display central mejorado */
 .note-display {
     background: #000;
     border: 2px solid #ff4500;
@@ -185,22 +187,37 @@
 .step {
     background: #111;
     border: 1px solid #333;
-    padding: 6px 2px;
+    padding: 4px 2px;
     text-align: center;
     border-radius: 2px;
     display: flex;
     flex-direction: column;
     gap: 3px;
+    cursor: pointer;
   }
 .step.active { background: #ff4500; color: #111; }
 .step.playing { box-shadow: 0 0 12px #ff4500; border-color: #ff4500; }
+.step.selected { border-color: #0f0; box-shadow: 0 0 8px #0f0; }
+
+/* NUEVO: Display de nota+octava en cada step */
+.step-display {
+    background: #000;
+    color: #0f0;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 0;
+    border-radius: 2px;
+    font-family: 'Courier New', monospace;
+    min-height: 16px;
+  }
 .step select {
     width: 100%;
     background: #000;
     color: #0f0;
     border: 1px solid #333;
-    font-size: 11px;
+    font-size: 10px;
     text-align: center;
+    padding: 2px;
   }
 .step-controls {
     display: flex;
@@ -253,7 +270,6 @@
 <div class="tb303">
   <div class="header">
     <div class="logo">TB-303<span>Groove Bassline</span></div>
-    <!-- NUEVO: Display de nota en tiempo real -->
     <div class="note-display">
       <div>
         <div class="label">NOTE</div>
@@ -272,7 +288,6 @@
       <button id="downloadWav" class="download">WAV</button>
     </div>
   </div>
-
   <div class="soundbank-bar">
     <label>Soundbank:</label>
     <select id="bankSelect"></select>
@@ -283,6 +298,7 @@
     <button id="delPatternBtn" class="small">DEL PAT</button>
     <input id="patternNameInput" type="text" placeholder="Pattern name" style="width:100px">
   </div>
+
   <div class="controls">
     <div class="knob-group">
       <label>Tuning</label>
@@ -422,6 +438,7 @@ let currentStep = 0;
 let nextNoteTime = 0;
 let waveform = 'sawtooth';
 let scheduleTimer;
+let selectedStep = -1;
 
 const params = {
   tune: 0,
@@ -458,7 +475,7 @@ const noteFreq = {
 
 let seq = Array(16).fill().map(() => ({note: 'OFF', octave: 2, slide: false, accent: false}));
 
-// GROOVE BASSLINE TOP 10 - Los patterns más icónicos de la historia
+// SOLO GROOVE BASSLINE TOP 10 + USER
 const FACTORY_BANKS = {
   'Groove Bassline': {
     '01: Acid Tracks 1987': [
@@ -525,12 +542,11 @@ const FACTORY_BANKS = {
   'User': {}
 };
 
-let soundbanks = JSON.parse(localStorage.getItem('tb303_soundbanks')) || FACTORY_BANKS;
+let soundbanks = JSON.parse(localStorage.getItem('tb303_soundbanks_v92')) || FACTORY_BANKS;
 let currentBank = 'Groove Bassline';
 let currentPattern = '01: Acid Tracks 1987';
-
 function saveSoundbanks() {
-  localStorage.setItem('tb303_soundbanks', JSON.stringify(soundbanks));
+  localStorage.setItem('tb303_soundbanks_v92', JSON.stringify(soundbanks));
 }
 
 function refreshBankSelect() {
@@ -583,6 +599,7 @@ function saveCurrentPattern() {
   document.getElementById('patternNameInput').value = '';
 }
 
+// NUEVO: Actualiza display central
 function updateNoteDisplay(step, stepNum) {
   const noteEl = document.getElementById('currentNoteDisplay');
   const octEl = document.getElementById('currentOctDisplay');
@@ -597,6 +614,25 @@ function updateNoteDisplay(step, stepNum) {
     octEl.textContent = step.octave;
   }
   infoEl.textContent = `STEP ${stepNum + 1}`;
+}
+
+// NUEVO: Formatea nota+octava para mostrar en step
+function formatStepDisplay(step) {
+  if(step.note === 'OFF') return 'OFF';
+  return step.note.replace('2', '') + step.octave;
+}
+
+// NUEVO: Actualiza el display visual de un step individual
+function updateStepDisplay(index) {
+  const step = seq[index];
+  const displayEl = document.getElementById(`step-display-${index}`);
+  if(displayEl) {
+    displayEl.textContent = formatStepDisplay(step);
+  }
+  document.querySelector(`select[data-step="${index}"]`).value = step.note;
+  document.getElementById(`oct-${index}`).textContent = step.octave;
+  document.querySelector(`.slide-btn[data-step="${index}"]`).classList.toggle('active', step.slide);
+  document.querySelector(`.accent-btn[data-step="${index}"]`).classList.toggle('active', step.accent);
 }
 
 let reverbNode = null;
@@ -638,12 +674,15 @@ async function createAcidVReverb() {
   reverbGain.connect(ctx.destination);
 }
 
+// NUEVO: Render de steps con display de nota+octava
 const stepsDiv = document.getElementById('steps');
 const ledsDiv = document.getElementById('leds');
 for(let i=0;i<16;i++){
   const step = document.createElement('div');
   step.className = 'step';
+  step.dataset.step = i;
   step.innerHTML = `
+    <div class="step-display" id="step-display-${i}">OFF</div>
     <select data-step="${i}">
       <option value="OFF">OFF</option>
       ${baseNotes.map(n => `<option value="${n}">${n}</option>`).join('')}
@@ -658,12 +697,28 @@ for(let i=0;i<16;i++){
       <button class="step-btn accent-btn" data-step="${i}">A</button>
     </div>
   `;
+  // NUEVO: Click en step para preview en display central
+  step.addEventListener('click', (e) => {
+    if(e.target.tagName === 'SELECT' || e.target.tagName === 'BUTTON') return;
+    document.querySelectorAll('.step').forEach(s => s.classList.remove('selected'));
+    step.classList.add('selected');
+    selectedStep = i;
+    updateNoteDisplay(seq[i], i);
+  });
   stepsDiv.appendChild(step);
 
   const led = document.createElement('div');
   led.className = 'led';
   ledsDiv.appendChild(led);
 }
+// NUEVO: Actualiza todos los displays cuando cambia algo
+function updateStepUI() {
+  seq.forEach((s, i) => {
+    updateStepDisplay(i);
+  });
+}
+
+// Event listeners de knobs
 document.querySelectorAll('input[type=range]').forEach(input => {
   input.addEventListener('input', e => {
     const id = e.target.id;
@@ -690,35 +745,45 @@ document.getElementById('squareBtn').onclick = () => {
   document.getElementById('squareBtn').classList.add('active');
 };
 
+// NUEVO: Cambiar nota actualiza display del step
 document.querySelectorAll('select[data-step]').forEach(sel => {
   sel.addEventListener('change', e => {
-    seq[e.target.dataset.step].note = e.target.value;
+    const i = parseInt(e.target.dataset.step);
+    seq[i].note = e.target.value;
+    updateStepDisplay(i);
+    if(selectedStep === i) updateNoteDisplay(seq[i], i);
   });
 });
 
+// NUEVO: Cambiar octava actualiza display
 document.querySelectorAll('.oct-down').forEach(btn => {
   btn.addEventListener('click', e => {
-    const i = e.target.dataset.step;
+    e.stopPropagation();
+    const i = parseInt(e.target.dataset.step);
     if(seq[i].octave > 1) {
       seq[i].octave--;
-      document.getElementById(`oct-${i}`).textContent = seq[i].octave;
+      updateStepDisplay(i);
+      if(selectedStep === i) updateNoteDisplay(seq[i], i);
     }
   });
 });
 
 document.querySelectorAll('.oct-up').forEach(btn => {
   btn.addEventListener('click', e => {
-    const i = e.target.dataset.step;
+    e.stopPropagation();
+    const i = parseInt(e.target.dataset.step);
     if(seq[i].octave < 3) {
       seq[i].octave++;
-      document.getElementById(`oct-${i}`).textContent = seq[i].octave;
+      updateStepDisplay(i);
+      if(selectedStep === i) updateNoteDisplay(seq[i], i);
     }
   });
 });
 
 document.querySelectorAll('.slide-btn').forEach(btn => {
   btn.addEventListener('click', e => {
-    const i = e.target.dataset.step;
+    e.stopPropagation();
+    const i = parseInt(e.target.dataset.step);
     seq[i].slide =!seq[i].slide;
     e.target.classList.toggle('active', seq[i].slide);
   });
@@ -726,7 +791,8 @@ document.querySelectorAll('.slide-btn').forEach(btn => {
 
 document.querySelectorAll('.accent-btn').forEach(btn => {
   btn.addEventListener('click', e => {
-    const i = e.target.dataset.step;
+    e.stopPropagation();
+    const i = parseInt(e.target.dataset.step);
     seq[i].accent =!seq[i].accent;
     e.target.classList.toggle('active', seq[i].accent);
   });
@@ -734,10 +800,10 @@ document.querySelectorAll('.accent-btn').forEach(btn => {
 
 document.getElementById('clearBtn').onclick = () => {
   seq.forEach(s => {s.note='OFF'; s.octave=2; s.slide=false; s.accent=false;});
-  document.querySelectorAll('select[data-step]').forEach(sel => sel.value='OFF');
-  document.querySelectorAll('.oct-indicator').forEach(ind => ind.textContent='2');
-  document.querySelectorAll('.step-btn').forEach(btn => btn.classList.remove('active'));
+  updateStepUI();
   updateNoteDisplay({note:'OFF',octave:2}, 0);
+  selectedStep = -1;
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('selected'));
 };
 
 document.getElementById('runBtn').onclick = async () => {
@@ -756,7 +822,6 @@ document.getElementById('runBtn').onclick = async () => {
     clearTimeout(scheduleTimer);
     document.querySelectorAll('.led').forEach(led => led.classList.remove('on'));
     document.querySelectorAll('.step').forEach(s => s.classList.remove('playing'));
-    updateNoteDisplay({note:'OFF',octave:2}, 0);
   }
 };
 
@@ -803,6 +868,7 @@ document.getElementById('randomBtn').onclick = () => {
   const density = params.density / 100;
   const root = parseInt(document.getElementById('rootSelect').value);
   generatePattern(scale, genre, density, root);
+  updateStepUI(); // NUEVO: Actualiza displays después de random
 };
 
 function generatePattern(scaleName, genre, density, rootOffset) {
@@ -831,7 +897,6 @@ function generatePattern(scaleName, genre, density, rootOffset) {
     case 'dnb': generateDrumAndBass(scaleNotes, density); break;
     case 'acid': generateAcidClassic(scaleNotes, density); break;
   }
-  updateStepUI();
 }
 
 function generateBorisBrejcha(scaleNotes, density) {
@@ -1038,15 +1103,6 @@ function generateAcidClassic(scaleNotes, density) {
   }
 }
 
-function updateStepUI() {
-  seq.forEach((s, i) => {
-    document.querySelector(`select[data-step="${i}"]`).value = s.note;
-    document.getElementById(`oct-${i}`).textContent = s.octave;
-    document.querySelector(`.slide-btn[data-step="${i}"]`).classList.toggle('active', s.slide);
-    document.querySelector(`.accent-btn[data-step="${i}"]`).classList.toggle('active', s.accent);
-  });
-}
-
 function getStepFreq(step) {
   if(step.note === 'OFF') return null;
   let baseNote = step.note;
@@ -1139,7 +1195,6 @@ function scheduler() {
   while(nextNoteTime < ctx.currentTime + 0.1) {
     const step = seq[currentStep];
 
-    // NUEVO: Actualizar display de nota en tiempo real
     updateNoteDisplay(step, currentStep);
 
     document.querySelectorAll('.led').forEach((led,i) => {
@@ -1164,26 +1219,20 @@ function scheduler() {
   if(isRunning) scheduleTimer = setTimeout(scheduler, 25);
 }
 
-// MIDI ROLAND TB-303 REAL: Format 0, PPQ 96, 1 pista, canal 0
 document.getElementById('downloadMidi').onclick = () => {
   const PPQN = 96;
   const ticksPerStep = 24;
   let events = [];
 
-  // Tempo track - 128 BPM default
   const mpqn = Math.floor(60000000 / params.tempo);
   events.push({t: 0, d: [0xFF, 0x51, 0x03, (mpqn>>16)&0xFF, (mpqn>>8)&0xFF, mpqn&0xFF]});
-
-  // Time signature 4/4
   events.push({t: 0, d: [0xFF, 0x58, 0x04, 0x04, 0x02, 0x18, 0x08]});
 
-  // Track name TB-303
   const name = 'TB-303';
   let nameBytes = [0xFF, 0x03, name.length];
   for(let i=0; i<name.length; i++) nameBytes.push(name.charCodeAt(i));
   events.push({t: 0, d: nameBytes});
 
-  // Notas del sequencer - Canal 0, una sola pista
   seq.forEach((step, i) => {
     const freq = getStepFreq(step);
     if(freq) {
@@ -1192,14 +1241,11 @@ document.getElementById('downloadMidi').onclick = () => {
       const vel = step.accent? 127 : 100;
       const dur = step.slide? 23 : 20;
 
-      // Note On - Canal 0
       events.push({t: startTick, d: [0x90, midiNote, vel]});
-      // Note Off - Canal 0
       events.push({t: startTick + dur, d: [0x80, midiNote, 0x40]});
     }
   });
 
-  // End of track
   events.push({t: 16 * ticksPerStep, d: [0xFF, 0x2F, 0x00]});
   events.sort((a,b) => a.t - b.t);
 
@@ -1213,10 +1259,8 @@ document.getElementById('downloadMidi').onclick = () => {
     lastTick = ev.t;
   });
 
-  // Header MIDI Format 0, 1 track, PPQ 96
   let midi = [];
-  midi.push(0x4D,0x54,0x68,0x64, 0x00,0x00,0x00,0x06, 0x00,0x00, 0x00,0x01, 0x00,0x60);
-  // Track chunk
+  midi.push(0x4D,0x54,0x68,0x64, 0x00,0x00,0x06, 0x00,0x00, 0x00,0x01, 0x00,0x60);
   midi.push(0x4D,0x54,0x72,0x6B);
   midi.push((track.length>>24)&0xFF, (track.length>>16)&0xFF, (track.length>>8)&0xFF, track.length&0xFF);
   midi.push(...track);
