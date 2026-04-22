@@ -1,7 +1,8 @@
 <!DOCTYPE html>
+<html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>TB-303 v8.2 - Soundbanks</title>
+<title>TB-303 v9.0 - Groove Bassline</title>
 <link rel="manifest" href="manifest.json">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#ff4500">
@@ -18,9 +19,14 @@
     padding: 20px;
     margin: 0;
   }
+    * {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
 .tb303 {
-    background: linear-gradient(#c8c8c0, #a8a89e);
-    width: 980px;
+    background: linear-gradient(#c8c0, #a8a89e);
+    width: 100%;
+    max-width: 980px;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 10px 30px rgba(0,0,0,.6), inset 0 1px 0 #fff6;
@@ -218,7 +224,7 @@
 <body>
 <div class="tb303">
   <div class="header">
-    <div class="logo">TB-303<span>Bass Line Synthesizer</span></div>
+    <div class="logo">TB-303<span>Groove Bassline</span></div>
     <div>
       <button id="runBtn">RUN</button>
       <button id="clearBtn">CLEAR</button>
@@ -280,7 +286,6 @@
       <div class="value" id="reverbVal">0</div>
     </div>
   </div>
-
   <div class="switch-row">
     <div class="switch">
       <label>Wave:</label>
@@ -366,7 +371,7 @@
     <div class="led-row" id="leds"></div>
     <div class="steps" id="steps"></div>
     <div style="font-size:10px;color:#888;margin-top:8px;text-align:center">
-      Soundbanks: Factory Transistor Bass + Roland TB-303 + User
+      Soundbanks: Groove Bassline Top 10 + User
     </div>
   </div>
 </div>
@@ -378,16 +383,15 @@ let nextNoteTime = 0;
 let waveform = 'sawtooth';
 let scheduleTimer;
 
-// Parámetros: Cutoff/Res 0-100 Transistor Bass + Drive + Reverb Acid V
 const params = {
   tune: 0,
-  cutoff: 40, // 0-100 = 27Hz-7.4kHz exp como Transistor Bass
-  resonance: 60, // 0-100 = Q 0.5-30 como Transistor Bass
+  cutoff: 40,
+  resonance: 60,
   envmod: 2000,
   decay: 0.3,
   accent: 0.5,
-  drive: 0, // Drive Transistor Bass 0-100
-  reverb: 0, // Wet 0-100 Acid V style
+  drive: 0,
+  reverb: 0,
   tempo: 128,
   dist: 0,
   density: 60
@@ -414,61 +418,76 @@ const noteFreq = {
 
 let seq = Array(16).fill().map(() => ({note: 'OFF', octave: 2, slide: false, accent: false}));
 
-// FACTORY SOUNDBANKS - TRANSISTOR BASS + ROLAND TB-303
+// GROOVE BASSLINE TOP 10 - Los patterns más icónicos de la historia
 const FACTORY_BANKS = {
-  'Factory Transistor Bass': {
-    'TB Bassline 1': [
-      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:true,a:false},{n:'G2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},
-      {n:'C2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},
-      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:true,a:false},{n:'G2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},
-      {n:'C2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false}
+  'Groove Bassline': {
+    '01: Acid Tracks 1987': [
+      {n:'C2',o:1,s:false,a:true},{n:'C2',o:1,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'D#2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false},{n:'F2',o:2,s:true,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'G2',o:2,s:true,a:false},{n:'G#2',o:2,s:false,a:false},{n:'G#2',o:2,s:true,a:false},
+      {n:'C3',o:3,s:false,a:true},{n:'C3',o:3,s:true,a:false},{n:'A#2',o:2,s:false,a:false},{n:'G2',o:2,s:true,a:false}
     ],
-    'TB Acid Walk': [
-      {n:'C2',o:1,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:false},
-      {n:'F2',o:2,s:false,a:true},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},
-      {n:'C2',o:1,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'G2',o:2,s:false,a:false},
-      {n:'G#2',o:2,s:false,a:true},{n:'G2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false},{n:'D#2',o:2,s:false,a:false}
+    '02: Da Funk 1995': [
+      {n:'C2',o:1,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:1,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'D#2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'F2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false}
     ],
-    'TB Resonance Test': [
+    '03: Higher State 1993': [
       {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
-      {n:'G2',o:2,s:false,a:true},{n:'G2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},
-      {n:'C3',o:3,s:false,a:true},{n:'C3',o:3,s:true,a:false},{n:'C3',o:3,s:true,a:false},{n:'C3',o:3,s:true,a:false},
-      {n:'G2',o:2,s:false,a:true},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
-    ]
-  },
-  'Factory Roland TB-303': {
-    'TB-303 Pattern 1': [
-      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:false},
-      {n:'F2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:false},
-      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'G2',o:2,s:false,a:false},
-      {n:'G#2',o:2,s:false,a:true},{n:'G2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false},{n:'D#2',o:2,s:false,a:false}
+      {n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'G2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},
+      {n:'F2',o:2,s:true,a:false},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
     ],
-    'TB-303 Pattern 2': [
-      {n:'C2',o:1,s:false,a:true},{n:'C2',o:1,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
-      {n:'G2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:false},
-      {n:'C2',o:1,s:false,a:true},{n:'C2',o:1,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
-      {n:'A#2',o:2,s:false,a:true},{n:'G2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false},{n:'D#2',o:2,s:false,a:false}
+    '04: Landlord 1986': [
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false}
     ],
-    'TB-303 Pattern 3': [
-      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:true,a:false},{n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
-      {n:'C2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
-      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:true,a:false},{n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
-      {n:'C2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false}
+    '05: Windowlicker 1999': [
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'D2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},
+      {n:'F2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},{n:'G#2',o:2,s:true,a:false},{n:'A#2',o:2,s:true,a:false},
+      {n:'C3',o:3,s:true,a:false},{n:'A#2',o:2,s:true,a:false},{n:'G#2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},
+      {n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},{n:'D2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
     ],
-    'TB-303 Pattern 4': [
-      {n:'C2',o:1,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'OFF',o:2,s:false,a:false},
-      {n:'G2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'F2',o:2,s:true,a:false},{n:'OFF',o:2,s:false,a:false},
-      {n:'C2',o:1,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'OFF',o:2,s:false,a:false},
-      {n:'A#2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'G2',o:2,s:true,a:false},{n:'OFF',o:2,s:false,a:false}
+    '06: Spastik 1993': [
+      {n:'C2',o:1,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'D#2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false}
+    ],
+    '07: Flat Beat 1999': [
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:false},{n:'F2',o:2,s:false,a:false},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
+    ],
+    '08: I Feel Love 1977': [
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:false,a:false},{n:'D#2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'G2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false}
+    ],
+    '09: Dirty Cash 1990': [
+      {n:'C2',o:1,s:false,a:true},{n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:true,a:false},
+      {n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:true,a:false},{n:'C2',o:1,s:true,a:false},
+      {n:'G2',o:1,s:true,a:false},{n:'G2',o:1,s:true,a:false},{n:'G2',o:1,s:true,a:false},{n:'G2',o:1,s:true,a:false},
+      {n:'F2',o:1,s:true,a:false},{n:'F2',o:1,s:true,a:false},{n:'D#2',o:1,s:true,a:false},{n:'C2',o:1,s:false,a:false}
+    ],
+    '10: Voodoo Ray 1988': [
+      {n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false}
     ]
   },
   'User': {}
 };
 
-// Cargar soundbanks de localStorage o usar factory
 let soundbanks = JSON.parse(localStorage.getItem('tb303_soundbanks')) || FACTORY_BANKS;
-let currentBank = 'Factory Transistor Bass';
-let currentPattern = 'TB Bassline 1';
+let currentBank = 'Groove Bassline';
+let currentPattern = '01: Acid Tracks 1987';
 
 function saveSoundbanks() {
   localStorage.setItem('tb303_soundbanks', JSON.stringify(soundbanks));
@@ -524,7 +543,6 @@ function saveCurrentPattern() {
   document.getElementById('patternNameInput').value = '';
 }
 
-// REVERB ACID V - Convolver filtrado 300Hz-4kHz tono dark
 let reverbNode = null;
 let reverbHPF = null;
 let reverbLPF = null;
@@ -564,7 +582,6 @@ async function createAcidVReverb() {
   reverbGain.connect(ctx.destination);
 }
 
-// UI Setup
 const stepsDiv = document.getElementById('steps');
 const ledsDiv = document.getElementById('leds');
 for(let i=0;i<16;i++){
@@ -591,7 +608,6 @@ for(let i=0;i<16;i++){
   led.className = 'led';
   ledsDiv.appendChild(led);
 }
-
 document.querySelectorAll('input[type=range]').forEach(input => {
   input.addEventListener('input', e => {
     const id = e.target.id;
@@ -686,7 +702,6 @@ document.getElementById('runBtn').onclick = async () => {
   }
 };
 
-// SOUNDBANK CONTROLS
 document.getElementById('bankSelect').addEventListener('change', e => {
   currentBank = e.target.value;
   currentPattern = Object.keys(soundbanks[currentBank])[0];
@@ -724,9 +739,6 @@ document.getElementById('delPatternBtn').onclick = () => {
   }
 };
 
-// Inicializar soundbanks al cargar
-refreshBankSelect();
-loadPattern();
 document.getElementById('randomBtn').onclick = () => {
   const scale = document.getElementById('scaleSelect').value;
   const genre = document.getElementById('genreSelect').value;
@@ -984,7 +996,6 @@ function getStepFreq(step) {
   return noteFreq[baseNote];
 }
 
-// MOTOR TRANSISTOR BASS: Cutoff 0-100, Res 0-100, Drive pre-filtro + Reverb Acid V
 let lastFreq = 65.41;
 let reverbSend = null;
 
@@ -1005,7 +1016,6 @@ function create303Voice(freq, time, slide, accent, duration) {
   osc.type = waveform;
   osc.frequency.value = freq * Math.pow(2, params.tune/12);
 
-  // 1. DRIVE TRANSISTOR BASS: saturación pre-filtro 0-100
   if(params.drive > 0) {
     const k = params.drive / 100 * 100;
     const curve = new Float32Array(44100);
@@ -1020,13 +1030,10 @@ function create303Voice(freq, time, slide, accent, duration) {
     osc.connect(filter);
   }
 
-  // 2. FILTRO TRANSISTOR BASS: Cutoff 0-100 = 27Hz-7.4kHz exponencial
   filter.type = 'lowpass';
   const cutoffHz = 27 * Math.pow(274.07, params.cutoff / 100);
-  // Res 0-100 = Q 0.5-30 como Transistor Bass
   filter.Q.value = 0.5 + (params.resonance / 100) * 29.5;
 
-  // 3. Env Mod + Accent
   const envAmount = params.envmod * (accent? 1 + params.accent : 1);
   const peakCutoff = Math.min(cutoffHz + envAmount, 20000);
 
@@ -1034,7 +1041,6 @@ function create303Voice(freq, time, slide, accent, duration) {
   filter.frequency.linearRampToValueAtTime(peakCutoff, time + 0.005);
   filter.frequency.exponentialRampToValueAtTime(cutoffHz, time + params.decay);
 
-  // 4. VCA con accent
   const amp = accent? 0.8 : 0.4;
   vca.gain.setValueAtTime(0, time);
   vca.gain.linearRampToValueAtTime(amp, time + 0.003);
@@ -1045,7 +1051,6 @@ function create303Voice(freq, time, slide, accent, duration) {
     vca.gain.exponentialRampToValueAtTime(0.001, time + params.decay);
   }
 
-  // 5. Distorsión post-filtro - sin modificar
   if(params.dist > 0) {
     const k = params.dist * 10;
     const curve = new Float32Array(44100);
@@ -1060,7 +1065,6 @@ function create303Voice(freq, time, slide, accent, duration) {
     filter.connect(vca);
   }
 
-  // 6. Salida + Send a Reverb Acid V
   initReverb();
   vca.connect(ctx.destination);
   vca.connect(reverbSend);
@@ -1098,7 +1102,6 @@ function scheduler() {
   if(isRunning) scheduleTimer = setTimeout(scheduler, 25);
 }
 
-// MIDI ROLAND TB-303 FORMAT 0 PPQ 96 - SIN MODIFICAR
 document.getElementById('downloadMidi').onclick = () => {
   const PPQN = 96;
   const ticksPerStep = 24;
@@ -1108,7 +1111,7 @@ document.getElementById('downloadMidi').onclick = () => {
   events.push({t: 0, d: [0xFF, 0x51, 0x03, (mpqn>>16)&0xFF, (mpqn>>8)&0xFF, mpqn&0xFF]});
   events.push({t: 0, d: [0xFF, 0x58, 0x04, 0x04, 0x02, 0x18, 0x08]});
 
-  const name = 'TB-303 Bassline';
+  const name = 'TB-303 Groove Bassline';
   let nameBytes = [0xFF, 0x03, name.length];
   for(let i=0; i<name.length; i++) nameBytes.push(name.charCodeAt(i));
   events.push({t: 0, d: nameBytes});
@@ -1145,12 +1148,12 @@ document.getElementById('downloadMidi').onclick = () => {
   midi.push((track.length>>24)&0xFF, (track.length>>16)&0xFF, (track.length>>8)&0xFF, track.length&0xFF);
   midi.push(...track);
 
-  downloadBlob(new Uint8Array(midi), 'tb303_pattern.mid', 'audio/midi');
+  downloadBlob(new Uint8Array(midi), 'tb303_groove.mid', 'audio/midi');
 };
 
 function toVLQ(value) {
   value = Math.floor(value);
-  if (value === 0) return ;
+  if (value === 0) return [0];
 
   let bytes = [];
   bytes.push(value & 0x7F);
@@ -1164,14 +1167,12 @@ function toVLQ(value) {
   return bytes.reverse();
 }
 
-// DESCARGA WAV - Con reverb
 document.getElementById('downloadWav').onclick = async () => {
   const secondsPerStep = 60.0 / params.tempo / 4;
   const totalDuration = secondsPerStep * 16 * 4;
   const sampleRate = 44100;
   const offlineCtx = new OfflineAudioContext(2, sampleRate * totalDuration, sampleRate);
 
-  // Reverb offline
   const offlineReverb = offlineCtx.createConvolver();
   const offlineHPF = offlineCtx.createBiquadFilter();
   const offlineLPF = offlineCtx.createBiquadFilter();
@@ -1216,7 +1217,7 @@ document.getElementById('downloadWav').onclick = async () => {
 
   const buffer = await offlineCtx.startRendering();
   const wav = audioBufferToWav(buffer);
-  downloadBlob(wav, 'tb303_pattern.wav', 'audio/wav');
+  downloadBlob(wav, 'tb303_groove.wav', 'audio/wav');
 };
 
 function renderStepToContext(octx, freq, time, slide, accent, duration, sendNode) {
@@ -1229,7 +1230,6 @@ function renderStepToContext(octx, freq, time, slide, accent, duration, sendNode
   osc.type = waveform;
   osc.frequency.value = freq * Math.pow(2, params.tune/12);
 
-  // Drive Transistor Bass
   if(params.drive > 0) {
     const k = params.drive / 100 * 100;
     const curve = new Float32Array(44100);
@@ -1244,7 +1244,6 @@ function renderStepToContext(octx, freq, time, slide, accent, duration, sendNode
     osc.connect(filter);
   }
 
-  // Filtro Transistor Bass
   const cutoffHz = 27 * Math.pow(274.07, params.cutoff / 100);
   filter.type = 'lowpass';
   filter.Q.value = 0.5 + (params.resonance / 100) * 29.5;
@@ -1266,7 +1265,6 @@ function renderStepToContext(octx, freq, time, slide, accent, duration, sendNode
     vca.gain.exponentialRampToValueAtTime(0.001, time + params.decay);
   }
 
-  // Distorsión
   if(params.dist > 0) {
     const k = params.dist * 10;
     const curve = new Float32Array(44100);
@@ -1352,6 +1350,13 @@ document.body.addEventListener('click', async () => {
   if(ctx.state === 'suspended') await ctx.resume();
   if(!reverbNode) await createAcidVReverb();
 }, {once: true});
+
+if('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js');
+}
+
+refreshBankSelect();
+loadPattern();
 </script>
 </body>
 </html>
