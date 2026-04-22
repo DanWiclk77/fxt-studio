@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>TB-303 v9.3 - MIDI Format 1 Fixed</title>
+<title>TB-303 v9.4 - MIDI Roland Ready</title>
 <link rel="manifest" href="manifest.json">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#ff4500">
@@ -267,7 +267,7 @@
 <body>
 <div class="tb303">
   <div class="header">
-    <div class="logo">TB-303<span>Roland Format 1</span></div>
+    <div class="logo">TB-303<span>Roland Cloud Ready</span></div>
     <div class="note-display">
       <div>
         <div class="label">NOTE</div>
@@ -425,7 +425,7 @@
     <div class="led-row" id="leds"></div>
     <div class="steps" id="steps"></div>
     <div style="font-size:10px;color:#888;margin-top:8px;text-align:center">
-      Soundbanks: Groove Bassline Top 10 + User | MIDI Format 1 Standard
+      Soundbanks: Groove Bassline Top 10 + User | MIDI Format 1
     </div>
   </div>
 </div>
@@ -539,11 +539,11 @@ const FACTORY_BANKS = {
   'User': {}
 };
 
-let soundbanks = JSON.parse(localStorage.getItem('tb303_soundbanks_v93')) || FACTORY_BANKS;
+let soundbanks = JSON.parse(localStorage.getItem('tb303_soundbanks_v94')) || FACTORY_BANKS;
 let currentBank = 'Groove Bassline';
 let currentPattern = '01: Acid Tracks 1987';
 function saveSoundbanks() {
-  localStorage.setItem('tb303_soundbanks_v93', JSON.stringify(soundbanks));
+  localStorage.setItem('tb303_soundbanks_v94', JSON.stringify(soundbanks));
 }
 
 function refreshBankSelect() {
@@ -651,9 +651,8 @@ async function createAcidVReverb() {
   reverbLPF.frequency.value = 4000;
   reverbLPF.Q.value = 0.7;
 
-  // Impulse corto = decay cero, tono dark
   const sampleRate = ctx.sampleRate;
-  const length = sampleRate * 0.4; // 400ms decay corto
+  const length = sampleRate * 0.4;
   const impulse = ctx.createBuffer(2, length, sampleRate);
 
   for(let ch = 0; ch < 2; ch++) {
@@ -666,7 +665,6 @@ async function createAcidVReverb() {
   }
   reverbNode.buffer = impulse;
 
-  // Cadena: send -> HPF 300Hz -> Convolver -> LPF 4kHz -> Gain -> out
   reverbSend.connect(reverbHPF);
   reverbHPF.connect(reverbNode);
   reverbNode.connect(reverbLPF);
@@ -1209,94 +1207,7 @@ function scheduler() {
   if(isRunning) scheduleTimer = setTimeout(scheduler, 25);
 }
 
-// MIDI FORMAT 1 STANDARD - ROLAND TB-303 COMPATIBLE
-document.getElementById('downloadMidi').onclick = () => {
-  const PPQN = 96;
-  const ticksPerStep = 24;
-  let events = [];
-
-  // Tempo meta event
-  const mpqn = Math.floor(60000000 / params.tempo);
-  events.push({t: 0, d: [0xFF, 0x51, 0x03, (mpqn>>16)&0xFF, (mpqn>>8)&0xFF, mpqn&0xFF]});
-
-  // Time signature 4/4
-  events.push({t: 0, d: [0xFF, 0x58, 0x04, 0x04, 0x02, 0x18, 0x08]});
-
-  // Track name
-  const name = 'TB-303 Bass';
-  let nameBytes = [0xFF, 0x03, name.length];
-  for(let i=0; i<name.length; i++) nameBytes.push(name.charCodeAt(i));
-  events.push({t: 0, d: nameBytes});
-
-  // Generar eventos nota a nota con slide legato
-  for(let i = 0; i < 16; i++) {
-    const step = seq[i];
-    const freq = getStepFreq(step);
-    const startTick = i * ticksPerStep;
-
-    if(freq) {
-      const midiNote = Math.max(0, Math.min(127, Math.round(69 + 12 * Math.log2(freq / 440))));
-      const vel = step.accent? 127 : 100;
-
-      // Si el step anterior tiene slide, cerramos nota anterior en este tick = legato TB-303
-      const prevStep = i > 0? seq[i-1] : null;
-      const hasPrevSlide = prevStep && prevStep.slide && prevStep.note!== 'OFF';
-
-      if(hasPrevSlide) {
-        const prevFreq = getStepFreq(prevStep);
-        const prevMidiNote = Math.round(69 + 12 * Math.log2(prevFreq / 440));
-        events.push({t: startTick, d: [0x80, prevMidiNote, 0x00]}); // Note Off anterior canal 0
-      }
-
-      events.push({t: startTick, d: [0x90, midiNote, vel]}); // Note On canal 0
-
-      // Si NO tiene slide, cerrar nota en tick 20 de este step
-      if(!step.slide) {
-        const endTick = startTick + 20;
-        events.push({t: endTick, d: [0x80, midiNote, 0x00]}); // Note Off
-      }
-    }
-  }
-
-  // Cerrar última nota si quedó con slide activo
-  const lastStep = seq[15];
-  if(lastStep.note!== 'OFF' && lastStep.slide) {
-    const lastFreq = getStepFreq(lastStep);
-    const lastMidiNote = Math.round(69 + 12 * Math.log2(lastFreq / 440));
-    events.push({t: 16 * ticksPerStep - 4, d: [0x80, lastMidiNote, 0x00]});
-  }
-
-  // End of Track
-  events.push({t: 16 * ticksPerStep, d: [0xFF, 0x2F, 0x00]});
-  events.sort((a,b) => a.t - b.t);
-
-  // Construir track chunk
-  let track = [];
-  let lastTick = 0;
-
-  events.forEach(ev => {
-    const delta = ev.t - lastTick;
-    track.push(...toVLQ(delta));
-    track.push(...ev.d);
-    lastTick = ev.t;
-  });
-
-  // HEADER MIDI FORMAT 1 - CORREGIDO
-  let midi = [];
-  midi.push(0x4D,0x54,0x68,0x64); // "MThd"
-  midi.push(0x00,0x06); // Header length: 6 bytes
-  midi.push(0x00,0x01); // Format 1
-  midi.push(0x00,0x01); // 1 track
-  midi.push(0x00,0x60); // PPQ 96
-
-  // Track chunk
-  midi.push(0x4D,0x54,0x72,0x6B); // "MTrk"
-  midi.push((track.length>>24)&0xFF, (track.length>>16)&0xFF, (track.length>>8)&0xFF, track.length&0xFF);
-  midi.push(...track);
-
-  downloadBlob(new Uint8Array(midi), 'tb303_format1.mid', 'audio/midi');
-};
-
+// ===== MIDI FORMAT 1 REESCRITO DESDE CERO - ROLAND CLOUD TB-303 =====
 function toVLQ(value) {
   value = Math.floor(value);
   if (value === 0) return [0];
@@ -1310,13 +1221,123 @@ function toVLQ(value) {
   return bytes.reverse();
 }
 
+function freqToMidi(freq) {
+  return Math.max(0, Math.min(127, Math.round(69 + 12 * Math.log2(freq / 440))));
+}
+
+document.getElementById('downloadMidi').onclick = () => {
+  const PPQN = 96;
+  const TICKS_PER_STEP = 24;
+  const TICKS_PER_16TH = 20; // Duración de nota 16th con espacio
+  const events = [];
+
+  // 1. Tempo
+  const mpqn = Math.floor(60000000 / params.tempo);
+  events.push({tick: 0, data: [0xFF, 0x51, 0x03, (mpqn>>16)&0xFF, (mpqn>>8)&0xFF, mpqn&0xFF]});
+
+  // 2. Time Signature 4/4
+  events.push({tick: 0, data: [0xFF, 0x58, 0x04, 0x04, 0x02, 0x18, 0x08]});
+
+  // 3. Track Name
+  const trackName = 'TB-303 Bass';
+  const nameData = [0xFF, 0x03, trackName.length];
+  for(let i = 0; i < trackName.length; i++) nameData.push(trackName.charCodeAt(i));
+  events.push({tick: 0, data: nameData});
+
+  // 4. Generar notas con slide legato auténtico TB-303
+  let lastMidiNote = null;
+  let lastNoteOffTick = 0;
+
+  for(let stepIdx = 0; stepIdx < 16; stepIdx++) {
+    const step = seq[stepIdx];
+    const freq = getStepFreq(step);
+    const stepStartTick = stepIdx * TICKS_PER_STEP;
+
+    if(freq) {
+      const midiNote = freqToMidi(freq);
+      const velocity = step.accent? 127 : 100;
+
+      // Si el step anterior tenía slide, no cerramos la nota anterior = legato
+      const prevStep = stepIdx > 0? seq[stepIdx - 1] : null;
+      const isLegato = prevStep && prevStep.slide && prevStep.note!== 'OFF';
+
+      // Cerrar nota anterior solo si NO es legato
+      if(!isLegato && lastMidiNote!== null) {
+        events.push({tick: stepStartTick, data: [0x80, lastMidiNote, 0x00]});
+      }
+
+      // Note On en tick de inicio del step
+      events.push({tick: stepStartTick, data: [0x90, midiNote, velocity]});
+      lastMidiNote = midiNote;
+
+      // Si NO tiene slide, cerrar nota al final del 16th
+      if(!step.slide) {
+        const noteOffTick = stepStartTick + TICKS_PER_16TH;
+        events.push({tick: noteOffTick, data: [0x80, midiNote, 0x00]});
+        lastMidiNote = null;
+        lastNoteOffTick = noteOffTick;
+      }
+    }
+  }
+
+  // 5. Cerrar última nota si quedó abierta con slide
+  if(lastMidiNote!== null) {
+    const endTick = 16 * TICKS_PER_STEP;
+    events.push({tick: endTick, data: [0x80, lastMidiNote, 0x00]});
+  }
+
+  // 6. End of Track
+  const totalTicks = 16 * TICKS_PER_STEP;
+  events.push({tick: totalTicks, data: [0xFF, 0x2F, 0x00]});
+
+  // Ordenar eventos por tick
+  events.sort((a, b) => a.tick - b.tick);
+
+  // 7. Construir track chunk con deltas
+  const trackBytes = [];
+  let prevTick = 0;
+
+  for(const evt of events) {
+    const delta = evt.tick - prevTick;
+    trackBytes.push(...toVLQ(delta));
+    trackBytes.push(...evt.data);
+    prevTick = evt.tick;
+  }
+
+  // 8. HEADER MIDI FORMAT 1 - 6 bytes de longitud, 1 track, PPQ 96
+  const header = [
+    0x4D, 0x54, 0x68, 0x64, // "MThd"
+    0x00, 0x06, // Header length = 6
+    0x00, 0x01, // Format 1
+    0x00, 0x01, // 1 track
+    0x00, 0x60 // PPQ 96
+  ];
+
+  // 9. TRACK CHUNK
+  const trackHeader = [
+    0x4D, 0x54, 0x72, 0x6B, // "MTrk"
+    (trackBytes.length >> 24) & 0xFF,
+    (trackBytes.length >> 16) & 0xFF,
+    (trackBytes.length >> 8) & 0xFF,
+    trackBytes.length & 0xFF
+  ];
+
+  // 10. Combinar todo
+  const midiFile = new Uint8Array([
+   ...header,
+   ...trackHeader,
+   ...trackBytes
+  ]);
+
+  downloadBlob(midiFile, 'tb303_roland_format1.mid', 'audio/midi');
+};
+
 document.getElementById('downloadWav').onclick = async () => {
   const secondsPerStep = 60.0 / params.tempo / 4;
   const totalDuration = secondsPerStep * 16 * 4;
   const sampleRate = 44100;
   const offlineCtx = new OfflineAudioContext(2, sampleRate * totalDuration, sampleRate);
 
-  // Reverb offline con misma cadena HPF->Conv->LPF
   const offlineReverb = offlineCtx.createConvolver();
   const offlineHPF = offlineCtx.createBiquadFilter();
   const offlineLPF = offlineCtx.createBiquadFilter();
