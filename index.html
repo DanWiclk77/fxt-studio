@@ -2,10 +2,10 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>TB-303 v8.1 - Transistor Bass + Acid V Reverb</title>
+<title>TB-303 v8.2 - Soundbanks</title>
 <style>
   body {
-    background: #1a1a1a;
+    background: #1a1a;
     font-family: "Helvetica Neue", Arial, sans-serif;
     color: #ddd;
     display: flex;
@@ -92,6 +92,7 @@
   button.active { background: #ff4500; color: #111; }
   button.download { background: #0a5; color: #fff; }
   button.download:hover { background: #0c7; }
+  button.small { padding: 4px 8px; font-size: 10px; }
   select {
     background: #111;
     color: #ff4500;
@@ -100,6 +101,35 @@
     border-radius: 3px;
     font-size: 11px;
     font-weight: 600;
+  }
+
+.soundbank-bar {
+    background: #1a1a1a;
+    padding: 12px 15px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+    border: 1px solid #333;
+  }
+.soundbank-bar label {
+    font-size: 11px;
+    color: #ff4500;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+.soundbank-bar select {
+    min-width: 160px;
+  }
+.soundbank-bar input {
+    background: #111;
+    color: #eee;
+    border: 1px solid #444;
+    padding: 4px 8px;
+    border-radius: 3px;
+    font-size: 11px;
   }
 
 .sequencer {
@@ -190,6 +220,17 @@
       <button id="downloadMidi" class="download">MIDI</button>
       <button id="downloadWav" class="download">WAV</button>
     </div>
+  </div>
+
+  <div class="soundbank-bar">
+    <label>Soundbank:</label>
+    <select id="bankSelect"></select>
+    <label>Pattern:</label>
+    <select id="patternSelect"></select>
+    <button id="savePatternBtn" class="small">SAVE</button>
+    <button id="newBankBtn" class="small">+BANK</button>
+    <button id="delPatternBtn" class="small">DEL PAT</button>
+    <input id="patternNameInput" type="text" placeholder="Pattern name" style="width:100px">
   </div>
 
   <div class="controls">
@@ -320,7 +361,7 @@
     <div class="led-row" id="leds"></div>
     <div class="steps" id="steps"></div>
     <div style="font-size:10px;color:#888;margin-top:8px;text-align:center">
-      Transistor Bass Cutoff/Res + Drive | Acid V Reverb 300Hz-4kHz
+      Soundbanks: Factory Transistor Bass + Roland TB-303 + User
     </div>
   </div>
 </div>
@@ -332,19 +373,10 @@ let nextNoteTime = 0;
 let waveform = 'sawtooth';
 let scheduleTimer;
 
-// Parámetros: Cutoff/Res 0-100 Transistor Bass, Drive añadido, Reverb Acid V
 const params = {
-  tune: 0,
-  cutoff: 40, // 0-100 = 27Hz-7.4kHz exp como Transistor Bass
-  resonance: 60, // 0-100 = Q 0.5-30 como Transistor Bass
-  envmod: 2000,
-  decay: 0.3,
-  accent: 0.5,
-  drive: 0, // Drive Transistor Bass 0-100
-  reverb: 0, // Wet 0-100 Acid V style
-  tempo: 128,
-  dist: 0,
-  density: 60
+  tune: 0, cutoff: 40, resonance: 60, envmod: 2000,
+  decay: 0.3, accent: 0.5, drive: 0, reverb: 0,
+  tempo: 128, dist: 0, density: 60
 };
 
 const scales = {
@@ -366,9 +398,119 @@ const noteFreq = {
   'C3':130.8,'C#3':138.6,'D3':146.8,'D#3':155.6,'E3':164.8,'F3':174.6,'F#3':185.0,'G3':196.0,'G#3':207.7,'A3':220.0,'A#3':233.1,'B3':246.9
 };
 
-const seq = Array(16).fill().map(() => ({note: 'OFF', octave: 2, slide: false, accent: false}));
+let seq = Array(16).fill().map(() => ({note: 'OFF', octave: 2, slide: false, accent: false}));
 
-// REVERB ACID V - Convolver filtrado 300Hz-4kHz tono dark
+// FACTORY SOUNDBANKS - TRANSISTOR BASS + ROLAND TB-303
+const FACTORY_BANKS = {
+  'Factory Transistor Bass': {
+    'TB Bassline 1': [
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:true,a:false},{n:'G2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:true,a:false},{n:'G2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false}
+    ],
+    'TB Acid Walk': [
+      {n:'C2',o:1,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:false},{n:'C2',o:2,s:false,a:false},
+      {n:'C2',o:1,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'G2',o:2,s:false,a:false},
+      {n:'G#2',o:2,s:false,a:true},{n:'G2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false},{n:'D#2',o:2,s:false,a:false}
+    ],
+    'TB Resonance Test': [
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},{n:'C2',o:2,s:true,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'G2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},{n:'G2',o:2,s:true,a:false},
+      {n:'C3',o:3,s:false,a:true},{n:'C3',o:3,s:true,a:false},{n:'C3',o:3,s:true,a:false},{n:'C3',o:3,s:true,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:true,a:false},{n:'C2',o:2,s:false,a:false}
+    ]
+  },
+  'Factory Roland TB-303': {
+    'TB-303 Pattern 1': [
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:false},
+      {n:'F2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'G2',o:2,s:false,a:false},
+      {n:'G#2',o:2,s:false,a:true},{n:'G2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false},{n:'D#2',o:2,s:false,a:false}
+    ],
+    'TB-303 Pattern 2': [
+      {n:'C2',o:1,s:false,a:true},{n:'C2',o:1,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'F2',o:2,s:true,a:false},{n:'D#2',o:2,s:false,a:false},
+      {n:'C2',o:1,s:false,a:true},{n:'C2',o:1,s:true,a:false},{n:'C2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'A#2',o:2,s:false,a:true},{n:'G2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false},{n:'D#2',o:2,s:false,a:false}
+    ],
+    'TB-303 Pattern 3': [
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:true,a:false},{n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:true},{n:'C2',o:2,s:true,a:false},{n:'G2',o:2,s:false,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'C2',o:2,s:false,a:true},{n:'D#2',o:2,s:true,a:false},{n:'F2',o:2,s:false,a:false},{n:'G2',o:2,s:false,a:false}
+    ],
+    'TB-303 Pattern 4': [
+      {n:'C2',o:1,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'G2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'F2',o:2,s:true,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'C2',o:1,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'C2',o:2,s:true,a:false},{n:'OFF',o:2,s:false,a:false},
+      {n:'A#2',o:2,s:false,a:true},{n:'OFF',o:2,s:false,a:false},{n:'G2',o:2,s:true,a:false},{n:'OFF',o:2,s:false,a:false}
+    ]
+  },
+  'User': {}
+};
+
+// Cargar soundbanks de localStorage o usar factory
+let soundbanks = JSON.parse(localStorage.getItem('tb303_soundbanks')) || FACTORY_BANKS;
+let currentBank = 'Factory Transistor Bass';
+let currentPattern = 'TB Bassline 1';
+
+function saveSoundbanks() {
+  localStorage.setItem('tb303_soundbanks', JSON.stringify(soundbanks));
+}
+
+function refreshBankSelect() {
+  const bankSel = document.getElementById('bankSelect');
+  bankSel.innerHTML = '';
+  Object.keys(soundbanks).forEach(bank => {
+    const opt = document.createElement('option');
+    opt.value = bank;
+    opt.textContent = bank;
+    bankSel.appendChild(opt);
+  });
+  bankSel.value = currentBank;
+  refreshPatternSelect();
+}
+
+function refreshPatternSelect() {
+  const patSel = document.getElementById('patternSelect');
+  patSel.innerHTML = '';
+  Object.keys(soundbanks[currentBank] || {}).forEach(pat => {
+    const opt = document.createElement('option');
+    opt.value = pat;
+    opt.textContent = pat;
+    patSel.appendChild(opt);
+  });
+  if(soundbanks[currentBank] && soundbanks[currentBank][currentPattern]) {
+    patSel.value = currentPattern;
+  } else if(patSel.options.length > 0) {
+    currentPattern = patSel.options[0].value;
+  }
+}
+
+function loadPattern() {
+  const pattern = soundbanks[currentBank]?.[currentPattern];
+  if(!pattern) return;
+  pattern.forEach((step, i) => {
+    seq[i] = {note: step.n, octave: step.o, slide: step.s, accent: step.a};
+  });
+  updateStepUI();
+}
+
+function saveCurrentPattern() {
+  const name = document.getElementById('patternNameInput').value.trim();
+  if(!name) { alert('Ingresa un nombre'); return; }
+  if(!soundbanks['User']) soundbanks['User'] = {};
+  soundbanks['User'][name] = seq.map(s => ({n:s.note, o:s.octave, s:s.slide, a:s.accent}));
+  saveSoundbanks();
+  currentBank = 'User';
+  currentPattern = name;
+  refreshBankSelect();
+  document.getElementById('patternNameInput').value = '';
+}
+
+// REVERB ACID V
 let reverbNode = null;
 let reverbHPF = null;
 let reverbLPF = null;
@@ -380,7 +522,6 @@ async function createAcidVReverb() {
   reverbLPF = ctx.createBiquadFilter();
   reverbGain = ctx.createGain();
 
-  // Filtros Acid V: HPF 300Hz, LPF 4kHz
   reverbHPF.type = 'highpass';
   reverbHPF.frequency.value = 300;
   reverbHPF.Q.value = 0.7;
@@ -389,7 +530,6 @@ async function createAcidVReverb() {
   reverbLPF.frequency.value = 4000;
   reverbLPF.Q.value = 0.7;
 
-  // IR sintética dark: decay 2.5s con damping fuerte
   const sampleRate = ctx.sampleRate;
   const length = sampleRate * 2.5;
   const impulse = ctx.createBuffer(2, length, sampleRate);
@@ -398,142 +538,17 @@ async function createAcidVReverb() {
     const channel = impulse.getChannelData(ch);
     for(let i = 0; i < length; i++) {
       const t = i / sampleRate;
-      // Decay exponencial con tono dark
       const decay = Math.pow(1 - t / 2.5, 3);
       channel[i] = (Math.random() * 2 - 1) * decay * 0.5;
     }
   }
   reverbNode.buffer = impulse;
 
-  // Cadena: source -> HPF -> Convolver -> LPF -> Gain -> destination
   reverbHPF.connect(reverbNode);
   reverbNode.connect(reverbLPF);
   reverbLPF.connect(reverbGain);
   reverbGain.connect(ctx.destination);
 }
-
-// UI Setup
-const stepsDiv = document.getElementById('steps');
-const ledsDiv = document.getElementById('leds');
-for(let i=0;i<16;i++){
-  const step = document.createElement('div');
-  step.className = 'step';
-  step.innerHTML = `
-    <select data-step="${i}">
-      <option value="OFF">OFF</option>
-      ${baseNotes.map(n => `<option value="${n}">${n}</option>`).join('')}
-    </select>
-    <div class="step-controls">
-      <button class="step-btn oct-down" data-step="${i}">O-</button>
-      <span class="oct-indicator" id="oct-${i}">2</span>
-      <button class="step-btn oct-up" data-step="${i}">O+</button>
-    </div>
-    <div class="step-controls">
-      <button class="step-btn slide-btn" data-step="${i}">S</button>
-      <button class="step-btn accent-btn" data-step="${i}">A</button>
-    </div>
-  `;
-  stepsDiv.appendChild(step);
-
-  const led = document.createElement('div');
-  led.className = 'led';
-  ledsDiv.appendChild(led);
-}
-
-// Event listeners
-document.querySelectorAll('input[type=range]').forEach(input => {
-  input.addEventListener('input', e => {
-    const id = e.target.id;
-    params[id] = parseFloat(e.target.value);
-    const val = params[id];
-    document.getElementById(id+'Val').textContent =
-      id === 'density'? val + '%' :
-      id === 'decay' || id === 'accent' || id === 'resonance'? val.toFixed(2) : val;
-
-    if(id === 'reverb' && reverbGain) {
-      reverbGain.gain.value = val / 100;
-    }
-  });
-});
-
-document.getElementById('sawBtn').onclick = () => {
-  waveform = 'sawtooth';
-  document.getElementById('sawBtn').classList.add('active');
-  document.getElementById('squareBtn').classList.remove('active');
-};
-document.getElementById('squareBtn').onclick = () => {
-  waveform = 'square';
-  document.getElementById('sawBtn').classList.remove('active');
-  document.getElementById('squareBtn').classList.add('active');
-};
-
-document.querySelectorAll('select[data-step]').forEach(sel => {
-  sel.addEventListener('change', e => {
-    seq[e.target.dataset.step].note = e.target.value;
-  });
-});
-
-document.querySelectorAll('.oct-down').forEach(btn => {
-  btn.addEventListener('click', e => {
-    const i = e.target.dataset.step;
-    if(seq[i].octave > 1) {
-      seq[i].octave--;
-      document.getElementById(`oct-${i}`).textContent = seq[i].octave;
-    }
-  });
-});
-
-document.querySelectorAll('.oct-up').forEach(btn => {
-  btn.addEventListener('click', e => {
-    const i = e.target.dataset.step;
-    if(seq[i].octave < 3) {
-      seq[i].octave++;
-      document.getElementById(`oct-${i}`).textContent = seq[i].octave;
-    }
-  });
-});
-
-document.querySelectorAll('.slide-btn').forEach(btn => {
-  btn.addEventListener('click', e => {
-    const i = e.target.dataset.step;
-    seq[i].slide =!seq[i].slide;
-    e.target.classList.toggle('active', seq[i].slide);
-  });
-});
-
-document.querySelectorAll('.accent-btn').forEach(btn => {
-  btn.addEventListener('click', e => {
-    const i = e.target.dataset.step;
-    seq[i].accent =!seq[i].accent;
-    e.target.classList.toggle('active', seq[i].accent);
-  });
-});
-
-document.getElementById('clearBtn').onclick = () => {
-  seq.forEach(s => {s.note='OFF'; s.octave=2; s.slide=false; s.accent=false;});
-  document.querySelectorAll('select[data-step]').forEach(sel => sel.value='OFF');
-  document.querySelectorAll('.oct-indicator').forEach(ind => ind.textContent='2');
-  document.querySelectorAll('.step-btn').forEach(btn => btn.classList.remove('active'));
-};
-
-document.getElementById('runBtn').onclick = async () => {
-  if(ctx.state === 'suspended') await ctx.resume();
-  if(!reverbNode) await createAcidVReverb();
-
-  isRunning =!isRunning;
-  document.getElementById('runBtn').classList.toggle('active');
-  document.getElementById('runBtn').textContent = isRunning? 'STOP' : 'RUN';
-
-  if(isRunning) {
-    currentStep = 0;
-    nextNoteTime = ctx.currentTime + 0.1;
-    scheduler();
-  } else {
-    clearTimeout(scheduleTimer);
-    document.querySelectorAll('.led').forEach(led => led.classList.remove('on'));
-    document.querySelectorAll('.step').forEach(s => s.classList.remove('playing'));
-  }
-};
 document.getElementById('randomBtn').onclick = () => {
   const scale = document.getElementById('scaleSelect').value;
   const genre = document.getElementById('genreSelect').value;
@@ -774,6 +789,48 @@ function generateAcidClassic(scaleNotes, density) {
     }
   }
 }
+
+// SOUNDBANK CONTROLS
+document.getElementById('bankSelect').addEventListener('change', e => {
+  currentBank = e.target.value;
+  currentPattern = Object.keys(soundbanks[currentBank])[0];
+  refreshPatternSelect();
+  loadPattern();
+});
+
+document.getElementById('patternSelect').addEventListener('change', e => {
+  currentPattern = e.target.value;
+  loadPattern();
+});
+
+document.getElementById('savePatternBtn').onclick = () => {
+  saveCurrentPattern();
+};
+
+document.getElementById('newBankBtn').onclick = () => {
+  const name = prompt('Nombre del nuevo Soundbank:');
+  if(name &&!soundbanks[name]) {
+    soundbanks[name] = {};
+    saveSoundbanks();
+    currentBank = name;
+    refreshBankSelect();
+  }
+};
+
+document.getElementById('delPatternBtn').onclick = () => {
+  if(currentBank === 'User' && soundbanks[currentBank][currentPattern]) {
+    delete soundbanks[currentBank][currentPattern];
+    saveSoundbanks();
+    refreshBankSelect();
+    loadPattern();
+  } else {
+    alert('Solo puedes borrar patterns del banco User');
+  }
+};
+
+// Inicializar soundbanks al cargar
+refreshBankSelect();
+loadPattern();
 function updateStepUI() {
   seq.forEach((s, i) => {
     document.querySelector(`select[data-step="${i}"]`).value = s.note;
@@ -812,7 +869,7 @@ function create303Voice(freq, time, slide, accent, duration) {
   osc.type = waveform;
   osc.frequency.value = freq * Math.pow(2, params.tune/12);
 
-  // 1. DRIVE del Transistor Bass: saturación pre-filtro 0-100
+  // 1. DRIVE TRANSISTOR BASS: saturación pre-filtro 0-100
   if(params.drive > 0) {
     const k = params.drive / 100 * 100;
     const curve = new Float32Array(44100);
@@ -852,7 +909,7 @@ function create303Voice(freq, time, slide, accent, duration) {
     vca.gain.exponentialRampToValueAtTime(0.001, time + params.decay);
   }
 
-  // 5. Distorsión post-filtro - la mantengo igual
+  // 5. Distorsión post-filtro - sin modificar
   if(params.dist > 0) {
     const k = params.dist * 10;
     const curve = new Float32Array(44100);
@@ -904,11 +961,6 @@ function scheduler() {
 
   if(isRunning) scheduleTimer = setTimeout(scheduler, 25);
 }
-
-// Actualizar send de reverb en tiempo real
-document.getElementById('reverb').addEventListener('input', () => {
-  if(reverbSend) reverbSend.gain.value = params.reverb / 100;
-});
 
 // MIDI ROLAND TB-303 FORMAT 0 PPQ 96 - SIN MODIFICAR
 document.getElementById('downloadMidi').onclick = () => {
@@ -962,7 +1014,7 @@ document.getElementById('downloadMidi').onclick = () => {
 
 function toVLQ(value) {
   value = Math.floor(value);
-  if (value === 0) return [0x00];
+  if (value === 0) return ;
 
   let bytes = [];
   bytes.push(value & 0x7F);
@@ -976,14 +1028,14 @@ function toVLQ(value) {
   return bytes.reverse();
 }
 
-// DESCARGA WAV - Renderiza 4 compases con reverb
+// DESCARGA WAV - Con reverb
 document.getElementById('downloadWav').onclick = async () => {
   const secondsPerStep = 60.0 / params.tempo / 4;
   const totalDuration = secondsPerStep * 16 * 4;
   const sampleRate = 44100;
   const offlineCtx = new OfflineAudioContext(2, sampleRate * totalDuration, sampleRate);
 
-  // Crear reverb offline
+  // Reverb offline
   const offlineReverb = offlineCtx.createConvolver();
   const offlineHPF = offlineCtx.createBiquadFilter();
   const offlineLPF = offlineCtx.createBiquadFilter();
@@ -995,7 +1047,6 @@ document.getElementById('downloadWav').onclick = async () => {
   offlineLPF.type = 'lowpass';
   offlineLPF.frequency.value = 4000;
   offlineSend.gain.value = params.reverb / 100;
-  offlineReturn.gain.value = 1;
 
   const length = sampleRate * 2.5;
   const impulse = offlineCtx.createBuffer(2, length, sampleRate);
