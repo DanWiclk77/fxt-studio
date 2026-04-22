@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>TB-303 Web Emulator v8 - MIDI Roland Compatible</title>
+<title>TB-303 v8.1 - Transistor Bass + Acid V Reverb</title>
 <style>
   body {
     background: #1a1a1a;
@@ -33,8 +33,8 @@
 
 .controls {
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 15px;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 12px;
     margin-bottom: 15px;
     background: #222;
     padding: 15px;
@@ -199,14 +199,14 @@
       <div class="value" id="tuneVal">0</div>
     </div>
     <div class="knob-group">
-      <label>Cut Off Freq</label>
-      <input type="range" id="cutoff" min="100" max="8000" value="1000" step="10">
-      <div class="value" id="cutoffVal">1000</div>
+      <label>Cutoff</label>
+      <input type="range" id="cutoff" min="0" max="100" value="40" step="1">
+      <div class="value" id="cutoffVal">40</div>
     </div>
     <div class="knob-group">
       <label>Resonance</label>
-      <input type="range" id="resonance" min="0" max="30" value="10" step="0.1">
-      <div class="value" id="resVal">10.0</div>
+      <input type="range" id="resonance" min="0" max="100" value="60" step="1">
+      <div class="value" id="resVal">60</div>
     </div>
     <div class="knob-group">
       <label>Env Mod</label>
@@ -222,6 +222,16 @@
       <label>Accent</label>
       <input type="range" id="accent" min="0" max="1" value="0.5" step="0.01">
       <div class="value" id="accentVal">0.50</div>
+    </div>
+    <div class="knob-group">
+      <label>Drive</label>
+      <input type="range" id="drive" min="0" max="100" value="0" step="1">
+      <div class="value" id="driveVal">0</div>
+    </div>
+    <div class="knob-group">
+      <label>Reverb</label>
+      <input type="range" id="reverb" min="0" max="100" value="0" step="1">
+      <div class="value" id="reverbVal">0</div>
     </div>
   </div>
 
@@ -310,7 +320,7 @@
     <div class="led-row" id="leds"></div>
     <div class="steps" id="steps"></div>
     <div style="font-size:10px;color:#888;margin-top:8px;text-align:center">
-      NOTA | O- O+ | S A - Random genera patrones por estilo
+      Transistor Bass Cutoff/Res + Drive | Acid V Reverb 300Hz-4kHz
     </div>
   </div>
 </div>
@@ -322,9 +332,19 @@ let nextNoteTime = 0;
 let waveform = 'sawtooth';
 let scheduleTimer;
 
+// Parámetros: Cutoff/Res 0-100 Transistor Bass, Drive añadido, Reverb Acid V
 const params = {
-  tune: 0, cutoff: 1000, resonance: 10, envmod: 2000,
-  decay: 0.3, accent: 0.5, tempo: 128, dist: 0, density: 60
+  tune: 0,
+  cutoff: 40, // 0-100 = 27Hz-7.4kHz exp como Transistor Bass
+  resonance: 60, // 0-100 = Q 0.5-30 como Transistor Bass
+  envmod: 2000,
+  decay: 0.3,
+  accent: 0.5,
+  drive: 0, // Drive Transistor Bass 0-100
+  reverb: 0, // Wet 0-100 Acid V style
+  tempo: 128,
+  dist: 0,
+  density: 60
 };
 
 const scales = {
@@ -347,6 +367,50 @@ const noteFreq = {
 };
 
 const seq = Array(16).fill().map(() => ({note: 'OFF', octave: 2, slide: false, accent: false}));
+
+// REVERB ACID V - Convolver filtrado 300Hz-4kHz tono dark
+let reverbNode = null;
+let reverbHPF = null;
+let reverbLPF = null;
+let reverbGain = null;
+
+async function createAcidVReverb() {
+  reverbNode = ctx.createConvolver();
+  reverbHPF = ctx.createBiquadFilter();
+  reverbLPF = ctx.createBiquadFilter();
+  reverbGain = ctx.createGain();
+
+  // Filtros Acid V: HPF 300Hz, LPF 4kHz
+  reverbHPF.type = 'highpass';
+  reverbHPF.frequency.value = 300;
+  reverbHPF.Q.value = 0.7;
+
+  reverbLPF.type = 'lowpass';
+  reverbLPF.frequency.value = 4000;
+  reverbLPF.Q.value = 0.7;
+
+  // IR sintética dark: decay 2.5s con damping fuerte
+  const sampleRate = ctx.sampleRate;
+  const length = sampleRate * 2.5;
+  const impulse = ctx.createBuffer(2, length, sampleRate);
+
+  for(let ch = 0; ch < 2; ch++) {
+    const channel = impulse.getChannelData(ch);
+    for(let i = 0; i < length; i++) {
+      const t = i / sampleRate;
+      // Decay exponencial con tono dark
+      const decay = Math.pow(1 - t / 2.5, 3);
+      channel[i] = (Math.random() * 2 - 1) * decay * 0.5;
+    }
+  }
+  reverbNode.buffer = impulse;
+
+  // Cadena: source -> HPF -> Convolver -> LPF -> Gain -> destination
+  reverbHPF.connect(reverbNode);
+  reverbNode.connect(reverbLPF);
+  reverbLPF.connect(reverbGain);
+  reverbGain.connect(ctx.destination);
+}
 
 // UI Setup
 const stepsDiv = document.getElementById('steps');
@@ -385,6 +449,10 @@ document.querySelectorAll('input[type=range]').forEach(input => {
     document.getElementById(id+'Val').textContent =
       id === 'density'? val + '%' :
       id === 'decay' || id === 'accent' || id === 'resonance'? val.toFixed(2) : val;
+
+    if(id === 'reverb' && reverbGain) {
+      reverbGain.gain.value = val / 100;
+    }
   });
 });
 
@@ -450,6 +518,8 @@ document.getElementById('clearBtn').onclick = () => {
 
 document.getElementById('runBtn').onclick = async () => {
   if(ctx.state === 'suspended') await ctx.resume();
+  if(!reverbNode) await createAcidVReverb();
+
   isRunning =!isRunning;
   document.getElementById('runBtn').classList.toggle('active');
   document.getElementById('runBtn').textContent = isRunning? 'STOP' : 'RUN';
@@ -721,37 +791,57 @@ function getStepFreq(step) {
   return noteFreq[baseNote];
 }
 
+// MOTOR TRANSISTOR BASS: Cutoff 0-100, Res 0-100, Drive pre-filtro + Reverb Acid V
+let lastFreq = 65.41;
+let reverbSend = null;
+
+function initReverb() {
+  if(reverbSend) return;
+  reverbSend = ctx.createGain();
+  reverbSend.gain.value = params.reverb / 100;
+  reverbSend.connect(reverbHPF);
+}
+
 function create303Voice(freq, time, slide, accent, duration) {
   const osc = ctx.createOscillator();
   const filter = ctx.createBiquadFilter();
   const vca = ctx.createGain();
-  const dist = ctx.createWaveShaper();
+  const driveNode = ctx.createWaveShaper();
+  const distNode = ctx.createWaveShaper();
 
   osc.type = waveform;
   osc.frequency.value = freq * Math.pow(2, params.tune/12);
 
-  if(params.dist > 0) {
-    const k = params.dist * 10;
+  // 1. DRIVE del Transistor Bass: saturación pre-filtro 0-100
+  if(params.drive > 0) {
+    const k = params.drive / 100 * 100;
     const curve = new Float32Array(44100);
     for(let i=0; i<44100; i++) {
       const x = i * 2 / 44100 - 1;
       curve[i] = (1 + k) * x / (1 + k * Math.abs(x));
     }
-    dist.curve = curve;
-    dist.oversample = '4x';
+    driveNode.curve = curve;
+    driveNode.oversample = '4x';
+    osc.connect(driveNode).connect(filter);
+  } else {
+    osc.connect(filter);
   }
 
+  // 2. FILTRO TRANSISTOR BASS: Cutoff 0-100 = 27Hz-7.4kHz exponencial
   filter.type = 'lowpass';
-  filter.Q.value = params.resonance;
+  const cutoffHz = 27 * Math.pow(274.07, params.cutoff / 100);
+  // Res 0-100 = Q 0.5-30 como Transistor Bass
+  filter.Q.value = 0.5 + (params.resonance / 100) * 29.5;
 
-  const baseCutoff = params.cutoff;
+  // 3. Env Mod + Accent
   const envAmount = params.envmod * (accent? 1 + params.accent : 1);
-  const peakCutoff = Math.min(baseCutoff + envAmount, 18000);
+  const peakCutoff = Math.min(cutoffHz + envAmount, 20000);
 
-  filter.frequency.setValueAtTime(baseCutoff, time);
+  filter.frequency.setValueAtTime(cutoffHz, time);
   filter.frequency.linearRampToValueAtTime(peakCutoff, time + 0.005);
-  filter.frequency.exponentialRampToValueAtTime(baseCutoff, time + params.decay);
+  filter.frequency.exponentialRampToValueAtTime(cutoffHz, time + params.decay);
 
+  // 4. VCA con accent
   const amp = accent? 0.8 : 0.4;
   vca.gain.setValueAtTime(0, time);
   vca.gain.linearRampToValueAtTime(amp, time + 0.003);
@@ -762,17 +852,31 @@ function create303Voice(freq, time, slide, accent, duration) {
     vca.gain.exponentialRampToValueAtTime(0.001, time + params.decay);
   }
 
+  // 5. Distorsión post-filtro - la mantengo igual
   if(params.dist > 0) {
-    osc.connect(dist).connect(filter).connect(vca).connect(ctx.destination);
+    const k = params.dist * 10;
+    const curve = new Float32Array(44100);
+    for(let i=0; i<44100; i++) {
+      const x = i * 2 / 44100 - 1;
+      curve[i] = (1 + k) * x / (1 + k * Math.abs(x));
+    }
+    distNode.curve = curve;
+    distNode.oversample = '4x';
+    filter.connect(distNode).connect(vca);
   } else {
-    osc.connect(filter).connect(vca).connect(ctx.destination);
+    filter.connect(vca);
   }
+
+  // 6. Salida + Send a Reverb Acid V
+  initReverb();
+  vca.connect(ctx.destination);
+  vca.connect(reverbSend);
 
   osc.start(time);
   osc.stop(time + duration + 0.1);
 }
 
-let lastFreq = 65.41;
+let lastStepFreq = 65.41;
 function scheduler() {
   const secondsPerStep = 60.0 / params.tempo / 4;
 
@@ -788,10 +892,10 @@ function scheduler() {
 
     const freq = getStepFreq(step);
     if(freq) {
-      const isSlide = step.slide && lastFreq;
+      const isSlide = step.slide && lastStepFreq;
       const dur = isSlide? secondsPerStep * 2 : secondsPerStep * 0.9;
       create303Voice(freq, nextNoteTime, step.slide, step.accent, dur);
-      lastFreq = freq;
+      lastStepFreq = freq;
     }
 
     nextNoteTime += secondsPerStep;
@@ -801,47 +905,42 @@ function scheduler() {
   if(isRunning) scheduleTimer = setTimeout(scheduler, 25);
 }
 
-// MIDI FORMAT 0 - COMPATIBLE ROLAND TB-303 PLUGIN + FL STUDIO MOBILE
+// Actualizar send de reverb en tiempo real
+document.getElementById('reverb').addEventListener('input', () => {
+  if(reverbSend) reverbSend.gain.value = params.reverb / 100;
+});
+
+// MIDI ROLAND TB-303 FORMAT 0 PPQ 96 - SIN MODIFICAR
 document.getElementById('downloadMidi').onclick = () => {
-  const PPQN = 96; // 96 ticks per quarter = estándar Roland
-  const ticksPerStep = 24; // 16th note = 96/4
+  const PPQN = 96;
+  const ticksPerStep = 24;
   let events = [];
 
-  // Tempo Meta Event - debe ir primero
   const mpqn = Math.floor(60000000 / params.tempo);
   events.push({t: 0, d: [0xFF, 0x51, 0x03, (mpqn>>16)&0xFF, (mpqn>>8)&0xFF, mpqn&0xFF]});
-
-  // Time Signature 4/4
   events.push({t: 0, d: [0xFF, 0x58, 0x04, 0x04, 0x02, 0x18, 0x08]});
 
-  // Track Name
   const name = 'TB-303 Bassline';
   let nameBytes = [0xFF, 0x03, name.length];
   for(let i=0; i<name.length; i++) nameBytes.push(name.charCodeAt(i));
   events.push({t: 0, d: nameBytes});
 
-  // Notas en canal 0 - estilo Roland: notas cortas tipo blip
   seq.forEach((step, i) => {
     const freq = getStepFreq(step);
     if(freq) {
       const startTick = i * ticksPerStep;
       const midiNote = Math.max(0, Math.min(127, Math.round(69 + 12 * Math.log2(freq / 440))));
       const vel = step.accent? 127 : 100;
-      // Roland usa duraciones cortas: 20 ticks normal, 23 ticks si hay slide
       const dur = step.slide? 23 : 20;
 
-      events.push({t: startTick, d: [0x90, midiNote, vel]}); // Note On Ch1
-      events.push({t: startTick + dur, d: [0x80, midiNote, 0x40]}); // Note Off Ch1
+      events.push({t: startTick, d: [0x90, midiNote, vel]});
+      events.push({t: startTick + dur, d: [0x80, midiNote, 0x40]});
     }
   });
 
-  // End of Track
   events.push({t: 16 * ticksPerStep, d: [0xFF, 0x2F, 0x00]});
-
-  // Ordenar por tick
   events.sort((a,b) => a.t - b.t);
 
-  // Convertir a delta times y construir chunk
   let track = [];
   let lastTick = 0;
 
@@ -852,11 +951,8 @@ document.getElementById('downloadMidi').onclick = () => {
     lastTick = ev.t;
   });
 
-  // Construir archivo: MThd + MTrk
   let midi = [];
-  // MThd: 4D 54 68 64, length=6, format=0, ntrks=1, division=96
-  midi.push(0x4D,0x54,0x68,0x64, 0x00,0x00,0x00,0x06, 0x00,0x00, 0x00,0x01, 0x00,0x60);
-  // MTrk
+  midi.push(0x4D,0x54,0x68,0x64, 0x00,0x00,0x06, 0x00, 0x00,0x01, 0x00,0x60);
   midi.push(0x4D,0x54,0x72,0x6B);
   midi.push((track.length>>24)&0xFF, (track.length>>16)&0xFF, (track.length>>8)&0xFF, track.length&0xFF);
   midi.push(...track);
@@ -864,7 +960,6 @@ document.getElementById('downloadMidi').onclick = () => {
   downloadBlob(new Uint8Array(midi), 'tb303_pattern.mid', 'audio/midi');
 };
 
-// VLQ según spec MIDI oficial - idéntico al usado por Roland
 function toVLQ(value) {
   value = Math.floor(value);
   if (value === 0) return [0x00];
@@ -881,12 +976,44 @@ function toVLQ(value) {
   return bytes.reverse();
 }
 
-// DESCARGA WAV - Renderiza 4 compases
+// DESCARGA WAV - Renderiza 4 compases con reverb
 document.getElementById('downloadWav').onclick = async () => {
   const secondsPerStep = 60.0 / params.tempo / 4;
   const totalDuration = secondsPerStep * 16 * 4;
   const sampleRate = 44100;
-  const offlineCtx = new OfflineAudioContext(1, sampleRate * totalDuration, sampleRate);
+  const offlineCtx = new OfflineAudioContext(2, sampleRate * totalDuration, sampleRate);
+
+  // Crear reverb offline
+  const offlineReverb = offlineCtx.createConvolver();
+  const offlineHPF = offlineCtx.createBiquadFilter();
+  const offlineLPF = offlineCtx.createBiquadFilter();
+  const offlineSend = offlineCtx.createGain();
+  const offlineReturn = offlineCtx.createGain();
+
+  offlineHPF.type = 'highpass';
+  offlineHPF.frequency.value = 300;
+  offlineLPF.type = 'lowpass';
+  offlineLPF.frequency.value = 4000;
+  offlineSend.gain.value = params.reverb / 100;
+  offlineReturn.gain.value = 1;
+
+  const length = sampleRate * 2.5;
+  const impulse = offlineCtx.createBuffer(2, length, sampleRate);
+  for(let ch = 0; ch < 2; ch++) {
+    const channel = impulse.getChannelData(ch);
+    for(let i = 0; i < length; i++) {
+      const t = i / sampleRate;
+      const decay = Math.pow(1 - t / 2.5, 3);
+      channel[i] = (Math.random() * 2 - 1) * decay * 0.5;
+    }
+  }
+  offlineReverb.buffer = impulse;
+
+  offlineSend.connect(offlineHPF);
+  offlineHPF.connect(offlineReverb);
+  offlineReverb.connect(offlineLPF);
+  offlineLPF.connect(offlineReturn);
+  offlineReturn.connect(offlineCtx.destination);
 
   let time = 0;
   for(let loop = 0; loop < 4; loop++) {
@@ -894,7 +1021,7 @@ document.getElementById('downloadWav').onclick = async () => {
       const step = seq[i];
       const freq = getStepFreq(step);
       if(freq) {
-        renderStepToContext(offlineCtx, freq, time, step.slide, step.accent, secondsPerStep * 0.9);
+        renderStepToContext(offlineCtx, freq, time, step.slide, step.accent, secondsPerStep * 0.9, offlineSend);
       }
       time += secondsPerStep;
     }
@@ -905,36 +1032,42 @@ document.getElementById('downloadWav').onclick = async () => {
   downloadBlob(wav, 'tb303_pattern.wav', 'audio/wav');
 };
 
-function renderStepToContext(octx, freq, time, slide, accent, duration) {
+function renderStepToContext(octx, freq, time, slide, accent, duration, sendNode) {
   const osc = octx.createOscillator();
   const filter = octx.createBiquadFilter();
   const vca = octx.createGain();
-  const dist = octx.createWaveShaper();
+  const driveNode = octx.createWaveShaper();
+  const distNode = octx.createWaveShaper();
 
   osc.type = waveform;
   osc.frequency.value = freq * Math.pow(2, params.tune/12);
 
-  if(params.dist > 0) {
-    const k = params.dist * 10;
+  // Drive Transistor Bass
+  if(params.drive > 0) {
+    const k = params.drive / 100 * 100;
     const curve = new Float32Array(44100);
     for(let i=0; i<44100; i++) {
       const x = i * 2 / 44100 - 1;
       curve[i] = (1 + k) * x / (1 + k * Math.abs(x));
     }
-    dist.curve = curve;
-    dist.oversample = '4x';
+    driveNode.curve = curve;
+    driveNode.oversample = '4x';
+    osc.connect(driveNode).connect(filter);
+  } else {
+    osc.connect(filter);
   }
 
+  // Filtro Transistor Bass
+  const cutoffHz = 27 * Math.pow(274.07, params.cutoff / 100);
   filter.type = 'lowpass';
-  filter.Q.value = params.resonance;
+  filter.Q.value = 0.5 + (params.resonance / 100) * 29.5;
 
-  const baseCutoff = params.cutoff;
   const envAmount = params.envmod * (accent? 1 + params.accent : 1);
-  const peakCutoff = Math.min(baseCutoff + envAmount, 18000);
+  const peakCutoff = Math.min(cutoffHz + envAmount, 20000);
 
-  filter.frequency.setValueAtTime(baseCutoff, time);
+  filter.frequency.setValueAtTime(cutoffHz, time);
   filter.frequency.linearRampToValueAtTime(peakCutoff, time + 0.005);
-  filter.frequency.exponentialRampToValueAtTime(baseCutoff, time + params.decay);
+  filter.frequency.exponentialRampToValueAtTime(cutoffHz, time + params.decay);
 
   const amp = accent? 0.8 : 0.4;
   vca.gain.setValueAtTime(0, time);
@@ -946,11 +1079,23 @@ function renderStepToContext(octx, freq, time, slide, accent, duration) {
     vca.gain.exponentialRampToValueAtTime(0.001, time + params.decay);
   }
 
+  // Distorsión
   if(params.dist > 0) {
-    osc.connect(dist).connect(filter).connect(vca).connect(octx.destination);
+    const k = params.dist * 10;
+    const curve = new Float32Array(44100);
+    for(let i=0; i<44100; i++) {
+      const x = i * 2 / 44100 - 1;
+      curve[i] = (1 + k) * x / (1 + k * Math.abs(x));
+    }
+    distNode.curve = curve;
+    distNode.oversample = '4x';
+    filter.connect(distNode).connect(vca);
   } else {
-    osc.connect(filter).connect(vca).connect(octx.destination);
+    filter.connect(vca);
   }
+
+  vca.connect(octx.destination);
+  if(sendNode) vca.connect(sendNode);
 
   osc.start(time);
   osc.stop(time + duration + 0.1);
@@ -1016,8 +1161,9 @@ function downloadBlob(data, filename, type) {
   URL.revokeObjectURL(url);
 }
 
-document.body.addEventListener('click', () => {
-  if(ctx.state === 'suspended') ctx.resume();
+document.body.addEventListener('click', async () => {
+  if(ctx.state === 'suspended') await ctx.resume();
+  if(!reverbNode) await createAcidVReverb();
 }, {once: true});
 </script>
 </body>
