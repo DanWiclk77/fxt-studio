@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>TB-303 v9.2 - Groove Bassline</title>
+<title>TB-303 v9.3 - Groove Bassline Fixed</title>
 <link rel="manifest" href="manifest.json">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#ff4500">
@@ -539,11 +539,11 @@ const FACTORY_BANKS = {
   'User': {}
 };
 
-let soundbanks = JSON.parse(localStorage.getItem('tb303_soundbanks_v92')) || FACTORY_BANKS;
+let soundbanks = JSON.parse(localStorage.getItem('tb303_soundbanks_v93')) || FACTORY_BANKS;
 let currentBank = 'Groove Bassline';
 let currentPattern = '01: Acid Tracks 1987';
 function saveSoundbanks() {
-  localStorage.setItem('tb303_soundbanks_v92', JSON.stringify(soundbanks));
+  localStorage.setItem('tb303_soundbanks_v93', JSON.stringify(soundbanks));
 }
 
 function refreshBankSelect() {
@@ -633,10 +633,13 @@ let reverbNode = null;
 let reverbHPF = null;
 let reverbLPF = null;
 let reverbGain = null;
+let reverbSend = null;
 
+// FIXED: Reverb dark con HPF 300Hz -> Convolver -> LPF 4kHz -> Gain
 async function createAcidVReverb() {
-  reverbNode = ctx.createConvolver();
+  reverbSend = ctx.createGain();
   reverbHPF = ctx.createBiquadFilter();
+  reverbNode = ctx.createConvolver();
   reverbLPF = ctx.createBiquadFilter();
   reverbGain = ctx.createGain();
 
@@ -648,24 +651,28 @@ async function createAcidVReverb() {
   reverbLPF.frequency.value = 4000;
   reverbLPF.Q.value = 0.7;
 
+  // Impulse corto = decay cero, tono dark
   const sampleRate = ctx.sampleRate;
-  const length = sampleRate * 2.5;
+  const length = sampleRate * 0.4; // 400ms decay corto
   const impulse = ctx.createBuffer(2, length, sampleRate);
 
   for(let ch = 0; ch < 2; ch++) {
     const channel = impulse.getChannelData(ch);
     for(let i = 0; i < length; i++) {
       const t = i / sampleRate;
-      const decay = Math.pow(1 - t / 2.5, 3);
-      channel[i] = (Math.random() * 2 - 1) * decay * 0.5;
+      const decay = Math.exp(-t * 8); // Decay exponencial rápido
+      channel[i] = (Math.random() * 2 - 1) * decay * 0.3;
     }
   }
   reverbNode.buffer = impulse;
 
+  // Cadena: send -> HPF 300Hz -> Convolver -> LPF 4kHz -> Gain -> out
+  reverbSend.connect(reverbHPF);
   reverbHPF.connect(reverbNode);
   reverbNode.connect(reverbLPF);
   reverbLPF.connect(reverbGain);
   reverbGain.connect(ctx.destination);
+  reverbGain.gain.value = 0;
 }
 
 const stepsDiv = document.getElementById('steps');
@@ -1099,13 +1106,9 @@ function getStepFreq(step) {
   return noteFreq[baseNote];
 }
 
-let reverbSend = null;
-
-function initReverb() {
-  if(reverbSend) return;
-  reverbSend = ctx.createGain();
-  reverbSend.gain.value = params.reverb / 100;
-  reverbSend.connect(reverbHPF);
+function initReverbSend() {
+  if(!reverbSend) return;
+  reverbGain.gain.value = params.reverb / 100;
 }
 
 function create303Voice(freq, time, slide, accent, duration) {
@@ -1167,9 +1170,9 @@ function create303Voice(freq, time, slide, accent, duration) {
     filter.connect(vca);
   }
 
-  initReverb();
+  initReverbSend();
   vca.connect(ctx.destination);
-  vca.connect(reverbSend);
+  if(reverbSend) vca.connect(reverbSend);
 
   osc.start(time);
   osc.stop(time + duration + 0.1);
@@ -1206,42 +1209,65 @@ function scheduler() {
   if(isRunning) scheduleTimer = setTimeout(scheduler, 25);
 }
 
-// MIDI ROLAND TB-303 REAL: Format 0, 1 pista, canal 0, PPQ 96
+// MIDI ROLAND TB-303 PLUGIN: Format 0, 1 pista, canal 0, PPQ 96
+// Accent = velocity 127, Slide = notas ligadas
 document.getElementById('downloadMidi').onclick = () => {
   const PPQN = 96;
   const ticksPerStep = 24;
   let events = [];
 
-  // Tempo - usa params.tempo actual
+  // Tempo meta event
   const mpqn = Math.floor(60000000 / params.tempo);
   events.push({t: 0, d: [0xFF, 0x51, 0x03, (mpqn>>16)&0xFF, (mpqn>>8)&0xFF, mpqn&0xFF]});
 
   // Time signature 4/4
   events.push({t: 0, d: [0xFF, 0x58, 0x04, 0x04, 0x02, 0x18, 0x08]});
 
-  // Track name TB-303
+  // Track name
   const name = 'TB-303';
   let nameBytes = [0xFF, 0x03, name.length];
   for(let i=0; i<name.length; i++) nameBytes.push(name.charCodeAt(i));
   events.push({t: 0, d: nameBytes});
 
-  // Notas del sequencer - CANAL 0 SIEMPRE
+  let activeNotes = []; // Para manejar slides TB-303
+
   seq.forEach((step, i) => {
     const freq = getStepFreq(step);
+    const startTick = i * ticksPerStep;
+
     if(freq) {
-      const startTick = i * ticksPerStep;
       const midiNote = Math.max(0, Math.min(127, Math.round(69 + 12 * Math.log2(freq / 440))));
       const vel = step.accent? 127 : 100;
-      const dur = step.slide? 23 : 20;
 
-      // Note On - Canal 0: 0x90
-      events.push({t: startTick, d: [0x90, midiNote, vel]});
-      // Note Off - Canal 0: 0x80
-      events.push({t: startTick + dur, d: [0x80, midiNote, 0x40]});
+      // Si el step anterior tiene slide, no cerramos la nota anterior
+      const prevStep = i > 0? seq[i-1] : null;
+      const hasPrevSlide = prevStep && prevStep.slide && prevStep.note!== 'OFF';
+
+      if(hasPrevSlide) {
+        // Cerrar nota anterior y abrir nueva en mismo tick = legato/slide
+        const prevFreq = getStepFreq(prevStep);
+        const prevMidiNote = Math.round(69 + 12 * Math.log2(prevFreq / 440));
+        events.push({t: startTick, d: [0x80, prevMidiNote, 0x00]}); // Note Off anterior
+      }
+
+      events.push({t: startTick, d: [0x90, midiNote, vel]}); // Note On canal 0
+
+      // Si no hay slide, cerrar en el siguiente step
+      if(!step.slide) {
+        const endTick = startTick + 20;
+        events.push({t: endTick, d: [0x80, midiNote, 0x00]}); // Note Off
+      }
     }
   });
 
-  // End of track
+  // Cerrar última nota si quedó abierta
+  const lastStep = seq[15];
+  if(lastStep.note!== 'OFF' && lastStep.slide) {
+    const lastFreq = getStepFreq(lastStep);
+    const lastMidiNote = Math.round(69 + 12 * Math.log2(lastFreq / 440));
+    events.push({t: 16 * ticksPerStep - 4, d: [0x80, lastMidiNote, 0x00]});
+  }
+
   events.push({t: 16 * ticksPerStep, d: [0xFF, 0x2F, 0x00]});
   events.sort((a,b) => a.t - b.t);
 
@@ -1255,10 +1281,10 @@ document.getElementById('downloadMidi').onclick = () => {
     lastTick = ev.t;
   });
 
-  // HEADER MIDI: Format 0, 1 track, PPQ 96
+  // Header MIDI: Format 0, 1 track, PPQ 96
   let midi = [];
   midi.push(0x4D,0x54,0x68,0x64); // MThd
-  midi.push(0x00,0x00,0x06); // Header length
+  midi.push(0x00,0x06); // Header length
   midi.push(0x00,0x00); // Format 0
   midi.push(0x00,0x01); // 1 track
   midi.push(0x00,0x60); // PPQ 96
@@ -1289,6 +1315,7 @@ document.getElementById('downloadWav').onclick = async () => {
   const sampleRate = 44100;
   const offlineCtx = new OfflineAudioContext(2, sampleRate * totalDuration, sampleRate);
 
+  // Reverb offline con misma cadena HPF->Conv->LPF
   const offlineReverb = offlineCtx.createConvolver();
   const offlineHPF = offlineCtx.createBiquadFilter();
   const offlineLPF = offlineCtx.createBiquadFilter();
@@ -1301,14 +1328,14 @@ document.getElementById('downloadWav').onclick = async () => {
   offlineLPF.frequency.value = 4000;
   offlineSend.gain.value = params.reverb / 100;
 
-  const length = sampleRate * 2.5;
+  const length = sampleRate * 0.4; // 400ms decay
   const impulse = offlineCtx.createBuffer(2, length, sampleRate);
   for(let ch = 0; ch < 2; ch++) {
     const channel = impulse.getChannelData(ch);
     for(let i = 0; i < length; i++) {
       const t = i / sampleRate;
-      const decay = Math.pow(1 - t / 2.5, 3);
-      channel[i] = (Math.random() * 2 - 1) * decay * 0.5;
+      const decay = Math.exp(-t * 8);
+      channel[i] = (Math.random() * 2 - 1) * decay * 0.3;
     }
   }
   offlineReverb.buffer = impulse;
